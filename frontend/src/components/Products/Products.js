@@ -5,7 +5,7 @@ import { popularProducts } from "../../data";
 import Product from "./Product";
 import { useEffect, useState } from "react";
 
-function Products({ cat, filters, sort }) {
+function Products({ cat, filters, sort, limit }) {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -26,7 +26,7 @@ function Products({ cat, filters, sort }) {
     <div className="product-container">
       {popularProducts &&
         popularProducts
-          .slice(0, 10)
+          .slice(0, limit)
           .map((product) => (
             <Product product={product} key={product.id}></Product>
           ))}
