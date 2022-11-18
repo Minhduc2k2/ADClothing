@@ -91,10 +91,13 @@
   background-color: #2196f3;
 }
 .color-container input:checked ~ .checkmark.red {
-  background-color: rgb(198, 71, 71);
+  background-color: #c64747;
+}
+.color-container input:checked ~ .checkmark.white {
+  background-color: #fff;
 }
 .color-container input:checked ~ .checkmark.black {
-  background-color: rgb(40, 38, 38);
+  background-color: #282626;
 }
 .color-container input:checked ~ .checkmark.yellow {
   background-color: #e2df08;
@@ -123,7 +126,17 @@
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-
+.color-container .checkmark.white:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
 .shop-by-size div {
   display: flex;
   flex-direction: column;

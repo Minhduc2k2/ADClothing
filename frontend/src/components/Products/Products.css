@@ -3,10 +3,10 @@
   flex-wrap: wrap;
   padding: 20px;
   justify-content: space-between;
+  width: 100%;
 }
 .product-container .product {
   flex: 1;
-  margin: 5px;
   min-width: 280px;
   height: 360px;
   display: flex;

@@ -8,12 +8,12 @@ function HomePage() {
     <div className="home-container">
       <Slider />
       <Categories />
-      <div>
-        <div className="new-arr">
-          <h2>New arrivals</h2>
-          <p>The best Online sales to shop these weekend</p>
-        </div>
+
+      <div className="new-arr">
+        <h2>New arrivals</h2>
+        <p>The best Online sales to shop these weekend</p>
       </div>
+
       <Products limit={10} />
       <Row className="d-flex justify-content-between row-info">
         <Col md={3} className="d-flex justify-content-center col-info">

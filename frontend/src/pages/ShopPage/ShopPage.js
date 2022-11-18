@@ -75,6 +75,12 @@ function ShopPage() {
               </label>
 
               <label class="color-container">
+                White
+                <input type="checkbox" />
+                <span class="checkmark white "></span>
+              </label>
+
+              <label class="color-container">
                 Yellow
                 <input type="checkbox" />
                 <span class="checkmark yellow"></span>
