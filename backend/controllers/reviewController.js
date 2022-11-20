@@ -11,10 +11,18 @@ export const selectAllReviewByProductId = async (req, res, next) => {
                 path: "user",
                 select: "name img"
             })
-        const { img, user, ...others } = review._doc;
-        const imgPath = getUrlImageObj(user.img);
-        const result = { ...others, imgPath: imgPath, name: user.name };
-        res.status(200).json(result);
+        let rs = [];
+        let i = 0;
+        for (i; i < review.length; i++) {
+            const { user, ...others } = review[i]._doc;
+            //console.log("🚀 ~ file: reviewController.js ~ line 16 ~ selectAllReviewByProductId ~ user", user)
+            const imgPath = getUrlImageObj(user.img);
+            const result = { ...others, name: user.name, imgPath: imgPath };
+            rs.push(result)
+        }
+        //console.log("🚀 ~ file: reviewController.js ~ line 10 ~ selectAllReviewByProductId ~ review", review)
+
+        res.status(200).json(rs);
     } catch (error) {
         next(error);
     }
