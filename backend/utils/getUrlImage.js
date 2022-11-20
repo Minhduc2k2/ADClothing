@@ -1,4 +1,13 @@
 
+export const getUrlImageObj = (img) => {
+    let rs;
+    if (img.coverImage != null && img.coverImageType != null) {
+        rs = (`data:${img.coverImageType};charset=utf-8;base64,${img.coverImage.toString('base64')}`)
+    }
+
+    return rs;
+}
+
 // imgs là mảng image
 export const getUrlImageArr = (imgs) => {
     var rs = [];

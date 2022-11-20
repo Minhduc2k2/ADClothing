@@ -48,6 +48,24 @@ const Image = () => {
                 {/* <input type="file" name="cover" class="book-cover filepond" multiple></input> */}
                 <input type="submit" value="Buy" />
             </form>
+            <form action="http://localhost:8800/backend/products" method="post">
+                <input type="text" name="name" />
+                <input type="text" name="price" />
+                <input type="text" name="description" />
+                <FilePond
+                    files={files}
+                    onupdatefiles={setFiles}
+                    allowMultiple={true}
+                    maxFiles={3}
+                    maxFileSize="3MB"
+                    //server="/api"
+                    name="img"
+                    labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+
+                />
+                {/* <input type="file" name="cover" class="book-cover filepond" multiple></input> */}
+                <input type="submit" value="Buy" />
+            </form>
         </div>
     );
 };

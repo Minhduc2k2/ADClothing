@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
       maxLength: [40, "A user name must have less or equal than 40 characters"],
       minLength: [5, "A user name must have more or equal than 5 characters"],
     },
-    img: [{
+    img: {
       coverImage: {
         type: Buffer,
         required: true
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: true
       },
-    }],
+    },
     email: {
       type: String,
       //required: [true, "User must have a email"],

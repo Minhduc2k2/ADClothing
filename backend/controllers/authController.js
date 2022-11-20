@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
-import { saveSingleFile, saveMultipleFile } from "../utils/saveFile.js";
+import { saveSingleFile, saveMultipleFile, saveFileObj } from "../utils/saveFile.js";
 
 export const getUser = (req, res, next) => {
   const token = req.cookies.access_token;
@@ -27,15 +27,15 @@ export const register = async (req, res, next) => {
       ...req.body,
       password: hash,
     });
-
-    if (typeof req.body.img === 'string') {
-      console.log("STRING");
-      saveSingleFile(newUser, image)
-    }
-    else {
-      console.log("ARRAYY");
-      saveMultipleFile(newUser, image)
-    }
+    saveFileObj(newUser, image);
+    // if (typeof req.body.img === 'string') {
+    //   console.log("STRING");
+    //   saveSingleFile(newUser, image)
+    // }
+    // else {
+    //   console.log("ARRAYY");
+    //   saveMultipleFile(newUser, image)
+    // }
     await newUser.save();
     res.status(200).send("User has been created.");
   } catch (err) {
