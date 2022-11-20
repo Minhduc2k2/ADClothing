@@ -31,14 +31,14 @@ const Image = () => {
   const [files, setFiles] = useState([]);
   return (
     <div class="dienthoai">
-      <form action="http://localhost:8800/backend/products" method="post">
+      <form action="http://localhost:8800/backend/auth/register" method="post">
         <input type="text" name="name" />
-        <input type="text" name="price" />
-        <input type="text" name="description" />
+        <input type="text" name="username" />
+        <input type="text" name="password" />
         <FilePond
           files={files}
           onupdatefiles={setFiles}
-          allowMultiple={true}
+          allowMultiple={false}
           maxFiles={3}
           //server="/api"
           name="img"

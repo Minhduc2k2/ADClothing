@@ -2,16 +2,14 @@ const imageMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
 export function saveSingleFile(doc, coverEncoded) {
   if (coverEncoded == null) return;
-
   var img = [];
   const cover = JSON.parse(coverEncoded);
-  console.log(cover);
   if (cover != null && imageMimeTypes.includes(cover.type)) {
     var data = {
       coverImage: new Buffer.from(cover.data, "base64"),
       coverImageType: cover.type,
     };
-    console.log(data);
+    console.log("data", data);
     img.push(data);
   }
   doc.img = img;
