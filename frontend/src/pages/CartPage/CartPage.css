@@ -1,0 +1,10 @@
+.cart-container {
+}
+.cart-container .product-img {
+  width: 100px;
+}
+.cart-container .product-name {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}

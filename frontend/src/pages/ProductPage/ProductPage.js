@@ -136,7 +136,7 @@ function ProductPage() {
             placeholder="Text your review here"
             className="product-review-textarea"
           />
-          <Button variant="warning">Add</Button>
+          <Button variant="dark">Add</Button>
         </Col>
       </Row>
       <div className="new-arr">
