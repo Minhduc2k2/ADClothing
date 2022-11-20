@@ -4,7 +4,7 @@ import { getUrlImageObj } from "../utils/getUrlImage.js";
 // select all reviews by product id
 export const selectAllReviewByProductId = async (req, res, next) => {
     try {
-        const review = await Review.findOne(
+        const review = await Review.find(
             { product: req.params.id }
         )
             .populate({
@@ -13,7 +13,7 @@ export const selectAllReviewByProductId = async (req, res, next) => {
             })
         const { img, user, ...others } = review._doc;
         const imgPath = getUrlImageObj(user.img);
-        const result = { ...others, imgPath: imgPath };
+        const result = { ...others, imgPath: imgPath, name: user.name };
         res.status(200).json(result);
     } catch (error) {
         next(error);
