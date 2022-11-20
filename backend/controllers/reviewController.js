@@ -1,11 +1,19 @@
 import Review from "../models/reviewModel.js";
+import { getUrlImageArr } from "../utils/getUrlImage.js";
 
 // select all reviews by product id
 export const selectAllReviewByProductId = async (req, res, next) => {
     try {
-        const result = await Review.find(
+        const review = await Review.findOne(
             { product: req.params.id }
         )
+            .populate({
+                path: "user",
+                select: "name img"
+            })
+        const { img, user, ...others } = review._doc;
+        const imgPath = getUrlImageArr(user.img);
+        const result = { ...others, imgPath: imgPath };
         res.status(200).json(result);
     } catch (error) {
         next(error);
