@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Col, Row, Form, Pagination, Button } from "react-bootstrap";
 import Products from "../../components/Products/Products";
 import "./ShopPage.css";
@@ -12,6 +13,7 @@ for (let number = 1; number <= 5; number++) {
   );
 }
 function ShopPage() {
+  const [url, setUrl] = useState("/products/");
   return (
     <div className="shop-container">
       <div className="shop-header">
@@ -49,7 +51,7 @@ function ShopPage() {
               <option value="desc">Sort by price: high to low</option>
             </Form.Select>
           </div>
-          <Products limit={6} />
+          <Products limit={6} url={url} />
           <Pagination className="shop-pagination">{items}</Pagination>
         </Col>
         <Col md={3}>

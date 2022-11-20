@@ -1,18 +1,17 @@
-import axios from "axios";
+import axios from "../../hooks/axios.js";
 import "./Products.css";
 
 import { popularProducts } from "../../data";
 import Product from "./Product";
 import { useEffect, useState } from "react";
 
-function Products({ cat, filters, sort, limit }) {
+function Products({ cat, filters, sort, limit, url }) {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = axios.get("http://localhost:3001/api/v1/products/");
+        const res = await axios.get(url);
         setProducts(res.data);
         console.log("Products: " + products);
       } catch (err) {
@@ -20,15 +19,15 @@ function Products({ cat, filters, sort, limit }) {
       }
     };
     getProducts();
-  });
+  }, []);
 
   return (
     <div className="product-container">
-      {popularProducts &&
-        popularProducts
+      {products &&
+        products
           .slice(0, limit)
           .map((product) => (
-            <Product product={product} key={product.id}></Product>
+            <Product product={product} key={product._id}></Product>
           ))}
     </div>
   );

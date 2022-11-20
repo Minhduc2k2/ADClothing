@@ -55,3 +55,6 @@
   transform: scale(1.25);
   cursor: pointer;
 }
+.product-container .detail {
+  width: 275px;
+}
