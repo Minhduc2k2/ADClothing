@@ -1,0 +1,673 @@
+{
+	"info": {
+		"_postman_id": "e9fd57c6-c047-4b40-b765-2139cf2b185f",
+		"name": "CNTT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24108109"
+	},
+	"item": [
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "REGISTER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Nguyen Van An\",\r\n    \"email\": \"1@gmail.com\",\r\n    \"phoneNumber\": \"033990001\",\r\n    \"address\": \"Binh Duong\",\r\n    \"username\": \"nvaaa1\",\r\n    \"password\": \"112233\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{auth}}/register",
+							"host": [
+								"{{auth}}"
+							],
+							"path": [
+								"register"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "nguyen van an",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "nva1@gmail.com",
+									"disabled": true
+								},
+								{
+									"key": "phoneNumber",
+									"value": "0339930201",
+									"disabled": true
+								},
+								{
+									"key": "address",
+									"value": "Binh Duong",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "nva1",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "112233",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOGIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"nvaaa1\",\r\n    \"password\": \"112233\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{auth}}/login",
+							"host": [
+								"{{auth}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CATEGORY",
+			"item": [
+				{
+					"name": "Create category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ao\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{category}}/",
+							"host": [
+								"{{category}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select all categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{category}}",
+							"host": [
+								"{{category}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update category name",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"BodySamsung\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{category}}/6378e78caf7a0fa769b23773",
+							"host": [
+								"{{category}}"
+							],
+							"path": [
+								"6378e78caf7a0fa769b23773"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{category}}/6378e787af7a0fa769b23771",
+							"host": [
+								"{{category}}"
+							],
+							"path": [
+								"6378e787af7a0fa769b23771"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PRODUCT",
+			"item": [
+				{
+					"name": "Delete product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{product}}/6378ea62456066b1300d4f47",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"6378ea62456066b1300d4f47"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Quan khoac nu 5\",\r\n    \"color\": [\"den\", \"vang\", \"do\"],\r\n    \"size\": [\"M\", \"L\", \"X\"],\r\n    \"price\": 10,\r\n    \"description\": \"This is a description\",\r\n    \"category\": \"6378e9ef456066b1300d4f41\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product}}",
+							"host": [
+								"{{product}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select all products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product}}",
+							"host": [
+								"{{product}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select products by category id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product}}/category/6378e9ef456066b1300d4f41",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"category",
+								"6378e9ef456066b1300d4f41"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Quan dai\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product}}/6378ea34456066b1300d4f44",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"6378ea34456066b1300d4f44"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select a product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product}}/6379b05d979b9ab5d52bcb92",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"6379b05d979b9ab5d52bcb92"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "Select all users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{user}}",
+							"host": [
+								"{{user}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select a user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user}}/6378fb123be5df162da1799b",
+							"host": [
+								"{{user}}"
+							],
+							"path": [
+								"6378fb123be5df162da1799b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Nguyen Van BB\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user}}/6378fb123be5df162da1799b",
+							"host": [
+								"{{user}}"
+							],
+							"path": [
+								"6378fb123be5df162da1799b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"112244\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user}}/6378fb123be5df162da1799b",
+							"host": [
+								"{{user}}"
+							],
+							"path": [
+								"6378fb123be5df162da1799b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "REVIEW",
+			"item": [
+				{
+					"name": "Create review",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": \"6378fc2376e65ac146af08dd\",\r\n    \"product\": \"6378fb3e3be5df162da179a1\",\r\n    \"review\": \"This is review\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{review}}",
+							"host": [
+								"{{review}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update review",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rating\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{review}}/6378fb603be5df162da179aa",
+							"host": [
+								"{{review}}"
+							],
+							"path": [
+								"6378fb603be5df162da179aa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select all review by product id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{review}}/6378fb3e3be5df162da179a1",
+							"host": [
+								"{{review}}"
+							],
+							"path": [
+								"6378fb3e3be5df162da179a1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete review",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{review}}/6378fc3376e65ac146af08e0",
+							"host": [
+								"{{review}}"
+							],
+							"path": [
+								"6378fc3376e65ac146af08e0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CHECKOUT",
+			"item": [
+				{
+					"name": "Create checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product\": \"6378fb3e3be5df162da179a1\",\r\n    \"quantity\": 2,\r\n    \"user\": \"6378fb123be5df162da1799b\",\r\n    \"deliveryAddress\": \"Binh Duong\",\r\n    \"price\": 1500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout}}",
+							"host": [
+								"{{checkout}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select all checkout by user id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{checkout}}/all/6378fb123be5df162da1799b",
+							"host": [
+								"{{checkout}}"
+							],
+							"path": [
+								"all",
+								"6378fb123be5df162da1799b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select checkout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{checkout}}/6379065c5eec9715ed120460",
+							"host": [
+								"{{checkout}}"
+							],
+							"path": [
+								"6379065c5eec9715ed120460"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update checkout",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout}}/6379065c5eec9715ed120460",
+							"host": [
+								"{{checkout}}"
+							],
+							"path": [
+								"6379065c5eec9715ed120460"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete checkout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{checkout}}/637908e55eec9715ed120467",
+							"host": [
+								"{{checkout}}"
+							],
+							"path": [
+								"637908e55eec9715ed120467"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth",
+			"value": "http://localhost:8800/backend/auth",
+			"type": "string"
+		},
+		{
+			"key": "category",
+			"value": "http://localhost:8800/backend/categories",
+			"type": "string"
+		},
+		{
+			"key": "user",
+			"value": "http://localhost:8800/backend/users",
+			"type": "string"
+		},
+		{
+			"key": "shop",
+			"value": "http://localhost:8800/backend/shops",
+			"type": "string"
+		},
+		{
+			"key": "product",
+			"value": "http://localhost:8800/backend/products",
+			"type": "string"
+		},
+		{
+			"key": "conv",
+			"value": "http://localhost:8800/backend/conversations",
+			"type": "string"
+		},
+		{
+			"key": "msg",
+			"value": "http://localhost:8800/backend/messages",
+			"type": "string"
+		},
+		{
+			"key": "paypal",
+			"value": "http://localhost:8800/backend/paypal",
+			"type": "string"
+		},
+		{
+			"key": "review",
+			"value": "http://localhost:8800/backend/reviews",
+			"type": "string"
+		},
+		{
+			"key": "checkout",
+			"value": "http://localhost:8800/backend/checkouts",
+			"type": "string"
+		}
+	]
+}

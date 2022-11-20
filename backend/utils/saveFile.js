@@ -1,4 +1,4 @@
-const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+const imageMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
 export function saveFileObj(doc, coverEncoded) {
     if (coverEncoded == null) return
@@ -12,18 +12,18 @@ export function saveFileObj(doc, coverEncoded) {
     doc.img = data;
 }
 export function saveSingleFile(doc, coverEncoded) {
-    if (coverEncoded == null) return
-    var img = [];
-    const cover = JSON.parse(coverEncoded);
-    if (cover != null && imageMimeTypes.includes(cover.type)) {
-        var data = {
-            coverImage: new Buffer.from(cover.data, 'base64'),
-            coverImageType: cover.type
-        }
-        console.log("data", data)
-        img.push(data);
-    }
-    doc.img = img;
+  if (coverEncoded == null) return;
+  var img = [];
+  const cover = JSON.parse(coverEncoded);
+  if (cover != null && imageMimeTypes.includes(cover.type)) {
+    var data = {
+      coverImage: new Buffer.from(cover.data, "base64"),
+      coverImageType: cover.type,
+    };
+    console.log("data", data);
+    img.push(data);
+  }
+  doc.img = img;
 }
 export function saveMultipleFile(doc, coverEncoded) {
     if (coverEncoded == null) return

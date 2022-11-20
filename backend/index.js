@@ -9,7 +9,7 @@ import categoriesRoute from "./routes/categories.js";
 import reviewRoute from "./routes/reviews.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-import { urlencoded, json } from 'express';
+import { urlencoded, json } from "express";
 // import mongoosePatchUpdate from "mongoose-patch-update";
 import cors from "cors";
 
@@ -20,6 +20,7 @@ const connect = async () => {
   try {
     // node > 17 => 127.0.0.1 else localhost
     await mongoose.connect("mongodb://127.0.0.1:27017/CNTT"); //process.env.MONGO //mongodb://localhost:27017/web-ec
+    // await mongoose.connect(process.env.MONGO); //process.env.MONGO //mongodb://localhost:27017/web-ec
     console.log("Connected to mongoDB.");
   } catch (error) {
     throw error;
@@ -35,8 +36,8 @@ mongoose.connection.on("connected", () => {
 });
 
 // middlewares
-app.use(bodyParser.json({ limit: '50000mb' }));
-app.use(bodyParser.urlencoded({ limit: '50000mb', extended: true }));
+app.use(bodyParser.json({ limit: "50000mb" }));
+app.use(bodyParser.urlencoded({ limit: "50000mb", extended: true }));
 app.use(
   express.urlencoded({
     extended: true,
@@ -44,9 +45,7 @@ app.use(
 );
 app.use(cors({ credentials: true, origin: true }));
 
-
-
-app.options('*', cors({ credentials: true, origin: true }));
+app.options("*", cors({ credentials: true, origin: true }));
 app.use(cookieParser());
 app.use(express.json());
 
