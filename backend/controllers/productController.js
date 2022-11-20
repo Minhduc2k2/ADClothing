@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import Product from "../models/productModel.js";
 import { saveSingleFile, saveMultipleFile } from "../utils/saveFile.js";
-
+import { getUrlImageArr, getUrlImageForArrObject } from "../utils/getUrlImage.js";
 
 // update product by id
 export const updateProduct = async (req, res, next) => {
@@ -29,6 +29,21 @@ export const deleteProduct = async (req, res, next) => {
   }
 };
 
+// select a product
+export const selectProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findOne(
+      {
+        _id: req.params.id
+      }
+    );
+    const result = { ...product._doc, imgPath: product.coverImagePath };
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
 // select product by category
 export const selectProductsByCategory = async (req, res, next) => {
   try {
@@ -37,7 +52,8 @@ export const selectProductsByCategory = async (req, res, next) => {
         category: req.params.id
       }
     );
-    res.status(200).json(products);
+    const result = getUrlImageForArrObject(products);
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
@@ -46,8 +62,9 @@ export const selectProductsByCategory = async (req, res, next) => {
 // select all products
 export const selectAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({})
-    res.status(200).json(products);
+    const products = await Product.find({});
+    const result = getUrlImageForArrObject(products);
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }
@@ -56,8 +73,17 @@ export const selectAllProducts = async (req, res, next) => {
 // create a new product
 export const createProduct = async (req, res, next) => {
   try {
-    const products = new Product(req.body);
-    await products.save();
+    const image = req.body.img;
+    const body = { ...req.body }
+    const product = new Product(body);
+
+    if (typeof req.body.img === 'string') {
+      saveSingleFile(product, image)
+    }
+    else
+      saveMultipleFile(product, image)
+
+    await product.save();
     res.status(200).send("Product has been created.");
   } catch (err) {
     next(err);
@@ -78,8 +104,6 @@ export const createProductImg = async (req, res, next) => {
         quantity: Number(req.body.quantity),
         brand: req.body.brand,
         description: req.body.description,
-
-
       });
       if (typeof req.body.img === 'string') {
         saveSingleFile(newProduct, img)

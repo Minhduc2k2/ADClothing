@@ -4,8 +4,7 @@ export function saveSingleFile(doc, coverEncoded) {
     if (coverEncoded == null) return
 
     var img = [];
-    const cover = JSON.parse(coverEncoded)
-    console.log("COVER>DTAT", cover.data.split('/')[0]);
+    const cover = JSON.parse(coverEncoded);
     if (cover != null && imageMimeTypes.includes(cover.type)) {
         var data = {
             coverImage: new Buffer.from(cover.data, 'base64'),

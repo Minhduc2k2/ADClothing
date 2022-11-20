@@ -5,6 +5,8 @@ import Header from "./components/Header/Header";
 import HomePage from "./pages/HomePage/HomePage";
 import ShopPage from "./pages/ShopPage/ShopPage";
 import ProductPage from "./pages/ProductPage/ProductPage";
+import Image from "./pages/Image/image.js";
+import Show from "./pages/Image/Show.js";
 import CartPage from "./pages/CartPage/CartPage";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import SigninPage from "./pages/SigninupPage/SigninPage";
@@ -17,6 +19,8 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/i" element={<Image />} />
+          <Route path="/s" element={<Show />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/product" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
