@@ -2,9 +2,13 @@ import { Link } from "react-router-dom";
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useState } from "react";
 import "./SigninupPage.css";
+import Google from "../../img/google.png";
 function SigninPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const google = () => {
+    window.open("http://localhost:8800/auth/google", "_self");
+  };
   return (
     <div>
       <Container className="signinup-container">
@@ -45,6 +49,10 @@ function SigninPage() {
                 <button type="button" class="login-with-google-btn">
                   Sign in with Google
                 </button>
+                <div className="loginButton google" onClick={google}>
+                  <img src={Google} alt="" className="icon" />
+                  Google
+                </div>
               </div>
             </Form>
           </Card.Body>

@@ -11,12 +11,39 @@ import CartPage from "./pages/CartPage/CartPage";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import SigninPage from "./pages/SigninupPage/SigninPage";
 import SignupPage from "./pages/SigninupPage/SignupPage";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const getUser = () => {
+      fetch("http://localhost:8800/auth/login/success", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) return response.json();
+          throw new Error("authentication has been failed!");
+        })
+        .then((resObject) => {
+          setUser(resObject.user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
   return (
     <BrowserRouter>
       <div className="App">
-        <Header />
+        <Header user={user} />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/i" element={<Image />} />

@@ -21,6 +21,10 @@ const checkoutSchema = new mongoose.Schema(
       required: [true, "Checkout must has a deliveryAddress"],
     },
     //price of all items = quantity * price of a product
+    quantity: {
+      type: Number,
+      default: 1
+    },
     price: {
       type: Number,
       required: true
