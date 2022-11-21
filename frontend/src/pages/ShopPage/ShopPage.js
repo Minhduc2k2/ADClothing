@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Col, Row, Form, Pagination, Button } from "react-bootstrap";
+import { useRef } from "react";
+import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
 import Products from "../../components/Products/Products";
 import "./ShopPage.css";
 
@@ -13,7 +13,7 @@ for (let number = 1; number <= 5; number++) {
   );
 }
 function ShopPage() {
-  const [url, setUrl] = useState("/products/");
+  const url = useRef("/products/");
   return (
     <div className="shop-container">
       <div className="shop-header">

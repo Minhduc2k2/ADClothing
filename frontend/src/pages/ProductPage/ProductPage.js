@@ -1,17 +1,25 @@
 import axios from "./../../hooks/axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Products from "../../components/Products/Products";
 import Rating from "./../../components/Rating/Rating";
 import "./ProductPage.css";
 import Star from "../../components/Star/Star";
+import Reviews from "../../components/Reviews/Review";
+import { Store } from "./../../Store";
+import { toast } from "react-toastify";
 function ProductPage() {
+  const { state } = useContext(Store);
+  const { userInfo } = state;
+
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [amount, setAmount] = useState(1);
-  const [url, setUrl] = useState("/products/");
+  const url = useRef("/products/");
   const [indexImg, setIndexImg] = useState(0);
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`/products/${id}`);
@@ -22,6 +30,25 @@ function ProductPage() {
 
   const handleChooseImg = (i) => {
     setIndexImg(i);
+  };
+
+  const handleAddReview = async () => {
+    try {
+      console.log(userInfo);
+      console.log("User: " + userInfo._id);
+      console.log("Product: " + product._id);
+      console.log("Review: " + review);
+      console.log("Rating: " + rating);
+      await axios.post("/reviews", {
+        user: userInfo._id,
+        product: product._id,
+        review,
+        rating,
+      });
+      toast.success("Review added successfully");
+    } catch (err) {
+      toast.error("Review added failed");
+    }
   };
   return (
     product && (
@@ -139,52 +166,25 @@ function ProductPage() {
         <Row className="mt-5">
           <Col md={8}>
             <h4>Feature Reviews</h4>
-            <div className="product-review-container">
-              <div className="product-review-content">
-                <img src="assets/images/avater-1.jpg" alt="avatar" />
-                <div>
-                  <Rating rating={5} caption={" "} />
-                  <div className="d-flex justify-content-between">
-                    <span className="product-review-name">Nguyen Van An</span>
-                    <span className="product-review-date">June 23, 2019</span>
-                  </div>
-                  <p className="product-review-detail">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ipsum suscipit consequuntur in, perspiciatis laudantium ipsa
-                    fugit. Iure esse saepe error dolore quod.
-                  </p>
-                </div>
-              </div>
-              <div className="product-review-content">
-                <img src="assets/images/avater-1.jpg" alt="avatar" />
-                <div>
-                  <Rating rating={5} caption={" "} />
-                  <div className="d-flex justify-content-between">
-                    <span className="product-review-name">Nguyen Van An</span>
-                    <span className="product-review-date">June 23, 2019</span>
-                  </div>
-                  <p className="product-review-detail">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ipsum suscipit consequuntur in, perspiciatis laudantium ipsa
-                    fugit. Iure esse saepe error dolore quod.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <Reviews limit={2} id={product._id} />
             <Link to={`/reviews/${product._id}`}>
-              <Button variant="dark">
+              <Button variant="dark" className="mt-3">
                 See All Reviews <i class="fa-solid fa-right-long"></i>
               </Button>
             </Link>
           </Col>
           <Col md={4}>
             <h4>Add a Review</h4>
-            <Star />
+            <Star setRating={setRating} />
             <textarea
               placeholder="Text your review here"
               className="product-review-textarea"
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
             />
-            <Button variant="dark">Add</Button>
+            <Button variant="dark" onClick={handleAddReview}>
+              Add
+            </Button>
           </Col>
         </Row>
         <div className="new-arr">

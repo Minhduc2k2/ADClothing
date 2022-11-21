@@ -13,22 +13,30 @@ function Products({ cat, filters, sort, limit, url }) {
       try {
         const res = await axios.get(url);
         setProducts(res.data);
-        console.log("Products: " + products);
       } catch (err) {
         console.log(err);
       }
     };
     getProducts();
-  }, []);
+  }, [url]);
 
   return (
-    <div className="product-container">
-      {products &&
+    <div
+      className="product-container"
+      //! Trường hợp getProduct By id
+      style={{ justifyContent: !Array.isArray(products) && "center" }}
+    >
+      {products && Array.isArray(products) ? (
+        //! Trường hợp getAllProducts
         products
           .slice(0, limit)
           .map((product) => (
             <Product product={product} key={product._id}></Product>
-          ))}
+          ))
+      ) : (
+        //! Trường hợp getProduct By id
+        <Product product={products} key={products._id}></Product>
+      )}
     </div>
   );
 }

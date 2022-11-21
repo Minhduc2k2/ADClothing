@@ -138,6 +138,9 @@
   display: flex;
   align-items: center;
 }
+.product-container .product-review-text {
+  width: 100%;
+}
 .product-container .product-review-content img {
   margin-right: 24px;
   height: 120px;

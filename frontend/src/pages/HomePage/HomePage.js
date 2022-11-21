@@ -1,11 +1,11 @@
 import { Col, Row } from "react-bootstrap";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Slider from "../../components/Slider/Slider";
 import Categories from "../../components/Categories/Categories";
 import Products from "../../components/Products/Products";
 import "./HomePage.css";
 function HomePage() {
-  const [url, setUrl] = useState("/products/");
+  const url = useRef("/products/");
   return (
     <div className="home-container">
       <Slider />
