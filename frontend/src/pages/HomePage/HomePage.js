@@ -1,11 +1,11 @@
 import { Col, Row } from "react-bootstrap";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Slider from "../../components/Slider/Slider";
 import Categories from "../../components/Categories/Categories";
 import Products from "../../components/Products/Products";
 import "./HomePage.css";
 function HomePage() {
-  const [url, setUrl] = useState("/products/");
+  const url = useRef("/products/");
   return (
     <div className="home-container">
       <Slider />
@@ -16,7 +16,7 @@ function HomePage() {
         <p>The best Online sales to shop these weekend</p>
       </div>
 
-      <Products limit={10} url={url} />
+      <Products limit={10} url={url.current} />
       <Row className="d-flex justify-content-between row-info">
         <Col md={3} className="d-flex justify-content-center col-info">
           <i class="fa-solid fa-truck-fast"></i>
