@@ -1,6 +1,10 @@
 import "./Header.css";
 import { Link } from "react-router-dom";
-function Header() {
+
+function Header({ user }) {
+  const logout = () => {
+    window.open("http://localhost:8800/auth/logout", "_self");
+  };
   return (
     <div className="header">
       <Link to="/" className="no-decor">
@@ -17,6 +21,26 @@ function Header() {
           <div>About Us</div>
         </Link>
       </div>
+      {user ? (
+        <div>
+          <ul className="list">
+            <li className="listItem">
+              <img
+                src={user.avatar}
+                alt=""
+                className="avatar"
+              />
+            </li>
+            <li className="listItem">{user.name}</li>
+            <li className="listItem" onClick={logout}>
+              Logout
+            </li>
+          </ul>
+        </div>
+      ) : (
+        <Link className="link" to="signin">
+          Login
+        </Link>)}
       <div>Some Icon</div>
     </div>
   );

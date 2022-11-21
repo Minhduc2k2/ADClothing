@@ -8,6 +8,26 @@
 .header-info {
   display: flex;
 }
+
 .header-info div {
   margin: 0 20px;
+}
+
+.listItem {
+  margin-right: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }
