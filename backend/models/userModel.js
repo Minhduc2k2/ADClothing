@@ -31,7 +31,6 @@ const userSchema = new mongoose.Schema(
     },
     address: [String],
     // TODO: xem lai img cho nay, co nen de hay xoa
-    photo: { type: String, default: "default.jpg" },
     username: {
       type: String,
       required: true,

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 import { saveSingleFile, saveMultipleFile, saveFileObj } from "../utils/saveFile.js";
+import { getUrlImageObj } from "../utils/getUrlImage.js";
 
 export const getUser = (req, res, next) => {
   const token = req.cookies.access_token;
@@ -62,12 +63,13 @@ export const login = async (req, res, next) => {
       { id: user._id, isAdmin: user.isAdmin },
       process.env.JWT
     );
-    const { password, ...otherDetails } = user._doc;
+    const { password, img, ...otherDetails } = user._doc;
     // set cookie token for backend
+    const imgPath = getUrlImageObj(img);
     res
       .cookie("access_token", token)
       .status(200)
-      .json({ details: { ...otherDetails } });
+      .json({ ...otherDetails, imgPath: imgPath });
   } catch (err) {
     next(err);
   }
