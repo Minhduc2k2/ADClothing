@@ -191,7 +191,7 @@ function ProductPage() {
           <h2>You May Like This</h2>
           <p>The best Online sales to shop these weekend</p>
         </div>
-        <Products limit={4} url={url} />
+        <Products limit={4} url={url.current} />
       </div>
     )
   );

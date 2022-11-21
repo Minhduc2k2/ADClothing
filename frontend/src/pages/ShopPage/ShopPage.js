@@ -51,7 +51,7 @@ function ShopPage() {
               <option value="desc">Sort by price: high to low</option>
             </Form.Select>
           </div>
-          <Products limit={6} url={url} />
+          <Products limit={6} url={url.current} />
           <Pagination className="shop-pagination">{items}</Pagination>
         </Col>
         <Col md={3}>

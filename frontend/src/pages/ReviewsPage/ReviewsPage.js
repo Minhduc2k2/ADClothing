@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Products from "../../components/Products/Products";
@@ -6,8 +6,10 @@ import Reviews from "../../components/Reviews/Review";
 import "./ReviewsPage.css";
 function ReviewsPage() {
   const { id } = useParams();
-  const url = useRef(`products/${id}`);
-
+  const [url, setUrl] = useState("");
+  useEffect(() => {
+    setUrl(`products/${id}`);
+  }, [id]);
   return (
     <div className="reviews-container">
       <div className="shop-header">

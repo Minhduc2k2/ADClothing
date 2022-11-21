@@ -16,7 +16,7 @@ function HomePage() {
         <p>The best Online sales to shop these weekend</p>
       </div>
 
-      <Products limit={10} url={url} />
+      <Products limit={10} url={url.current} />
       <Row className="d-flex justify-content-between row-info">
         <Col md={3} className="d-flex justify-content-center col-info">
           <i class="fa-solid fa-truck-fast"></i>
