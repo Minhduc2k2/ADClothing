@@ -10,23 +10,25 @@ import Reviews from "../../components/Reviews/Review";
 import { Store } from "./../../Store";
 import { toast } from "react-toastify";
 function ProductPage() {
-  const { state } = useContext(Store);
-  const { userInfo } = state;
+  const { state, contextDispatch } = useContext(Store);
+  const { cart, userInfo } = state;
 
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [amount, setAmount] = useState(1);
+  const [sizeProduct, setSizeProduct] = useState("");
   const url = useRef("/products/");
   const [indexImg, setIndexImg] = useState(0);
-  const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`/products/${id}`);
       setProduct(data);
     };
     fetchData();
-  }, [id, product]);
+  }, [id]);
 
   const handleChooseImg = (i) => {
     setIndexImg(i);
@@ -34,21 +36,28 @@ function ProductPage() {
 
   const handleAddReview = async () => {
     try {
-      console.log(userInfo);
-      console.log("User: " + userInfo._id);
-      console.log("Product: " + product._id);
-      console.log("Review: " + review);
-      console.log("Rating: " + rating);
       await axios.post("/reviews", {
         user: userInfo._id,
         product: product._id,
         review,
         rating,
       });
+      setReview("");
+      setRating(0);
       toast.success("Review added successfully");
     } catch (err) {
       toast.error("Review added failed");
     }
+  };
+  const handleAddtoCart = async () => {
+    const existItem = cart.cartItems.find(
+      (item) => item._id === product._id && item.size === sizeProduct
+    );
+    const quantity = existItem ? existItem.quantity + amount : amount;
+    contextDispatch({
+      type: "CART_ADD_ITEM",
+      payload: { ...product, quantity, sizeProduct },
+    });
   };
   return (
     product && (
@@ -132,12 +141,18 @@ function ProductPage() {
               </div>
               <div className="size-filter">
                 <span>Size</span>
-                <select name="size">
-                  <option value="xs">XS</option>
-                  <option value="xs">S</option>
-                  <option value="xs">M</option>
-                  <option value="xs">L</option>
-                  <option value="xs">XL</option>
+                <select
+                  name="size"
+                  value={sizeProduct}
+                  onChange={(e) => setSizeProduct(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Choose Size
+                  </option>
+                  <option value="s">S</option>
+                  <option value="m">M</option>
+                  <option value="l">L</option>
+                  <option value="xl">XL</option>
                 </select>
               </div>
             </div>
@@ -159,7 +174,9 @@ function ProductPage() {
                   <i class="fa-solid fa-plus"></i>
                 </div>
               </div>
-              <button className="addBtn">ADD TO CART</button>
+              <button className="addBtn" onClick={handleAddtoCart}>
+                ADD TO CART
+              </button>
             </div>
           </Col>
         </Row>
@@ -180,6 +197,7 @@ function ProductPage() {
               placeholder="Text your review here"
               className="product-review-textarea"
               value={review}
+              required
               onChange={(e) => setReview(e.target.value)}
             />
             <Button variant="dark" onClick={handleAddReview}>
