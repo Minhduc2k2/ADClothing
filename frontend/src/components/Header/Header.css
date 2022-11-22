@@ -8,10 +8,12 @@
 .header-info {
   display: flex;
 }
+
 .header-info div {
   margin: 0 20px;
 }
 
+<<<<<<< HEAD
 .header .header-right {
   display: flex;
   align-items: center;
@@ -20,3 +22,23 @@
 .header .header-search {
   margin-right: 8px;
 }
+=======
+.listItem {
+  margin-right: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+>>>>>>> d672d03ba4fc2a5b48069e074c9157e011121619

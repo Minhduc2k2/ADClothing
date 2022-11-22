@@ -1,4 +1,5 @@
 import Review from "../models/reviewModel.js";
+import Product from "../models/productModel.js";
 import { getUrlImageObj } from "../utils/getUrlImage.js";
 
 // select all reviews by product id
@@ -15,12 +16,10 @@ export const selectAllReviewByProductId = async (req, res, next) => {
         let i = 0;
         for (i; i < review.length; i++) {
             const { user, ...others } = review[i]._doc;
-            //console.log("🚀 ~ file: reviewController.js ~ line 16 ~ selectAllReviewByProductId ~ user", user)
             const imgPath = getUrlImageObj(user.img);
             const result = { ...others, name: user.name, imgPath: imgPath };
             rs.push(result)
         }
-        //console.log("🚀 ~ file: reviewController.js ~ line 10 ~ selectAllReviewByProductId ~ review", review)
 
         res.status(200).json(rs);
     } catch (error) {
@@ -59,6 +58,21 @@ export const createReview = async (req, res, next) => {
     try {
         const review = new Review(req.body);
         await review.save();
+        const rating = Number(req.body.rating);
+        const product = await Product.findOne({ _id: req.body.product });
+
+        const ratingQuantity = product.ratingQuantity + 1;
+        const ratingAverage = (product.ratingAverage * product.ratingQuantity + rating) / ratingQuantity;
+
+        await Product.findByIdAndUpdate(
+            req.body.product,
+            {
+                $set: {
+                    ratingQuantity: ratingQuantity,
+                    ratingAverage: ratingAverage
+                }
+            }
+        )
         res.status(200).json("Review has been created.")
     } catch (error) {
         next(error);

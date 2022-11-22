@@ -12,17 +12,17 @@ const userSchema = new mongoose.Schema(
     img: {
       coverImage: {
         type: Buffer,
-        required: true
+        default: ""
+        //required: true
       },
       coverImageType: {
         type: String,
-        required: true
+        default: ""
+        //required: true
       },
     },
-    email: {
+    avatar: {
       type: String,
-      //required: [true, "User must have a email"],
-      //unique: true,
     },
     phoneNumber: {
       type: String,
@@ -30,16 +30,20 @@ const userSchema = new mongoose.Schema(
       //unique: true,
     },
     address: [String],
-    // TODO: xem lai img cho nay, co nen de hay xoa
-    username: {
+    // username: {
+    //   type: String,
+    //   required: true,
+    //   minLength: [6, "A user name must have more or equal than 6 characters"],
+    //   unique: true,
+    // },
+    email: {
       type: String,
-      required: true,
-      minLength: [6, "A user name must have more or equal than 6 characters"],
-      unique: true,
+      //required: [true, "User must have a email"],
+      //unique: true,
     },
     password: {
       type: String,
-      required: [true, "User must have a password"],
+      //required: [true, "User must have a password"],
       minLength: [
         6,
         "A user password must have more or equal than 6 characters",

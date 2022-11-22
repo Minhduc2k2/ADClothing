@@ -9,10 +9,14 @@ import categoriesRoute from "./routes/categories.js";
 import reviewRoute from "./routes/reviews.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import cookieSession from "cookie-session";
+import authGG from "./routes/authGG.js"
+import setUpGG from "./passport.js";
+import passport from "passport";
 import { urlencoded, json } from "express";
 // import mongoosePatchUpdate from "mongoose-patch-update";
 import cors from "cors";
-
+setUpGG();
 const app = express();
 dotenv.config();
 
@@ -43,12 +47,28 @@ app.use(
     extended: true,
   })
 );
-app.use(cors({ credentials: true, origin: true }));
-
+//app.use(cors({ credentials: true, origin: true }));
 app.options("*", cors({ credentials: true, origin: true }));
 app.use(cookieParser());
 app.use(express.json());
+// =============== Authen
+app.use(
+  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+);
 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+// ====================================================
+
+
+app.use("/auth", authGG);
 app.use("/backend/auth", authRoute);
 app.use("/backend/users", usersRoute);
 app.use("/backend/products", productsRoute);
