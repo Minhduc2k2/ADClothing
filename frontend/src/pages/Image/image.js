@@ -20,11 +20,11 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
 // Register the plugins
 registerPlugin(
-  FilePondPluginFileValidateSize,
-  FilePondPluginImageValidateSize,
-  FilePondPluginFileEncode,
-  FilePondPluginImagePreview,
-  FilePondPluginImageResize
+    FilePondPluginFileValidateSize,
+    FilePondPluginImageValidateSize,
+    FilePondPluginFileEncode,
+    FilePondPluginImagePreview,
+    FilePondPluginImageResize
 );
 
 const Image = () => {
@@ -33,7 +33,7 @@ const Image = () => {
         <div class="dienthoai">
             <form action="http://localhost:8800/backend/auth/register" method="post">
                 <input type="text" name="name" />
-                <input type="text" name="username" />
+                <input type="text" name="email" />
                 <input type="text" name="password" />
                 <FilePond
                     files={files}
@@ -48,7 +48,7 @@ const Image = () => {
                 {/* <input type="file" name="cover" class="book-cover filepond" multiple></input> */}
                 <input type="submit" value="Buy" />
             </form>
-            <form action="http://localhost:8800/backend/products" method="post">
+            {/* <form action="http://localhost:8800/backend/products" method="post">
                 <input type="text" name="name" />
                 <input type="text" name="price" />
                 <input type="text" name="description" />
@@ -63,9 +63,8 @@ const Image = () => {
                     labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
 
                 />
-                {/* <input type="file" name="cover" class="book-cover filepond" multiple></input> */}
                 <input type="submit" value="Buy" />
-            </form>
+            </form> */}
         </div>
     );
 };

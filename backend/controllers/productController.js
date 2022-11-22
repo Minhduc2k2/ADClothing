@@ -6,7 +6,8 @@ import { getUrlImageArr, getUrlImageForArrObject } from "../utils/getUrlImage.js
 // update product by id
 export const updateProduct = async (req, res, next) => {
   try {
-    const body = req.body;
+    const img = req.body.img;
+    const body = { ...req.body, img: img };
     const update = await Product.findOneAndUpdate(
       { _id: req.params.id },
       { $set: body },
@@ -90,34 +91,4 @@ export const createProduct = async (req, res, next) => {
   }
 }
 
-// TODO: save image
-export const createProductImg = async (req, res, next) => {
-  try {
 
-    const img = req.body.img;
-
-    try {
-      const newProduct = new Product({
-
-        name: req.body.name,
-        shop: req.body.shop,
-        quantity: Number(req.body.quantity),
-        brand: req.body.brand,
-        description: req.body.description,
-      });
-      if (typeof req.body.img === 'string') {
-        saveSingleFile(newProduct, img)
-      }
-      else
-        saveMultipleFile(newProduct, img)
-
-      await newProduct.save();
-      res.status(200).send("Product has been created.");
-    } catch (err) {
-      next(err);
-    }
-  }
-  catch (err) {
-    next(err)
-  }
-}

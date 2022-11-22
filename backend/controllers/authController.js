@@ -2,18 +2,19 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
-import { saveSingleFile, saveMultipleFile, saveFileObj } from "../utils/saveFile.js";
+import { saveFileObj } from "../utils/saveFile.js";
 import { getUrlImageObj } from "../utils/getUrlImage.js";
+import { generateCode } from "../utils/generatePassword.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
-export const getUser = (req, res, next) => {
-  const token = req.cookies.access_token;
-  if (!token) {
-    return next(createError(401, "You are not authenticated!"));
+export const sendCodeVerify = async (req, res, next) => {
+  try {
+    const code = String(await generateCode(6));
+    await sendEmail(req.body.email, "Your code", code);
+    res.status(200).json({ code });
+  } catch (error) {
+    next(error);
   }
-  jwt.verify(token, process.env.JWT, (err, user) => {
-    if (err) return next(createError(403, "Token is not valid!"));
-    res.json((user));
-  })
 };
 
 // create a new user
@@ -28,15 +29,7 @@ export const register = async (req, res, next) => {
       ...req.body,
       password: hash,
     });
-    saveFileObj(newUser, image);
-    // if (typeof req.body.img === 'string') {
-    //   console.log("STRING");
-    //   saveSingleFile(newUser, image)
-    // }
-    // else {
-    //   console.log("ARRAYY");
-    //   saveMultipleFile(newUser, image)
-    // }
+    await saveFileObj(newUser, image);
     await newUser.save();
     res.status(200).send("User has been created.");
   } catch (err) {
@@ -47,7 +40,7 @@ export const register = async (req, res, next) => {
 // login to set token
 export const login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ email: req.body.email });
     if (!user) return next(createError(404, "User not found!"));
 
     // compare password in mongoose vs frontend
@@ -56,7 +49,7 @@ export const login = async (req, res, next) => {
       user.password
     );
     if (!isPasswordCorrect)
-      return next(createError(400, "Wrong password or username!"));
+      return next(createError(400, "Wrong password or email!"));
 
     // create a new token for backend
     const token = jwt.sign(
@@ -74,3 +67,7 @@ export const login = async (req, res, next) => {
     next(err);
   }
 }
+
+
+
+

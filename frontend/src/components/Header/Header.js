@@ -6,6 +6,7 @@ function Header({ user }) {
   const logout = () => {
     window.open("http://localhost:8800/auth/logout", "_self");
   };
+
   return (
     <div className="header">
       <Link to="/" className="no-decor">
@@ -41,7 +42,11 @@ function Header({ user }) {
         <div>
           <ul className="list">
             <li className="listItem">
-              <img src={user.avatar} alt="" className="avatar" />
+              <img
+                src={user.imgPath}
+                alt=""
+                className="avatar"
+              />
             </li>
             <li className="listItem">{user.name}</li>
             <li className="listItem" onClick={logout}>
