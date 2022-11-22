@@ -1,5 +1,8 @@
 .cart-container {
 }
+.cart-container .cart-content {
+  padding: 40px;
+}
 .cart-container .product-img {
   width: 100px;
 }

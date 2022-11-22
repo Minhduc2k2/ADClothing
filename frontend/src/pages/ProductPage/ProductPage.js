@@ -50,13 +50,18 @@ function ProductPage() {
     }
   };
   const handleAddtoCart = async () => {
-    const existItem = cart.cartItems.find(
-      (item) => item._id === product._id && item.size === sizeProduct
+    let existItem = cart.cartItems.find(
+      (item) => item._id === product._id && item.sizeProduct === sizeProduct
     );
     const quantity = existItem ? existItem.quantity + amount : amount;
     contextDispatch({
       type: "CART_ADD_ITEM",
-      payload: { ...product, quantity, sizeProduct },
+      payload: {
+        _id: product._id,
+        price: product.price,
+        quantity,
+        sizeProduct,
+      },
     });
   };
   return (
@@ -149,10 +154,10 @@ function ProductPage() {
                   <option value="" disabled>
                     Choose Size
                   </option>
-                  <option value="s">S</option>
-                  <option value="m">M</option>
-                  <option value="l">L</option>
-                  <option value="xl">XL</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
                 </select>
               </div>
             </div>

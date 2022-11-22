@@ -9,11 +9,11 @@ const categorySchema = new mongoose.Schema(
     },
     quantity: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
 //export const nameCategory =  mongoose.model('categoryname', categorySchema.category);
-export default mongoose.model('Category', categorySchema);
+export default mongoose.model("Category", categorySchema);

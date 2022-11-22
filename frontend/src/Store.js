@@ -23,21 +23,35 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "CART_ADD_ITEM": {
       const newItem = action.payload;
-      const existItem = state.cart.cartItems.find(
+      let existItem = state.cart.cartItems.find(
         (item) =>
           item._id === newItem._id && item.sizeProduct === newItem.sizeProduct
       );
-      const cartItems =
-        existItem && existItem.sizeProduct === newItem.sizeProduct
-          ? state.cart.cartItems.map((item) =>
-              item._id === newItem._id &&
-              existItem.sizeProduct === newItem.sizeProduct
-                ? newItem
-                : item
-            )
-          : [...state.cart.cartItems, newItem];
+      // if (existItem) {
+      //   if (existItem.sizeProduct !== newItem.sizeProduct) existItem = null;
+      // }
+      const cartItems = existItem
+        ? state.cart.cartItems.map((item) =>
+            item._id === newItem._id && item.sizeProduct === newItem.sizeProduct
+              ? newItem
+              : item
+          )
+        : [...state.cart.cartItems, newItem];
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
+    }
+    //? Chỉ lấy các sản phẩm khác id với id của product cần xóa và sản phẩm cùng id và khác size với product cần xóa
+    case "CART_REMOVE_ITEM": {
+      const removeItem = action.payload;
+      console.log(removeItem);
+      const cartItems = state.cart.cartItems.filter(
+        (item) =>
+          item._id !== removeItem._id ||
+          (item._id === removeItem._id &&
+            item.sizeProduct !== removeItem.sizeProduct)
+      );
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      return { ...state, cart: { ...state.cart, cartItems: cartItems } };
     }
     case "USER_SIGNIN": {
       return {

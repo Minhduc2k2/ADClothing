@@ -1,19 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Card, Container, Form } from "react-bootstrap";
 import { useContext, useState } from "react";
+import { Button, Card, Container, Form } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Store } from "../../Store";
 import axios from "./../../hooks/axios";
 import "./SigninupPage.css";
-import Google from "../../img/google.png";
 function SigninPage() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   const google = () => {
     window.open("http://localhost:8800/auth/google", "_self");
-
-
+  };
   const { contextDispatch } = useContext(Store);
 
   const navigate = useNavigate();
@@ -36,7 +34,6 @@ function SigninPage() {
       console.log(err.message);
       toast.error("Invalid username or password");
     }
-
   };
   return (
     <div>
@@ -79,13 +76,13 @@ function SigninPage() {
 
               <div className="signinup-footer">
                 <div className="mt-1 mb-1">OR</div>
-                <button type="button" class="login-with-google-btn">
+                <button
+                  type="button"
+                  class="login-with-google-btn"
+                  onClick={google}
+                >
                   Sign in with Google
                 </button>
-                <div className="loginButton google" onClick={google}>
-                  <img src={Google} alt="" className="icon" />
-                  Google
-                </div>
               </div>
             </Form>
           </Card.Body>
