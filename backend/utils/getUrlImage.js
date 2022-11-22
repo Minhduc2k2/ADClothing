@@ -1,10 +1,9 @@
 
 export const getUrlImageObj = (img) => {
     let rs;
-    if (img.coverImage != null && img.coverImageType != null) {
+    if (img.coverImage != null && img.coverImageType != "") {
         rs = (`data:${img.coverImageType};charset=utf-8;base64,${img.coverImage.toString('base64')}`)
     }
-
     return rs;
 }
 

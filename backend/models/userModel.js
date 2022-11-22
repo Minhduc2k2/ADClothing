@@ -10,16 +10,19 @@ const userSchema = new mongoose.Schema(
       minLength: [5, "A user name must have more or equal than 5 characters"],
     },
     img: {
-      coverImage: {
-        type: Buffer,
-        default: ""
-        //required: true
+      type: {
+        coverImage: {
+          type: Buffer,
+          default: ""
+          //required: true
+        },
+        coverImageType: {
+          type: String,
+          default: ""
+          //required: true
+        },
       },
-      coverImageType: {
-        type: String,
-        default: ""
-        //required: true
-      },
+      default: null
     },
     avatar: {
       type: String,
@@ -63,7 +66,8 @@ const userSchema = new mongoose.Schema(
 );
 userSchema.virtual('coverImagePath').get(function () {
   let rs;
-  if (this.img.coverImage != null && this.img.coverImageType != null) {
+  // NOTE: img luon o truoc, xet tu ben ngoai vao trong
+  if (this.img != null && this.img.coverImage != null && this.img.coverImageType != null) {
     rs = `data:${this.img.coverImageType};charset=utf-8;base64,${this.img.coverImage.toString('base64')}`
   }
   return rs;

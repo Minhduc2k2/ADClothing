@@ -1,11 +1,13 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import { getImg } from "../utils/saveFile.js"
 
 
 // update user
 export const updateUser = async (req, res, next) => {
   try {
-    const body = { ...req.body };
+    const image = getImg(req.body.img);
+    const body = { ...req.body, img: image };
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       { $set: body },
