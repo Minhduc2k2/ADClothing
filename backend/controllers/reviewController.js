@@ -10,13 +10,16 @@ export const selectAllReviewByProductId = async (req, res, next) => {
         )
             .populate({
                 path: "user",
-                select: "name img"
+                select: "name img avatar",
             })
         let rs = [];
         let i = 0;
         for (i; i < review.length; i++) {
             const { user, ...others } = review[i]._doc;
-            const imgPath = getUrlImageObj(user.img);
+            let imgPath = getUrlImageObj(user.img);
+            if (!imgPath) {
+                imgPath = user.avatar;
+            }
             const result = { ...others, name: user.name, imgPath: imgPath };
             rs.push(result)
         }

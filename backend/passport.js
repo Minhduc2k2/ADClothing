@@ -1,11 +1,14 @@
 import gg from "passport-google-oauth20";
-
+import dotenv from "dotenv";
 import passport from "passport";
+
+dotenv.config();
+
 export default function setUpGG() {
   const GoogleStrategy = gg.Strategy;
   const GOOGLE_CLIENT_ID =
-    "582123381617-mta9p99llc8u7p1f57h22hm92s0us7bb.apps.googleusercontent.com";
-  const GOOGLE_CLIENT_SECRET = "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";
+    process.env.GOOGLE_CLIENT_ID;
+  const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
 
   passport.use(
