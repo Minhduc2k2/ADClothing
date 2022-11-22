@@ -11,7 +11,12 @@ const MESSAGES = {
   5: "We're awesome!",
 };
 
-function Star({ value = 0, messages = MESSAGES, onClickStar = () => {} }) {
+function Star({
+  value = 0,
+  messages = MESSAGES,
+  onClickStar = () => {},
+  setRating,
+}) {
   const [selected, setSelected] = useState(value);
   const [starHovered, setStarHovered] = useState(0);
 
@@ -31,10 +36,12 @@ function Star({ value = 0, messages = MESSAGES, onClickStar = () => {} }) {
               onClick={() => {
                 onClickStar(star);
                 setSelected(star);
+                setRating(star);
               }}
               onMouseOver={() => setStarHovered(star)}
               onMouseOut={() => setStarHovered(0)}
               className={applyClasses(star)}
+              key={star}
             ></i>
           );
         })}

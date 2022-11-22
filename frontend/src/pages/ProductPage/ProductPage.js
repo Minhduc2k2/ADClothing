@@ -1,27 +1,63 @@
 import axios from "./../../hooks/axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Products from "../../components/Products/Products";
 import Rating from "./../../components/Rating/Rating";
 import "./ProductPage.css";
 import Star from "../../components/Star/Star";
+import Reviews from "../../components/Reviews/Review";
+import { Store } from "./../../Store";
+import { toast } from "react-toastify";
 function ProductPage() {
+  const { state, contextDispatch } = useContext(Store);
+  const { cart, userInfo } = state;
+
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [amount, setAmount] = useState(1);
-  const [url, setUrl] = useState("/products/");
+  const [sizeProduct, setSizeProduct] = useState("");
+  const url = useRef("/products/");
   const [indexImg, setIndexImg] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`/products/${id}`);
       setProduct(data);
     };
     fetchData();
-  }, [id, product]);
+  }, [id]);
 
   const handleChooseImg = (i) => {
     setIndexImg(i);
+  };
+
+  const handleAddReview = async () => {
+    try {
+      await axios.post("/reviews", {
+        user: userInfo._id,
+        product: product._id,
+        review,
+        rating,
+      });
+      setReview("");
+      setRating(0);
+      toast.success("Review added successfully");
+    } catch (err) {
+      toast.error("Review added failed");
+    }
+  };
+  const handleAddtoCart = async () => {
+    const existItem = cart.cartItems.find(
+      (item) => item._id === product._id && item.size === sizeProduct
+    );
+    const quantity = existItem ? existItem.quantity + amount : amount;
+    contextDispatch({
+      type: "CART_ADD_ITEM",
+      payload: { ...product, quantity, sizeProduct },
+    });
   };
   return (
     product && (
@@ -105,12 +141,18 @@ function ProductPage() {
               </div>
               <div className="size-filter">
                 <span>Size</span>
-                <select name="size">
-                  <option value="xs">XS</option>
-                  <option value="xs">S</option>
-                  <option value="xs">M</option>
-                  <option value="xs">L</option>
-                  <option value="xs">XL</option>
+                <select
+                  name="size"
+                  value={sizeProduct}
+                  onChange={(e) => setSizeProduct(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Choose Size
+                  </option>
+                  <option value="s">S</option>
+                  <option value="m">M</option>
+                  <option value="l">L</option>
+                  <option value="xl">XL</option>
                 </select>
               </div>
             </div>
@@ -132,66 +174,42 @@ function ProductPage() {
                   <i class="fa-solid fa-plus"></i>
                 </div>
               </div>
-              <button className="addBtn">ADD TO CART</button>
+              <button className="addBtn" onClick={handleAddtoCart}>
+                ADD TO CART
+              </button>
             </div>
           </Col>
         </Row>
         <Row className="mt-5">
           <Col md={8}>
             <h4>Feature Reviews</h4>
-            <div className="product-review-container">
-              <div className="product-review-content">
-                <img src="assets/images/avater-1.jpg" alt="avatar" />
-                <div>
-                  <Rating rating={5} caption={" "} />
-                  <div className="d-flex justify-content-between">
-                    <span className="product-review-name">Nguyen Van An</span>
-                    <span className="product-review-date">June 23, 2019</span>
-                  </div>
-                  <p className="product-review-detail">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ipsum suscipit consequuntur in, perspiciatis laudantium ipsa
-                    fugit. Iure esse saepe error dolore quod.
-                  </p>
-                </div>
-              </div>
-              <div className="product-review-content">
-                <img src="assets/images/avater-1.jpg" alt="avatar" />
-                <div>
-                  <Rating rating={5} caption={" "} />
-                  <div className="d-flex justify-content-between">
-                    <span className="product-review-name">Nguyen Van An</span>
-                    <span className="product-review-date">June 23, 2019</span>
-                  </div>
-                  <p className="product-review-detail">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ipsum suscipit consequuntur in, perspiciatis laudantium ipsa
-                    fugit. Iure esse saepe error dolore quod.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <Reviews limit={2} id={product._id} />
             <Link to={`/reviews/${product._id}`}>
-              <Button variant="dark">
+              <Button variant="dark" className="mt-3">
                 See All Reviews <i class="fa-solid fa-right-long"></i>
               </Button>
             </Link>
           </Col>
           <Col md={4}>
             <h4>Add a Review</h4>
-            <Star />
+            <Star setRating={setRating} />
             <textarea
               placeholder="Text your review here"
               className="product-review-textarea"
+              value={review}
+              required
+              onChange={(e) => setReview(e.target.value)}
             />
-            <Button variant="dark">Add</Button>
+            <Button variant="dark" onClick={handleAddReview}>
+              Add
+            </Button>
           </Col>
         </Row>
         <div className="new-arr">
           <h2>You May Like This</h2>
           <p>The best Online sales to shop these weekend</p>
         </div>
-        <Products limit={4} url={url} />
+        <Products limit={4} url={url.current} />
       </div>
     )
   );

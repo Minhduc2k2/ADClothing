@@ -4,13 +4,13 @@ import "./Categories.css";
 function CategoryItem({ item }) {
   return (
     <div className={"item"}>
-      <Link to={`/products/${item.cat}`}>
-        <img className={"img"} src={item.img} alt="category" />
-        <div className={"info"}>
-          <p className={"title"}>{item.title}</p>
+      <img className={"img"} src={item.img} alt="category" />
+      <div className={"info"}>
+        <p className={"title"}>{item.title}</p>
+        <Link to="/shop">
           <button className={"buy-btn"}>Buy Now</button>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </div>
   );
 }

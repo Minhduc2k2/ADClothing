@@ -1,13 +1,42 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, Container, Form } from "react-bootstrap";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { toast } from "react-toastify";
+import { Store } from "../../Store";
+import axios from "./../../hooks/axios";
 import "./SigninupPage.css";
 import Google from "../../img/google.png";
 function SigninPage() {
-  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+
   const google = () => {
     window.open("http://localhost:8800/auth/google", "_self");
+
+
+  const { contextDispatch } = useContext(Store);
+
+  const navigate = useNavigate();
+
+  const submithandler = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post("/auth/login", {
+        username: userName,
+        password: password,
+      });
+      contextDispatch({
+        type: "USER_SIGNIN",
+        payload: data,
+      });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      toast.success("Success Sign in");
+      navigate("/");
+    } catch (err) {
+      console.log(err.message);
+      toast.error("Invalid username or password");
+    }
+
   };
   return (
     <div>
@@ -21,15 +50,15 @@ function SigninPage() {
                 <Link to="/signup"> Create a free account</Link>
               </p>
             </div>
-            <Form>
+            <Form onSubmit={submithandler}>
               <Form.Group
                 className="mb-3"
-                controlId="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                controlId="userName"
+                onChange={(e) => setUserName(e.target.value)}
+                value={userName}
               >
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="email" required />
+                <Form.Label>User Name</Form.Label>
+                <Form.Control required />
               </Form.Group>
               <Form.Group
                 className="mb-3"
@@ -40,7 +69,11 @@ function SigninPage() {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" required />
               </Form.Group>
-              <Button variant="dark" type="submit" className="signinup-button">
+              <Button
+                variant="dark"
+                type="submit"
+                className="signinup-button mt-3"
+              >
                 Sign In
               </Button>
 

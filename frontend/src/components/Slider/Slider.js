@@ -1,6 +1,7 @@
 import { sliderItems } from "../../data";
 import { useState } from "react";
 import "./Slider.css";
+import { Link } from "react-router-dom";
 
 function Slider() {
   const [sliderNumber, setSliderNumber] = useState(0);
@@ -41,7 +42,9 @@ function Slider() {
             <div className={"info-container"}>
               <h1 className={"title"}>{sliderItem.title}</h1>
               <p className={"desc"}>{sliderItem.desc}</p>
-              <button className={"button"}>BUY NOW</button>
+              <Link to="/shop">
+                <button className={"button"}>BUY NOW</button>
+              </Link>
             </div>
           </div>
         ))}
