@@ -5,11 +5,11 @@
   justify-content: space-between;
 }
 
-.header-info {
+.header .header-info {
   display: flex;
 }
 
-.header-info div {
+.header .header-info div {
   margin: 0 20px;
 }
 
@@ -21,21 +21,31 @@
 .header .header-search {
   margin-right: 8px;
 }
-.listItem {
+.header .listItem {
   margin-right: 20px;
   font-weight: 500;
   cursor: pointer;
 }
 
-.list {
+.header .list {
   display: flex;
   align-items: center;
   list-style: none;
 }
 
-.avatar {
+.header .avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.header .cart-container {
+  position: relative;
+}
+.header .badge-notification {
+  top: -6px;
+  position: absolute;
+  font-size: 8px;
+  left: 75%;
 }

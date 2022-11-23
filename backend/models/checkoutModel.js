@@ -2,61 +2,48 @@ import mongoose from "mongoose";
 
 const checkoutSchema = new mongoose.Schema(
   {
-    product: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Product",
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      required: true,
+    productItems: [
+      {
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        quantity: { type: Number, required: true },
+        sizeProduct: { type: String, required: true },
+        _id: {
+          type: mongoose.Schema.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+      },
+    ],
+    deliveryAddress: {
+      fullName: { type: String, required: true },
+      phoneNumber: { type: String, required: true },
+      email: { type: String, required: true },
+      province: { type: String, required: true },
+      distinct: { type: String, required: true },
+      ward: { type: String, required: true },
+      address: { type: String, required: true },
+      note: { type: String },
     },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      required: [true, "Checkout must be done by a user"],
+      // required: [true, "Checkout must be done by a user"],
     },
-    deliveryAddress: {
-      type: String,
-      required: [true, "Checkout must has a deliveryAddress"],
-    },
-    //price of all items = quantity * price of a product
-    quantity: {
-      type: Number,
-      default: 1
-    },
-    price: {
-      type: Number,
-      required: true
-    },
-    shipCost: {
+    shippingCost: {
       type: Number,
       default: 0,
     },
-    // TODO: sua lai required total cost
     totalCost: {
       type: Number,
-      //required: [true, "Checkout must has the totalCost"],
+      required: [true, "Checkout must has the totalCost"],
     },
-    // TODO: có nên xóa status ?
-    // status: {
-    //   type: String,
-    //   enum: ["Awaiting confirmation", "Delivering", "Received"],
-    //   required: true,
-    //   default: "Awaiting confirmation"
-    // }
+    paymentMethod: { type: String, enum: ["Paypal", "COD"], required: true },
+    isPaid: { type: Boolean, default: false },
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   }
 );
 
-// TODO: pre save có nên dùng không?
-checkoutSchema.pre("save", function (next) {
-  this.totalCost = this.price * this.quantity + this.shipCost;
-  next();
-});
 export default mongoose.model("Checkout", checkoutSchema);
-

@@ -1,4 +1,4 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose, { mongo } from "mongoose";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -27,9 +27,6 @@ const reviewSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   }
 );
 export default mongoose.model("Review", reviewSchema);
-

@@ -1,9 +1,8 @@
 const imageMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
-
 // return a data img json
 export function getImg(coverEncoded) {
-  if (coverEncoded == null) return
+  if (coverEncoded == null) return;
 
   var data = getDataForImage(coverEncoded);
 
@@ -12,7 +11,7 @@ export function getImg(coverEncoded) {
 
 // save an image json
 export function saveFileObj(doc, coverEncoded) {
-  if (coverEncoded == null) return
+  if (coverEncoded == null) return;
   var data = getDataForImage(coverEncoded);
   doc.img = data;
 }
@@ -28,10 +27,10 @@ export function saveSingleFile(doc, coverEncoded) {
 
 // save an Array of images
 export function saveMultipleFile(doc, coverEncoded) {
-  if (coverEncoded == null) return
+  if (coverEncoded == null) return;
   var i = 0;
   var img = [];
-  var data = {}
+  var data = {};
   for (i = 0; i < coverEncoded.length; i++) {
     var data = getDataForImage(coverEncoded[i]);
     img.push(data);
@@ -45,9 +44,9 @@ function getDataForImage(coverEncoded) {
   var data;
   if (cover != null && imageMimeTypes.includes(cover.type)) {
     data = {
-      coverImage: new Buffer.from(cover.data, 'base64'),
-      coverImageType: cover.type
-    }
+      coverImage: new Buffer.from(cover.data, "base64"),
+      coverImageType: cover.type,
+    };
   }
   return data;
 }

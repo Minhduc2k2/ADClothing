@@ -58,6 +58,7 @@ function ProductPage() {
       type: "CART_ADD_ITEM",
       payload: {
         _id: product._id,
+        name: product.name,
         price: product.price,
         quantity,
         sizeProduct,

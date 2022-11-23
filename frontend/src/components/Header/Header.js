@@ -1,8 +1,14 @@
-import "./Header.css";
 import { Link } from "react-router-dom";
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Badge, Button, Form, InputGroup } from "react-bootstrap";
+import { useContext } from "react";
+import { Store } from "./../../Store";
+import "./Header.css";
 
 function Header({ user }) {
+  const { state } = useContext(Store);
+  const {
+    cart: { cartItems },
+  } = state;
   const logout = () => {
     window.open("http://localhost:8800/auth/logout", "_self");
   };
@@ -35,18 +41,25 @@ function Header({ user }) {
           </Button>
         </InputGroup>
         <Link to="/cart" className="no-decor">
-          <i class="fa-solid fa-cart-shopping"></i>
+          <div className="cart-container">
+            <i class="fa-solid fa-cart-shopping"></i>
+            {cartItems.length > 0 && (
+              <Badge pill bg="danger" className="badge-notification">
+                {cartItems.reduce(
+                  (accumulate, currentValue) =>
+                    accumulate + currentValue.quantity,
+                  0
+                )}
+              </Badge>
+            )}
+          </div>
         </Link>
       </div>
       {user ? (
         <div>
           <ul className="list">
             <li className="listItem">
-              <img
-                src={user.imgPath}
-                alt=""
-                className="avatar"
-              />
+              <img src={user.imgPath} alt="" className="avatar" />
             </li>
             <li className="listItem">{user.name}</li>
             <li className="listItem" onClick={logout}>

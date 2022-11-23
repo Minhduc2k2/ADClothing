@@ -47,7 +47,12 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <ToastContainer position="bottom-center" limit={1} />
+        <ToastContainer
+          position="bottom-center"
+          limit={1}
+          autoClose={2000}
+          pauseOnHover={false}
+        />
         <Header user={user} />
         <Routes>
           <Route path="/" element={<HomePage />} />
