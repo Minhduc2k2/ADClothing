@@ -1,12 +1,139 @@
 import { Link } from "react-router-dom";
-import { Button, Card, Container, Form } from "react-bootstrap";
-import { useState } from "react";
+import { Button, Card, Container, Form, Spinner, Col, Row, } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { useState, useEffect, useRef } from "react";
 import "./SigninupPage.css";
+import axios from "../../hooks/axios.js";
+
 function SignupPage() {
-  const [userName, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [codeVerify, setCodeVerify] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const [set, setCode] = useState("");
+  const code = useRef();
+  const sleep = ms => new Promise(
+    resolve => setTimeout(resolve, ms)
+  );
+  const handleClick = async () => {
+    if (!email) {
+      toast.warn('Please enter your email information', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    if (await isExistedUser(email)) {
+      toast.warn(`Existed user ${email}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    setLoading(true);
+  };
+  const handleSignUp = async () => {
+    if (!checkTextBox()) {
+      toast.warn('Please complete all information', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    console.log('Sign Up: ', code.current, codeVerify)
+    if (code.current !== codeVerify) { //code.current !== codeVerify
+      toast.error('Wrong verify code', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    else if (password !== passwordConfirm) {
+      toast.error('Wrong password confirm', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    const user = { email, password, name };
+    const msg = registerNewUser(user);
+    // TODO: format code toast and navigate to home after register new user
+    toast.success(msg, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  }
+  useEffect(() => {
+    async function sendCode() {
+      if (isLoading) {
+        await sleep(1000);
+        const { data } = await axios.post("/auth/code", { email: email });
+        code.current = data.code;
+        await sleep(1000);
+        setLoading(false);
+      }
+    }
+    sendCode();
+  }, [isLoading]);
+  function checkTextBox() {
+    if (name && password && passwordConfirm && email && codeVerify) {
+      return true;
+    }
+    return false;
+  }
+  async function isExistedUser(email) {
+    const user = await axios.get(`/users/email/${email}`)
+    if (user.data === null) {
+      return false;
+    }
+    return true;
+  }
+  async function registerNewUser(user) {
+    try {
+      const result = await axios.post("/auth/register", user);
+      return result;
+    } catch (error) {
+
+    }
+  }
   return (
     <div>
       <Container className="signinup-container">
@@ -21,12 +148,13 @@ function SignupPage() {
             <Form>
               <Form.Group
                 className="mb-3"
-                controlId="userName"
-                onChange={(e) => setUserName(e.target.value)}
-                value={userName}
+                controlId="name"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
               >
-                <Form.Label>User Name</Form.Label>
+                <Form.Label>Name</Form.Label>
                 <Form.Control type="text" required />
+
               </Form.Group>
               <Form.Group
                 className="mb-3"
@@ -36,7 +164,29 @@ function SignupPage() {
               >
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" required />
+
               </Form.Group>
+              <Form.Group as={Row} className="mb-3"
+                controlId="codeVerify"
+                onChange={(e) => setCodeVerify(e.target.value)}
+                value={codeVerify}>
+
+                {isLoading ? (<Col><Spinner animation="border" variant="info" /></Col>) :
+                  (<Col><Button
+                    variant="primary"
+                    disabled={isLoading}
+                    onClick={!isLoading ? handleClick : null}
+                  >
+                    {isLoading ? 'Loading…' : 'Send code'}
+                  </Button></Col>)}
+
+                <Col sm="9">
+                  <Form.Label>Code</Form.Label>
+                  <Form.Control type="text" placeholder="Code" />
+                </Col>
+
+              </Form.Group>
+
               <Form.Group
                 className="mb-3"
                 controlId="password"
@@ -55,7 +205,9 @@ function SignupPage() {
                 <Form.Label>Password Confirm</Form.Label>
                 <Form.Control type="password" required />
               </Form.Group>
-              <Button variant="dark" type="submit" className="signinup-button">
+              <Button variant="dark"
+                className="signinup-button"
+                onClick={handleSignUp}>
                 Sign Up
               </Button>
 

@@ -3,7 +3,7 @@ import { register, login, sendCodeVerify } from "../controllers/authController.j
 const router = express.Router();
 
 // send code to user's email address
-router.get("/code", sendCodeVerify);
+router.post("/code", sendCodeVerify);
 
 // register a new user
 router.post("/register", register);

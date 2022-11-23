@@ -12,6 +12,7 @@ function CartPage() {
   //   cart: { cartItems },
   // } = state;
   const [cartItems, setCartItems] = useState(state.cart.cartItems);
+  console.log("INITTTT", cartItems)
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ function CartPage() {
     try {
       contextDispatch({ type: "CART_REMOVE_ITEM", payload: product });
       setCartItems(JSON.parse(localStorage.getItem("cartItems")));
+      console.log("🚀 ~ file: CartPage.js ~ line 36 ~ handleDeleteProduct ~ ", JSON.parse(localStorage.getItem("cartItems")))
       toast.success("Delete product successfully");
     } catch (err) {
       toast.error(err.message);

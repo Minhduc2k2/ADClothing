@@ -56,6 +56,16 @@ export const selectUser = async (req, res, next) => {
   }
 };
 
+// select a user by user id
+export const selectUserByEmail = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+    res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
 // select all users
 export const selectAllUsers = async (req, res, next) => {
   try {
