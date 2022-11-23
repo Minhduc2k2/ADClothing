@@ -1,9 +1,14 @@
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { Button, Form, InputGroup } from "react-bootstrap";
-
+import Cookies from 'js-cookie';
+import { AuthContext } from "../../context/AuthContext.js"
+import { useContext } from 'react';
 function Header({ user }) {
-  const logout = () => {
+  const { dispatch } = useContext(AuthContext);
+  const logout = async () => {
+    await dispatch({ type: "LOGOUT" })
+    Cookies.remove('userInfo');
     window.open("http://localhost:8800/auth/logout", "_self");
   };
 
@@ -46,6 +51,7 @@ function Header({ user }) {
                 src={user.imgPath}
                 alt=""
                 className="avatar"
+                referrerpolicy="no-referrer"
               />
             </li>
             <li className="listItem">{user.name}</li>

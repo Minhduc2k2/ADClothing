@@ -58,7 +58,12 @@ export const login = async (req, res, next) => {
     );
     const { password, img, ...otherDetails } = user._doc;
     // set cookie token for backend
-    const imgPath = getUrlImageObj(img);
+    let imgPath;
+    if (user.img === null)
+      imgPath = user.avatar;
+    else
+      imgPath = getUrlImageObj(img);
+    //res.cookie("access_token")
     res
       .cookie("access_token", token)
       .status(200)

@@ -9,14 +9,16 @@ const CLIENT_URL = "http://localhost:3000/";
 
 
 router.get("/login/success", async (req, res) => {
-    const data = req.user
-    if (req.user) {
-        let oldUser = await User.findOne({ email: data.emails[0].value });
-        let imgPath = oldUser.coverImagePath;
-        if (oldUser.img == null)
-            imgPath = oldUser.avatar;
-        const result = { ...oldUser, imgPath: imgPath }
+    const data = req.user;
+    if (data) {
+        const oldUser = await User.findOne({ email: data.emails[0].value });
         if (oldUser !== null) {
+            var { password, img, ...userData } = oldUser._doc;
+
+            let imgPath = userData.coverImagePath;
+            if (img == null)
+                imgPath = userData.avatar;
+            const result = { ...userData, imgPath: imgPath }
             res.status(200).json({
                 success: true,
                 message: "successful",
@@ -26,7 +28,7 @@ router.get("/login/success", async (req, res) => {
         }
         // else is new user
         else {
-            const pwd = String(await generatePassword(10));
+            const pwd = String(await generatePassword(8));
 
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(pwd, salt);
@@ -38,8 +40,16 @@ router.get("/login/success", async (req, res) => {
                 password: hash,
             })
             await newUser.save();
-            await sendEmail(data.emails[0].value, "Your password", pwd);
-            res.status(200).json("created a new user")
+            const imgPath = newUser.avatar;
+            const { password, img, ...result } = { ...newUser._doc, imgPath: imgPath };
+            // no need to wait for hight speed
+            sendEmail(data.emails[0].value, "Your password", pwd);
+            res.status(200).json({
+                success: true,
+                message: "successful",
+                user: result,
+                //   cookies: req.cookies
+            })
         };
     }
 });
