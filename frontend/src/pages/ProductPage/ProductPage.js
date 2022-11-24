@@ -17,6 +17,7 @@ function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [amount, setAmount] = useState(1);
+  const [colorProduct, setColorProduct] = useState("");
   const [sizeProduct, setSizeProduct] = useState("");
   const url = useRef("/products/");
   const [indexImg, setIndexImg] = useState(0);
@@ -71,13 +72,14 @@ function ProductPage() {
   const handleChoiceColor = async (color) => {
     console.log(color);
     const indexImg = product.color.indexOf(color);
+    setColorProduct(color);
     setIndexImg(indexImg);
-  }
+  };
   return (
     product && (
       <div className="product-container">
-        <Row>
-          <Col md={5}>
+        <Row className="product-content">
+          <Col md={5} className="product-img-container">
             <div className="product-main-img-container">
               <div
                 className={"arrow-left"}
@@ -130,10 +132,22 @@ function ProductPage() {
             <div className="filter-container">
               <div className="color-filter">
                 <span>Color</span>
-                <ul className="color-list">
+                <div className="color-list">
                   {/* TODO: add key id */}
                   {product.color.map((color, index) => {
-                    return (<Button variant="primary" onClick={() => handleChoiceColor(color)}>{color}{index}</Button>)
+                    return (
+                      <button
+                        //{backgroundColor: {color === "blue" ? "#2196f3" : color === "red" ? "#c64747" : color === "black" ? "#282626" : color === "white" ?"#fff" : color==="yellow" ? "#e2df08" : color }
+                        style={{ backgroundColor: color }}
+                        onClick={() => handleChoiceColor(color)}
+                        className={`color-btn ${
+                          colorProduct === color ? "active" : null
+                        }`}
+                      >
+                        {/* {color}
+                        {index} */}
+                      </button>
+                    );
                   })}
                   {/* <li
                     className="color-item"
@@ -155,7 +169,7 @@ function ProductPage() {
                     className="color-item"
                     style={{ backgroundColor: "#e2df08" }}
                   /> */}
-                </ul>
+                </div>
               </div>
               <div className="size-filter">
                 <span>Size</span>
@@ -200,10 +214,14 @@ function ProductPage() {
             </div>
           </Col>
         </Row>
-        <Row className="mt-5">
+        <Row className="mt-5 review-container">
           <Col md={8}>
             <h4>Feature Reviews</h4>
-            <Reviews limit={2} id={product._id} />
+            <Reviews
+              limit={2}
+              id={product._id}
+              isReload={rating === 0 ? true : false}
+            />
             <Link to={`/reviews/${product._id}`}>
               <Button variant="dark" className="mt-3">
                 See All Reviews <i class="fa-solid fa-right-long"></i>
