@@ -68,6 +68,11 @@ function ProductPage() {
     });
     toast.success("Product has been added");
   };
+  const handleChoiceColor = async (color) => {
+    console.log(color);
+    const indexImg = product.color.indexOf(color);
+    setIndexImg(indexImg);
+  }
   return (
     product && (
       <div className="product-container">
@@ -126,7 +131,11 @@ function ProductPage() {
               <div className="color-filter">
                 <span>Color</span>
                 <ul className="color-list">
-                  <li
+                  {/* TODO: add key id */}
+                  {product.color.map((color, index) => {
+                    return (<Button variant="primary" onClick={() => handleChoiceColor(color)}>{color}{index}</Button>)
+                  })}
+                  {/* <li
                     className="color-item"
                     style={{ backgroundColor: "#2196f3" }}
                   />
@@ -145,7 +154,7 @@ function ProductPage() {
                   <li
                     className="color-item"
                     style={{ backgroundColor: "#e2df08" }}
-                  />
+                  /> */}
                 </ul>
               </div>
               <div className="size-filter">

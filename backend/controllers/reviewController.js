@@ -16,10 +16,11 @@ export const selectAllReviewByProductId = async (req, res, next) => {
         let i = 0;
         for (i; i < review.length; i++) {
             const { user, ...others } = review[i]._doc;
-            let imgPath = getUrlImageObj(user.img);
-            if (!imgPath) {
+            let imgPath;
+            if (user.img !== null)
+                imgPath = getUrlImageObj(user.img);
+            else
                 imgPath = user.avatar;
-            }
             const result = { ...others, name: user.name, imgPath: imgPath };
             rs.push(result)
         }
