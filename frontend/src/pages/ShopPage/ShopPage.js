@@ -12,8 +12,14 @@ for (let number = 1; number <= 5; number++) {
     </Pagination.Item>
   );
 }
+
 function ShopPage() {
   const url = useRef("/products/");
+  const handleChoiceFilter = async (e) => {
+    url.current = url.current + e.target.value;
+    console.log("🚀 ~ file: ShopPage.js ~ line 20 ~ handleChoiceFilter ~ url.current", url.current)
+
+  }
   return (
     <div className="shop-container">
       <div className="shop-header">
@@ -44,14 +50,15 @@ function ShopPage() {
             <Form.Select
               aria-label="Default select example"
               className="shop-sort"
+              onChange={handleChoiceFilter}
             >
               <option>Default Sorting</option>
               <option value="lastest">Sort by latest</option>
-              <option value="inc">Sort by price: low to high</option>
+              <option value="asc">Sort by price: low to high</option>
               <option value="desc">Sort by price: high to low</option>
             </Form.Select>
           </div>
-          <Products limit={6} url={url.current} />
+          <Products limit={10} url={url.current} />
           <Pagination className="shop-pagination">{items}</Pagination>
         </Col>
         <Col md={3}>

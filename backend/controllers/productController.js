@@ -3,6 +3,32 @@ import Product from "../models/productModel.js";
 import { saveSingleFile, saveMultipleFile } from "../utils/saveFile.js";
 import { getUrlImageArr, getUrlImageForArrObject } from "../utils/getUrlImage.js";
 
+// sort products by category and price
+export const selectProductsByCategoryAndSort = async (req, res, next) => {
+  try {
+    const products = await Product.find(
+      { category: req.params.id },
+      [],
+      { sort: { price: req.params.code } }
+    );
+    const result = getUrlImageForArrObject(products);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// sort all products by price
+export const selectAllProductsAndSort = async (req, res, next) => {
+  try {
+    const products = await Product.find({}, [], { sort: { price: req.params.code } });
+    const result = getUrlImageForArrObject(products);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
 // update product by id
 export const updateProduct = async (req, res, next) => {
   try {
