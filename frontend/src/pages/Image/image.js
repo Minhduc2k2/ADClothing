@@ -31,7 +31,7 @@ const Image = () => {
     const [files, setFiles] = useState([]);
     return (
         <div class="dienthoai">
-            <form action="http://localhost:8800/backend/auth/register" method="post">
+            {/* <form action="http://localhost:8800/backend/auth/register" method="post">
                 <input type="text" name="name" />
                 <input type="text" name="email" />
                 <input type="text" name="password" />
@@ -46,12 +46,13 @@ const Image = () => {
 
                 />
                 {/* <input type="file" name="cover" class="book-cover filepond" multiple></input> */}
-                <input type="submit" value="Buy" />
-            </form>
-            {/* <form action="http://localhost:8800/backend/products" method="post">
+            {/* <input type="submit" value="Buy" />
+        </form> * /} */}
+            <form form action="http://localhost:8800/backend/products" method="post" >
                 <input type="text" name="name" />
                 <input type="text" name="price" />
                 <input type="text" name="description" />
+
                 <FilePond
                     files={files}
                     onupdatefiles={setFiles}
@@ -64,8 +65,8 @@ const Image = () => {
 
                 />
                 <input type="submit" value="Buy" />
-            </form> */}
-        </div>
+            </form >
+        </div >
     );
 };
 export default Image;
