@@ -100,6 +100,11 @@
 }
 .product-container .size-filter {
   margin-left: 50%;
+  display: flex;
+  align-items: center;
+}
+.product-container .size-filter .size-select {
+  margin-left: 4px;
 }
 .product-container .count-container {
   display: flex;

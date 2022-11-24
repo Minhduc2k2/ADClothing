@@ -8,10 +8,9 @@ import "./CartPage.css";
 
 function CartPage() {
   const { state, contextDispatch } = useContext(Store);
-  // const {
-  //   cart: { cartItems },
-  // } = state;
-  const [cartItems, setCartItems] = useState(state.cart.cartItems);
+  const {
+    cart: { cartItems },
+  } = state;
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -31,8 +30,8 @@ function CartPage() {
 
   const handleDeleteProduct = (product) => {
     try {
+      setProducts([]);
       contextDispatch({ type: "CART_REMOVE_ITEM", payload: product });
-      setCartItems(JSON.parse(localStorage.getItem("cartItems")));
       toast.success("Delete product successfully");
     } catch (err) {
       toast.error(err.message);
@@ -83,8 +82,7 @@ function CartPage() {
                   </Col>
                 </Row>
               </ListGroup.Item>
-              {/* KHÔNG BIẾT TẠI SAO LẠI BỊ RENDER PRODUCTS 2 LẦN. TẠM THỜI CHỈ LẤY GIÁ TRỊ CỦA NỬA MẢNG */}
-              {products.slice(0, products.length / 2).map((product, index) => (
+              {products.map((product, index) => (
                 <ListGroup.Item key={index}>
                   <Row className="align-items-center">
                     <Col md={4}>

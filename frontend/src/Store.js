@@ -50,6 +50,19 @@ const reducer = (state, action) => {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems: cartItems } };
     }
+    case "CART_CLEAR": {
+      localStorage.removeItem("cartItems");
+      return { ...state, cart: { ...state.cart, cartItems: [] } };
+    }
+    case "SAVE_DELIVERY_ADDRESS": {
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          deliveryAddress: action.payload,
+        },
+      };
+    }
     case "USER_SIGNIN": {
       return {
         ...state,

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useLocation, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,15 +13,15 @@ import CartPage from "./pages/CartPage/CartPage";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import SigninPage from "./pages/SigninupPage/SigninPage";
 import SignupPage from "./pages/SigninupPage/SignupPage";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState, useContext } from "react";
 import ReviewsPage from "./pages/ReviewsPage/ReviewsPage";
+import Cookies from "js-cookie";
+import { AuthContext } from "./context/AuthContext.js";
 
 function App() {
-  const [user, setUser] = useState(null);
-
+  const { user, loading, error, dispatch } = useContext(AuthContext);
   useEffect(() => {
-    const getUser = () => {
+    const getUser = async () => {
       fetch("http://localhost:8800/auth/login/success", {
         method: "GET",
         credentials: "include",
@@ -36,39 +36,41 @@ function App() {
           throw new Error("authentication has been failed!");
         })
         .then((resObject) => {
-          setUser(resObject.user);
+          if (resObject.user !== null) {
+            Cookies.set("userInfo", JSON.stringify(resObject.user));
+            dispatch({ type: "LOGIN_SUCCESS", payload: resObject.user });
+          }
         })
         .catch((err) => {
+          dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
           console.log(err);
         });
     };
     getUser();
-  }, []);
+  }, [dispatch]);
   return (
-    <BrowserRouter>
-      <div className="App">
-        <ToastContainer
-          position="bottom-center"
-          limit={1}
-          autoClose={2000}
-          pauseOnHover={false}
-        />
-        <Header user={user} />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/i" element={<Image />} />
-          <Route path="/s" element={<Show />} />
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/reviews/:id" element={<ReviewsPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/signin" element={<SigninPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <div className="App">
+      <ToastContainer
+        position="bottom-center"
+        limit={1}
+        autoClose={2000}
+        pauseOnHover={false}
+      />
+      <Header user={user} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/i" element={<Image />} />
+        <Route path="/s" element={<Show />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/reviews/:id" element={<ReviewsPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/signin" element={<SigninPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+      </Routes>
+      <Footer />
+    </div>
   );
 }
 

@@ -6,16 +6,21 @@ import { Store } from "./../../Store";
 import axios from "./../../hooks/axios";
 import { default as axiosOriginal } from "axios";
 import "./CheckoutPage.css";
+import { AuthContext } from "../../context/AuthContext";
 function CheckoutPage() {
   const navigate = useNavigate();
-  const { state } = useContext(Store);
+  const { state, contextDispatch } = useContext(Store);
   const {
-    cart: { cartItems },
+    cart: { cartItems, deliveryAddress },
   } = state;
 
-  const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
+  const { user } = useContext(AuthContext);
+
+  const [fullName, setFullName] = useState(user.name || "");
+  const [phoneNumber, setPhoneNumber] = useState(
+    deliveryAddress.phoneNumber || ""
+  );
+  const [email, setEmail] = useState(user.email || "");
   const [provinceArray, setProvinceArray] = useState([]);
   const [distinctArray, setDistinctArray] = useState([]);
   const [wardArray, setWardArray] = useState([]);
@@ -104,15 +109,16 @@ function CheckoutPage() {
           address,
           note,
         },
-        // user: "123",
+        user: user._id,
         shippingCost,
         totalCost,
         paymentMethod,
         isPaid: false,
       });
-      localStorage.setItem(
-        "deliveryAddress",
-        JSON.stringify({
+
+      contextDispatch({
+        type: "SAVE_DELIVERY_ADDRESS",
+        payload: JSON.stringify({
           fullName,
           phoneNumber,
           email,
@@ -121,8 +127,10 @@ function CheckoutPage() {
           ward: wardText,
           address,
           note,
-        })
-      );
+        }),
+      });
+      contextDispatch({ type: "CART_CLEAR" });
+
       toast.success("Checkout Success");
       window.setTimeout(() => {
         navigate("/");
@@ -132,7 +140,10 @@ function CheckoutPage() {
       toast.error(err.message);
     }
   };
-  console.log(provinceText + " " + distinctText + " " + wardText);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <div className="checkout-container">
       <div className="shop-header">
@@ -153,10 +164,10 @@ function CheckoutPage() {
       </div>
       <h1>Checkout</h1>
 
-      <Row>
-        <Col md={8} className="checkout-details">
-          <h2>Billing Address</h2>
-          <Form>
+      <Form onSubmit={handleSubmit}>
+        <Row className="checkout-container">
+          <Col md={8} className="checkout-details">
+            <h2>Billing Address</h2>
             <Form.Group className="mb-3" controlId="fullName">
               <Form.Label>Full Name</Form.Label>
               <Form.Control
@@ -179,33 +190,9 @@ function CheckoutPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled
               />
             </Form.Group>
-            {/* <Form.Group className="mb-3" controlId="province">
-              <Form.Label>Province</Form.Label>
-              <Form.Control
-                value={province}
-                onChange={(e) => setProvince(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="distinct">
-              <Form.Label>Distinct</Form.Label>
-              <Form.Control
-                value={distinct}
-                onChange={(e) => setDistinct(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="ward">
-              <Form.Label>Ward</Form.Label>
-              <Form.Control
-                value={ward}
-                onChange={(e) => setWard(e.target.value)}
-                required
-              />
-            </Form.Group> */}
-
             <Form.Group className="mb-3" controlId="province">
               <Form.Label>Province</Form.Label>
               <Form.Select
@@ -288,58 +275,58 @@ function CheckoutPage() {
                 className="checkout-note"
               />
             </Form.Group>
-          </Form>
-        </Col>
-        <Col md={4}>
-          <Card className="checkout-summary">
-            <Card.Body>
-              <Card.Title>Order Summary</Card.Title>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  {cartItems.map((item, index) => (
-                    <Row key={index}>
-                      <Col>{`${item.name} - ${item.sizeProduct}`}</Col>
-                      <Col>{`${item.quantity} x $${item.price}`}</Col>
+          </Col>
+          <Col md={4}>
+            <Card className="checkout-summary">
+              <Card.Body>
+                <Card.Title>Order Summary</Card.Title>
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    {cartItems.map((item, index) => (
+                      <Row key={index}>
+                        <Col>{`${item.name} - ${item.sizeProduct}`}</Col>
+                        <Col>{`${item.quantity} x $${item.price}`}</Col>
+                      </Row>
+                    ))}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Shipping (Fixed)</Col>
+                      <Col>$2</Col>
                     </Row>
-                  ))}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Shipping (Fixed)</Col>
-                    <Col>$2</Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col>
-                      <strong>Order Total</strong>
-                    </Col>
-                    <Col>
-                      <strong>${totalCost}</strong>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <div className="d-grid">
-                    <Button
-                      type="button"
-                      variant="dark"
-                      onClick={() => handleCheckout("COD")}
-                    >
-                      Check out by COD
-                    </Button>
-                  </div>
-                  <div className="d-grid mt-3">
-                    <Button type="button" variant="light">
-                      Check out by Paypal
-                    </Button>
-                  </div>
-                </ListGroup.Item>
-              </ListGroup>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>
+                        <strong>Order Total</strong>
+                      </Col>
+                      <Col>
+                        <strong>${totalCost}</strong>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <div className="d-grid">
+                      <Button
+                        type="submit"
+                        variant="dark"
+                        onClick={() => handleCheckout("COD")}
+                      >
+                        Check out by COD
+                      </Button>
+                    </div>
+                    <div className="d-grid mt-3">
+                      <Button type="button" variant="light">
+                        Check out by Paypal
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Form>
     </div>
   );
 }

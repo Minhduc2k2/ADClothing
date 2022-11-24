@@ -31,6 +31,7 @@
   display: flex;
   align-items: center;
   list-style: none;
+  margin-left: 24px;
 }
 
 .header .avatar {
@@ -48,4 +49,8 @@
   position: absolute;
   font-size: 8px;
   left: 75%;
+}
+
+.header .header-user a {
+  color: #000 !important;
 }

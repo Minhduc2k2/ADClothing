@@ -26,6 +26,7 @@ function ProductPage() {
     const fetchData = async () => {
       const { data } = await axios.get(`/products/${id}`);
       setProduct(data);
+      setSizeProduct(data.size[0]);
     };
     fetchData();
   }, [id]);
@@ -64,6 +65,7 @@ function ProductPage() {
         sizeProduct,
       },
     });
+    toast.success("Product has been added");
   };
   return (
     product && (
@@ -151,14 +153,16 @@ function ProductPage() {
                   name="size"
                   value={sizeProduct}
                   onChange={(e) => setSizeProduct(e.target.value)}
+                  className="size-select"
                 >
                   <option value="" disabled>
                     Choose Size
                   </option>
-                  <option value="S">S</option>
-                  <option value="M">M</option>
-                  <option value="L">L</option>
-                  <option value="XL">XL</option>
+                  {product.size.map((s) => (
+                    <option value={s} ket={s}>
+                      {s}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

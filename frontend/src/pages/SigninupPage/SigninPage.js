@@ -5,14 +5,18 @@ import { toast } from "react-toastify";
 import { Store } from "../../Store";
 import axios from "./../../hooks/axios";
 import "./SigninupPage.css";
+import Cookies from "js-cookie";
+import { AuthContext } from "../../context/AuthContext.js";
+
 function SigninPage() {
-  const [userName, setUserName] = useState("");
+  const { user, loading, error, dispatch } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const google = () => {
     window.open("http://localhost:8800/auth/google", "_self");
   };
-  const { contextDispatch } = useContext(Store);
+  // const { contextDispatch } = useContext(Store);
 
   const navigate = useNavigate();
 
@@ -20,16 +24,19 @@ function SigninPage() {
     e.preventDefault();
     try {
       const { data } = await axios.post("/auth/login", {
-        username: userName,
+        email: email,
         password: password,
       });
-      contextDispatch({
-        type: "USER_SIGNIN",
-        payload: data,
-      });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      // contextDispatch({
+      //   type: "USER_SIGNIN",
+      //   payload: data,
+      // });
+
       toast.success("Success Sign in");
-      navigate("/");
+      Cookies.set("userInfo", JSON.stringify(data));
+      dispatch({ type: "LOGIN_SUCCESS", payload: data });
+
+      navigate("/", { state: { user: data } });
     } catch (err) {
       console.log(err.message);
       toast.error("Invalid username or password");
@@ -51,10 +58,10 @@ function SigninPage() {
               <Form.Group
                 className="mb-3"
                 controlId="userName"
-                onChange={(e) => setUserName(e.target.value)}
-                value={userName}
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
               >
-                <Form.Label>User Name</Form.Label>
+                <Form.Label>Email</Form.Label>
                 <Form.Control required />
               </Form.Group>
               <Form.Group
