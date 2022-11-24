@@ -9,10 +9,11 @@ import Star from "../../components/Star/Star";
 import Reviews from "../../components/Reviews/Review";
 import { Store } from "./../../Store";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContext";
 function ProductPage() {
   const { state, contextDispatch } = useContext(Store);
   const { cart, userInfo } = state;
-
+  const { user } = useContext(AuthContext);
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [amount, setAmount] = useState(1);
@@ -38,7 +39,7 @@ function ProductPage() {
   const handleAddReview = async () => {
     try {
       await axios.post("/reviews", {
-        user: userInfo._id,
+        user: user._id,
         product: product._id,
         review,
         rating,
@@ -159,7 +160,7 @@ function ProductPage() {
                     Choose Size
                   </option>
                   {product.size.map((s) => (
-                    <option value={s} ket={s}>
+                    <option value={s} key={s}>
                       {s}
                     </option>
                   ))}
