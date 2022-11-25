@@ -1,18 +1,20 @@
-import axios from "./../../hooks/axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import Products from "../../components/Products/Products";
-import Rating from "./../../components/Rating/Rating";
-import "./ProductPage.css";
-import Star from "../../components/Star/Star";
-import Reviews from "../../components/Reviews/Review";
-import { Store } from "./../../Store";
 import { toast } from "react-toastify";
+import Products from "../../components/Products/Products";
+import Reviews from "../../components/Reviews/Review";
+import Star from "../../components/Star/Star";
 import { AuthContext } from "../../context/AuthContext";
+import Rating from "./../../components/Rating/Rating";
+import axios from "./../../hooks/axios";
+import { Store } from "./../../Store";
+import "./ProductPage.css";
 function ProductPage() {
   const { state, contextDispatch } = useContext(Store);
-  const { cart, userInfo } = state;
+  const {
+    cart: { indexItem, cartItems },
+  } = state;
   const { user } = useContext(AuthContext);
   const { id } = useParams();
   const [product, setProduct] = useState();
@@ -29,6 +31,7 @@ function ProductPage() {
       const { data } = await axios.get(`/products/${id}`);
       setProduct(data);
       setSizeProduct(data.size[0]);
+      setColorProduct(data.color[0]);
     };
     fetchData();
   }, [id]);
@@ -53,8 +56,11 @@ function ProductPage() {
     }
   };
   const handleAddtoCart = async () => {
-    let existItem = cart.cartItems.find(
-      (item) => item._id === product._id && item.sizeProduct === sizeProduct
+    let existItem = cartItems.find(
+      (item) =>
+        item._id === product._id &&
+        item.sizeProduct === sizeProduct &&
+        item.colorProduct === colorProduct
     );
     const quantity = existItem ? existItem.quantity + amount : amount;
     contextDispatch({
@@ -65,12 +71,16 @@ function ProductPage() {
         price: product.price,
         quantity,
         sizeProduct,
+        colorProduct,
+        indexItem,
       },
+    });
+    contextDispatch({
+      type: "ADD_INDEX",
     });
     toast.success("Product has been added");
   };
   const handleChoiceColor = async (color) => {
-    console.log(color);
     const indexImg = product.color.indexOf(color);
     setColorProduct(color);
     setIndexImg(indexImg);
@@ -128,7 +138,10 @@ function ProductPage() {
             <p className="name">{product.name}</p>
             <p className="description">{product.description}</p>
             <p className="price">${product.price}</p>
-            <Rating rating={5} numReviews={10} />
+            <Rating
+              rating={Math.round(product.ratingAverage)}
+              numReviews={product.ratingQuantity}
+            />
             <div className="filter-container">
               <div className="color-filter">
                 <span>Color</span>
@@ -143,32 +156,13 @@ function ProductPage() {
                         className={`color-btn ${
                           colorProduct === color ? "active" : null
                         }`}
+                        key={color}
                       >
                         {/* {color}
                         {index} */}
                       </button>
                     );
                   })}
-                  {/* <li
-                    className="color-item"
-                    style={{ backgroundColor: "#2196f3" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#c64747" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#282626" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#fff" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#e2df08" }}
-                  /> */}
                 </div>
               </div>
               <div className="size-filter">

@@ -4,25 +4,19 @@ import { Button } from "react-bootstrap";
 import axios from "../../hooks/axios";
 import "./CheckoutHistoryPage.css";
 import { AuthContext } from "../../context/AuthContext";
+import formatter from "../../hooks/formatter";
 function CheckoutHistoryPage() {
   const { user } = useContext(AuthContext);
   const [checkouts, setCheckouts] = useState([]);
   const navigate = useNavigate();
 
-  const formatter = new Intl.DateTimeFormat("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "2-digit",
-  });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`/checkouts/all/${user._id}`);
-        console.log(data);
         setCheckouts(data);
       } catch (err) {
-        console.error(err);
+        console.log(err.message);
       }
     };
     fetchData();

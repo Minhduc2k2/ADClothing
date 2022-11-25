@@ -13,11 +13,12 @@ import CartPage from "./pages/CartPage/CartPage";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import SigninPage from "./pages/SigninupPage/SigninPage";
 import SignupPage from "./pages/SigninupPage/SignupPage";
-import { useEffect, useState, useContext } from "react";
+import CheckoutHistoryPage from "./pages/CheckoutHistoryPage/CheckoutHistoryPage";
+import CheckoutDetailsPage from "./pages/CheckoutPage/CheckoutDetailsPage";
 import ReviewsPage from "./pages/ReviewsPage/ReviewsPage";
+import { useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "./context/AuthContext.js";
-import CheckoutHistoryPage from "./pages/CheckoutHistoryPage/CheckoutHistoryPage";
 
 function App() {
   const { user, loading, error, dispatch } = useContext(AuthContext);
@@ -67,6 +68,7 @@ function App() {
         <Route path="/reviews/:id" element={<ReviewsPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout/:id" element={<CheckoutDetailsPage />} />
         <Route path="/checkouthistory" element={<CheckoutHistoryPage />} />
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/signup" element={<SignupPage />} />

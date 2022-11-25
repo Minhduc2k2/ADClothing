@@ -13,16 +13,16 @@ const userSchema = new mongoose.Schema(
       type: {
         coverImage: {
           type: Buffer,
-          default: ""
+          default: "",
           //required: true
         },
         coverImageType: {
           type: String,
-          default: ""
+          default: "",
           //required: true
         },
       },
-      default: null
+      default: null,
     },
     avatar: {
       type: String,
@@ -64,12 +64,18 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-userSchema.virtual('coverImagePath').get(function () {
+userSchema.virtual("coverImagePath").get(function () {
   let rs;
   // NOTE: img luon o truoc, xet tu ben ngoai vao trong
-  if (this.img != null && this.img.coverImage != null && this.img.coverImageType != null) {
-    rs = `data:${this.img.coverImageType};charset=utf-8;base64,${this.img.coverImage.toString('base64')}`
+  if (
+    this.img != null &&
+    this.img.coverImage != null &&
+    this.img.coverImageType != null
+  ) {
+    rs = `data:${
+      this.img.coverImageType
+    };charset=utf-8;base64,${this.img.coverImage.toString("base64")}`;
   }
   return rs;
-})
+});
 export default mongoose.model("User", userSchema);

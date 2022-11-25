@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "./../../hooks/axios";
 import Rating from "../Rating/Rating";
+import formatter from "../../hooks/formatter";
+
 function Reviews({ id, limit, isReload }) {
   const [reviews, setReviews] = useState([]);
 
@@ -15,24 +17,21 @@ function Reviews({ id, limit, isReload }) {
   return (
     <div className="product-review-container">
       {reviews &&
-        reviews
-          .sort((a, b) => b.createdAt - a.createdAt)
-          .slice(0, limit)
-          .map((review) => (
-            <div className="product-review-content" key={review._id}>
-              <img src={review.imgPath} alt="avatar" />
-              <div className="product-review-text">
-                <Rating rating={review.rating} caption={" "} />
-                <div className="d-flex justify-content-between">
-                  <span className="product-review-name">{review.name}</span>
-                  <span className="product-review-date">
-                    {review.createdAt.slice(0, 10)}
-                  </span>
-                </div>
-                <p className="product-review-detail">{review.review}</p>
+        reviews.slice(0, limit).map((review) => (
+          <div className="product-review-content" key={review._id}>
+            <img src={review.imgPath} alt="avatar" />
+            <div className="product-review-text">
+              <Rating rating={review.rating} caption={" "} />
+              <div className="d-flex justify-content-between">
+                <span className="product-review-name">{review.name}</span>
+                <span className="product-review-date">
+                  {formatter.format(new Date(review.createdAt))}
+                </span>
               </div>
+              <p className="product-review-detail">{review.review}</p>
             </div>
-          ))}
+          </div>
+        ))}
     </div>
   );
 }

@@ -113,7 +113,7 @@ function CheckoutPage() {
         shippingCost,
         totalCost,
         paymentMethod,
-        isPaid: false,
+        isPaid: paymentMethod === "COD" && false,
       });
 
       contextDispatch({
@@ -130,6 +130,7 @@ function CheckoutPage() {
         }),
       });
       contextDispatch({ type: "CART_CLEAR" });
+      contextDispatch({ type: "REMOVE_INDEX" });
 
       toast.success("Checkout Success");
       window.setTimeout(() => {
@@ -284,7 +285,9 @@ function CheckoutPage() {
                   <ListGroup.Item>
                     {cartItems.map((item, index) => (
                       <Row key={index}>
-                        <Col>{`${item.name} - ${item.sizeProduct}`}</Col>
+                        <Col>{`${item.name} - ${
+                          item.sizeProduct
+                        } - ${item.colorProduct.toUpperCase()}`}</Col>
                         <Col>{`${item.quantity} x $${item.price}`}</Col>
                       </Row>
                     ))}
@@ -292,7 +295,7 @@ function CheckoutPage() {
                   <ListGroup.Item>
                     <Row>
                       <Col>Shipping (Fixed)</Col>
-                      <Col>$2</Col>
+                      <Col>${shippingCost}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item>
