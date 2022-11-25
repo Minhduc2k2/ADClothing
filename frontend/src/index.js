@@ -6,15 +6,18 @@ import reportWebVitals from "./reportWebVitals";
 import { StoreProvider } from "./Store";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext.js";
+import { PaginationContextProvider } from "./context/PaginationContext.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   //<React.StrictMode>
   <BrowserRouter>
     <AuthContextProvider>
-      <StoreProvider>
-        <App />
-      </StoreProvider>
+      <PaginationContextProvider>
+        <StoreProvider>
+          <App />
+        </StoreProvider>
+      </PaginationContextProvider>
     </AuthContextProvider>
   </BrowserRouter>
   //</React.StrictMode>

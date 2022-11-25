@@ -7,14 +7,17 @@ import {
   Nav,
   NavDropdown,
 } from "react-bootstrap";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext.js";
 import { Store } from "./../../Store";
 import "./Header.css";
-
+import axios from "../../hooks/axios.js";
+import { useNavigate } from "react-router-dom"
 function Header({ user }) {
+  const navigate = useNavigate();
   const { state } = useContext(Store);
+  const [textSearch, setTextSearch] = useState("");
   const {
     cart: { cartItems },
   } = state;
@@ -25,7 +28,22 @@ function Header({ user }) {
     Cookies.remove("userInfo");
     window.open("http://localhost:8800/auth/logout", "_self");
   };
-
+  const handleSearch = async (e) => {
+    try {
+      const input = String(textSearch).replaceAll(" ", "-");
+      let url;
+      if (input.trim() !== "") {
+        url = `/search/product?text=${input}`;
+        navigate("/shop", { state: { url } });
+      }
+      else {
+        navigate("/shop");
+      }
+      //const { data } = await axios.get(url);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="header">
       <Link to="/" className="no-decor">
@@ -48,8 +66,9 @@ function Header({ user }) {
             placeholder="Find any product"
             aria-label="Find any product"
             aria-describedby="basic-addon2"
+            onChange={e => setTextSearch(e.target.value)}
           />
-          <Button variant="outline-secondary" id="button-addon2">
+          <Button variant="outline-secondary" type="submit" id="button-addon2" onClick={handleSearch}>
             <i class="fa-solid fa-magnifying-glass"></i>
           </Button>
         </InputGroup>

@@ -7,6 +7,8 @@ import axios from "./../../hooks/axios";
 import { default as axiosOriginal } from "axios";
 import "./CheckoutPage.css";
 import { AuthContext } from "../../context/AuthContext";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 function CheckoutPage() {
   const navigate = useNavigate();
   const { state, contextDispatch } = useContext(Store);
@@ -95,6 +97,7 @@ function CheckoutPage() {
       fetchData();
     }
   }, [distinct]);
+
   const handleCheckout = async (paymentMethod) => {
     try {
       await axios.post("/checkouts", {
@@ -316,9 +319,38 @@ function CheckoutPage() {
                       </Button>
                     </div>
                     <div className="d-grid mt-3">
-                      <Button type="button" variant="light">
+                      {/* <Button type="button" variant="light">
                         Check out by Paypal
-                      </Button>
+                      </Button> */}
+                      <PayPalScriptProvider options={{ "client-id": "AZJXkD3NTX9_mMJ1o9JObSSM9GCYQmbY3kBXEE4-t36AC-YrNqyM_6Oy5VKrTK7Ilf-8uUaxy00z7kQb" }}>
+
+                        <PayPalButtons
+                          fundingSource="paypal"
+                          createOrder={(data, actions) => {
+
+                            return actions.order.create({
+                              purchase_units: [
+                                {
+                                  amount: {
+                                    value: `${totalCost}`,
+                                  }
+
+                                },
+                              ]
+                            });
+                          }}
+
+                          onApprove={(data, actions) => {
+                            return actions.order.capture().then((details) => {
+
+                              const name = details.payer.name.given_name;
+                              console.log("🚀 ~ file: CheckoutPage.js ~ line 347 ~ returnactions.order.capture ~ details.payer", details.payer)
+                              handleCheckout("Paypal");
+                              alert(`Transaction completed by ${name}`);
+                            });
+                          }}
+                        />
+                      </PayPalScriptProvider>
                     </div>
                   </ListGroup.Item>
                 </ListGroup>

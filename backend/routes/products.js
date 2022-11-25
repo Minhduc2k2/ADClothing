@@ -1,5 +1,5 @@
 import express from "express";
-import { updateProduct, deleteProduct, selectProductsByCategory, selectAllProducts, createProduct, selectProduct, selectAllProductsAndSort, selectProductsByCategoryAndSort } from "../controllers/productController.js";
+import { updateProduct, deleteProduct, selectProductsByCategory, selectAllProducts, createProduct, selectProduct, selectAllProductsAndSort, selectProductsByCategoryAndSort, searchProduct } from "../controllers/productController.js";
 import { verifyBuyer, verifyUser, verifyAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
@@ -14,10 +14,14 @@ router.get("/:id", selectProduct);
 router.get("/sort/:code", selectAllProductsAndSort);
 
 // select a product by category id
-router.get("/category/:id", selectProductsByCategory);
+router.get("/category/sort/:id/:code", selectProductsByCategoryAndSort);
 
 // select a product by category id
-router.get("/category/:id/sort/:code", selectProductsByCategoryAndSort);
+router.get("/category/:id", selectProductsByCategory);
+
+
+router.get("/search/:text", searchProduct);
+
 
 // create a new product
 router.post("/", createProduct);
