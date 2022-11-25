@@ -17,6 +17,7 @@ import { useEffect, useState, useContext } from "react";
 import ReviewsPage from "./pages/ReviewsPage/ReviewsPage";
 import Cookies from "js-cookie";
 import { AuthContext } from "./context/AuthContext.js";
+import CheckoutHistoryPage from "./pages/CheckoutHistoryPage/CheckoutHistoryPage";
 
 function App() {
   const { user, loading, error, dispatch } = useContext(AuthContext);
@@ -66,6 +67,7 @@ function App() {
         <Route path="/reviews/:id" element={<ReviewsPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkouthistory" element={<CheckoutHistoryPage />} />
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/signup" element={<SignupPage />} />
       </Routes>

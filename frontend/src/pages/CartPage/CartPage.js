@@ -56,8 +56,8 @@ function CartPage() {
           </p>
         </div>
       </div>
-      <h1>Cart</h1>
       <Row className="cart-content">
+        <h1>Cart</h1>
         <Col md={8} style={{ textAlign: cartItems.length === 0 && "center" }}>
           {cartItems.length === 0 ? (
             <img src="/assets/images/cart-empty.jpg" alt="Empty Cart" />

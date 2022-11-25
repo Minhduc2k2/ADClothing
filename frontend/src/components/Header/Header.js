@@ -78,7 +78,11 @@ function Header({ user }) {
               />
 
               <NavDropdown title={user.name} className="header-user">
-                <NavDropdown.Item>Order History</NavDropdown.Item>
+                <NavDropdown.Item>
+                  <Link to="/checkouthistory" className="no-decor">
+                    Checkout History
+                  </Link>
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
               </NavDropdown>
