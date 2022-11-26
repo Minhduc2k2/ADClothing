@@ -72,7 +72,7 @@ function ShopPage() {
     idCategory.current = "";
     if (location.state !== null) {
       if (filter !== "")
-        setUrlProduct(location.state.url + "&sort=" + filter);
+        setUrlProduct(location.state.url + "/sort/" + filter);
       else
         setUrlProduct(location.state.url)
     }
@@ -105,7 +105,7 @@ function ShopPage() {
     if (location.state !== null) {
       link = location.state.url;
       if (filter !== null)
-        link = link + "&sort=" + filter;
+        link = link + "/sort/" + filter;
     }
     // TH dùng thanh tìm kiếm có chữ = null
     else if (location.state === null) {
@@ -150,7 +150,7 @@ function ShopPage() {
               onChange={handleChoiceFilter}
             >
               <option value="">Default Sorting</option>
-              <option value="lastest">Sort by latest</option>
+              <option value="date/desc">Sort by latest</option>
               <option value="asc">Sort by price: low to high</option>
               <option value="desc">Sort by price: high to low</option>
             </Form.Select>

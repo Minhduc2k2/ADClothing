@@ -2,17 +2,25 @@ import User from "../models/userModel.js";
 import Product from "../models/productModel.js";
 import { saveSingleFile, saveMultipleFile } from "../utils/saveFile.js";
 import { getUrlImageArr, getUrlImageForArrObject } from "../utils/getUrlImage.js";
-import { getTextSearch } from "../utils/format.js";
 
 
-// search products by input = name + description
-export const searchProduct = async (req, res, next) => {
+
+// sort products by category and sort date
+export const selectProductsByCategoryAndSortDate = async (req, res, next) => {
   try {
-    const input = `"${await getTextSearch(req.query.text)}"`;
-    const sort = req.query.sort;
-    let products = await Product.find({ $text: { $search: input } })
-    if (sort !== "")
-      products = await Product.find({ $text: { $search: input } }, [], { sort: { price: sort } })//products.sort({ price: "asc" });
+    let products;
+    if (req.params.code !== "")
+      products = await Product.find(
+        { category: req.params.id },
+        [],
+        { sort: { createdAt: req.params.code } }
+      );
+    else {
+      products = await Product.find(
+        { category: req.params.id },
+        []
+      );
+    }
     const result = getUrlImageForArrObject(products);
     res.status(200).json(result);
   } catch (error) {
@@ -36,6 +44,17 @@ export const selectProductsByCategoryAndSort = async (req, res, next) => {
         []
       );
     }
+    const result = getUrlImageForArrObject(products);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// sort all products by date
+export const selectAllProductsAndSortDate = async (req, res, next) => {
+  try {
+    const products = await Product.find({}, [], { sort: { createdAt: req.params.code } });
     const result = getUrlImageForArrObject(products);
     res.status(200).json(result);
   } catch (error) {

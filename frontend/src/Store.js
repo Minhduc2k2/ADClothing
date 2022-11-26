@@ -4,6 +4,9 @@ export const Store = createContext();
 
 const initialState = {
   cart: {
+    indexItem: localStorage.getItem("indexItem")
+      ? JSON.parse(localStorage.getItem("indexItem"))
+      : 0,
     cartItems: localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
       : [],
@@ -22,14 +25,15 @@ const reducer = (state, action) => {
       const newItem = action.payload;
       let existItem = state.cart.cartItems.find(
         (item) =>
-          item._id === newItem._id && item.sizeProduct === newItem.sizeProduct
+          item._id === newItem._id &&
+          item.sizeProduct === newItem.sizeProduct &&
+          item.colorProduct === newItem.colorProduct
       );
-      // if (existItem) {
-      //   if (existItem.sizeProduct !== newItem.sizeProduct) existItem = null;
-      // }
       const cartItems = existItem
         ? state.cart.cartItems.map((item) =>
-            item._id === newItem._id && item.sizeProduct === newItem.sizeProduct
+            item._id === newItem._id &&
+            item.sizeProduct === newItem.sizeProduct &&
+            item.colorProduct === newItem.colorProduct
               ? newItem
               : item
           )
@@ -41,11 +45,14 @@ const reducer = (state, action) => {
     case "CART_REMOVE_ITEM": {
       const removeItem = action.payload;
       console.log(removeItem);
+      // const cartItems = state.cart.cartItems.filter(
+      //   (item) =>
+      //     item._id !== removeItem._id ||
+      //     (item._id === removeItem._id &&
+      //       item.sizeProduct !== removeItem.sizeProduct)
+      // );
       const cartItems = state.cart.cartItems.filter(
-        (item) =>
-          item._id !== removeItem._id ||
-          (item._id === removeItem._id &&
-            item.sizeProduct !== removeItem.sizeProduct)
+        (item) => item.indexItem !== removeItem.indexItem
       );
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems: cartItems } };
@@ -53,6 +60,27 @@ const reducer = (state, action) => {
     case "CART_CLEAR": {
       localStorage.removeItem("cartItems");
       return { ...state, cart: { ...state.cart, cartItems: [] } };
+    }
+    case "ADD_INDEX": {
+      const indexItem = state.cart.indexItem + 1;
+      localStorage.setItem("indexItem", JSON.stringify(indexItem));
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          indexItem,
+        },
+      };
+    }
+    case "REMOVE_INDEX": {
+      localStorage.removeItem("indexItem");
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          indexItem: 0,
+        },
+      };
     }
     case "SAVE_DELIVERY_ADDRESS": {
       return {

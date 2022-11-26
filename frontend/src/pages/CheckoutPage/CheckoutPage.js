@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Form, Col, Card, ListGroup, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -35,6 +35,7 @@ function CheckoutPage() {
   const [address, setAddress] = useState("");
   const [note, setNote] = useState("");
   const shippingCost = 2;
+  const info = useRef();
   const totalCost = useMemo(
     () =>
       cartItems.reduce(
@@ -100,7 +101,7 @@ function CheckoutPage() {
 
   const handleCheckout = async (paymentMethod) => {
     try {
-      await axios.post("/checkouts", {
+      const data = {
         productItems: cartItems,
         deliveryAddress: {
           fullName,
@@ -116,8 +117,9 @@ function CheckoutPage() {
         shippingCost,
         totalCost,
         paymentMethod,
-        isPaid: false,
-      });
+        isPaid: paymentMethod === "COD" ? false : true,
+      }
+      await axios.post("/checkouts", data);
 
       contextDispatch({
         type: "SAVE_DELIVERY_ADDRESS",
@@ -133,6 +135,7 @@ function CheckoutPage() {
         }),
       });
       contextDispatch({ type: "CART_CLEAR" });
+      contextDispatch({ type: "REMOVE_INDEX" });
 
       toast.success("Checkout Success");
       window.setTimeout(() => {
@@ -175,7 +178,10 @@ function CheckoutPage() {
               <Form.Label>Full Name</Form.Label>
               <Form.Control
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => {
+                  info.current = { fullName };
+                  setFullName(e.target.value)
+                }}
                 required
               />
             </Form.Group>
@@ -287,7 +293,8 @@ function CheckoutPage() {
                   <ListGroup.Item>
                     {cartItems.map((item, index) => (
                       <Row key={index}>
-                        <Col>{`${item.name} - ${item.sizeProduct}`}</Col>
+                        <Col>{`${item.name} - ${item.sizeProduct
+                          } - ${item.colorProduct.toUpperCase()}`}</Col>
                         <Col>{`${item.quantity} x $${item.price}`}</Col>
                       </Row>
                     ))}
@@ -295,7 +302,7 @@ function CheckoutPage() {
                   <ListGroup.Item>
                     <Row>
                       <Col>Shipping (Fixed)</Col>
-                      <Col>$2</Col>
+                      <Col>${shippingCost}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item>
@@ -327,7 +334,6 @@ function CheckoutPage() {
                         <PayPalButtons
                           fundingSource="paypal"
                           createOrder={(data, actions) => {
-
                             return actions.order.create({
                               purchase_units: [
                                 {
@@ -340,12 +346,12 @@ function CheckoutPage() {
                             });
                           }}
 
-                          onApprove={(data, actions) => {
+                          onApprove={async (data, actions) => {
+                            ;
+                            handleCheckout("Paypal");
                             return actions.order.capture().then((details) => {
 
                               const name = details.payer.name.given_name;
-                              console.log("🚀 ~ file: CheckoutPage.js ~ line 347 ~ returnactions.order.capture ~ details.payer", details.payer)
-                              handleCheckout("Paypal");
                               alert(`Transaction completed by ${name}`);
                             });
                           }}

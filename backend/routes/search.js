@@ -1,11 +1,15 @@
 import express from "express";
-import { searchProduct } from "../controllers/productController.js";
+import { searchProductAndSortDate, searchProductAndSortPrice, searchProduct } from "../controllers/searchController.js";
 import { verifyToken, verifyUser, verifyAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-// select all products
-router.get("/product", searchProduct);
+
+router.get("/:text", searchProduct);
+
+router.get("/:text/sort/date/:code", searchProductAndSortDate);
+
+router.get("/:text/sort/:code", searchProductAndSortPrice);
 
 
 export default router;

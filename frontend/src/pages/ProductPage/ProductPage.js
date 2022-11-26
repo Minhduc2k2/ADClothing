@@ -1,21 +1,25 @@
-import axios from "./../../hooks/axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import Products from "../../components/Products/Products";
-import Rating from "./../../components/Rating/Rating";
-import "./ProductPage.css";
-import Star from "../../components/Star/Star";
-import Reviews from "../../components/Reviews/Review";
-import { Store } from "./../../Store";
 import { toast } from "react-toastify";
+import Products from "../../components/Products/Products";
+import Reviews from "../../components/Reviews/Review";
+import Star from "../../components/Star/Star";
+import { AuthContext } from "../../context/AuthContext";
+import Rating from "./../../components/Rating/Rating";
+import axios from "./../../hooks/axios";
+import { Store } from "./../../Store";
+import "./ProductPage.css";
 function ProductPage() {
   const { state, contextDispatch } = useContext(Store);
-  const { cart, userInfo } = state;
-
+  const {
+    cart: { indexItem, cartItems },
+  } = state;
+  const { user } = useContext(AuthContext);
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [amount, setAmount] = useState(1);
+  const [colorProduct, setColorProduct] = useState("");
   const [sizeProduct, setSizeProduct] = useState("");
   const url = useRef("/products/");
   const [indexImg, setIndexImg] = useState(0);
@@ -27,6 +31,7 @@ function ProductPage() {
       const { data } = await axios.get(`/products/${id}`);
       setProduct(data);
       setSizeProduct(data.size[0]);
+      setColorProduct(data.color[0]);
     };
     fetchData();
   }, [id]);
@@ -38,7 +43,7 @@ function ProductPage() {
   const handleAddReview = async () => {
     try {
       await axios.post("/reviews", {
-        user: userInfo._id,
+        user: user._id,
         product: product._id,
         review,
         rating,
@@ -51,8 +56,11 @@ function ProductPage() {
     }
   };
   const handleAddtoCart = async () => {
-    let existItem = cart.cartItems.find(
-      (item) => item._id === product._id && item.sizeProduct === sizeProduct
+    let existItem = cartItems.find(
+      (item) =>
+        item._id === product._id &&
+        item.sizeProduct === sizeProduct &&
+        item.colorProduct === colorProduct
     );
     const quantity = existItem ? existItem.quantity + amount : amount;
     contextDispatch({
@@ -63,20 +71,25 @@ function ProductPage() {
         price: product.price,
         quantity,
         sizeProduct,
+        colorProduct,
+        indexItem,
       },
+    });
+    contextDispatch({
+      type: "ADD_INDEX",
     });
     toast.success("Product has been added");
   };
   const handleChoiceColor = async (color) => {
-    console.log(color);
     const indexImg = product.color.indexOf(color);
+    setColorProduct(color);
     setIndexImg(indexImg);
-  }
+  };
   return (
     product && (
       <div className="product-container">
-        <Row>
-          <Col md={5}>
+        <Row className="product-content">
+          <Col md={5} className="product-img-container">
             <div className="product-main-img-container">
               <div
                 className={"arrow-left"}
@@ -125,36 +138,32 @@ function ProductPage() {
             <p className="name">{product.name}</p>
             <p className="description">{product.description}</p>
             <p className="price">${product.price}</p>
-            <Rating rating={5} numReviews={10} />
+            <Rating
+              rating={Math.round(product.ratingAverage)}
+              numReviews={product.ratingQuantity}
+            />
             <div className="filter-container">
               <div className="color-filter">
                 <span>Color</span>
-                <ul className="color-list">
+                <div className="color-list">
                   {/* TODO: add key id */}
                   {product.color.map((color, index) => {
-                    return (<Button variant="primary" onClick={() => handleChoiceColor(color)}>{color}{index}</Button>)
+                    return (
+                      <button
+                        //{backgroundColor: {color === "blue" ? "#2196f3" : color === "red" ? "#c64747" : color === "black" ? "#282626" : color === "white" ?"#fff" : color==="yellow" ? "#e2df08" : color }
+                        style={{ backgroundColor: color }}
+                        onClick={() => handleChoiceColor(color)}
+                        className={`color-btn ${
+                          colorProduct === color ? "active" : null
+                        }`}
+                        key={color}
+                      >
+                        {/* {color}
+                        {index} */}
+                      </button>
+                    );
                   })}
-                  {/* <li
-                    className="color-item"
-                    style={{ backgroundColor: "#2196f3" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#c64747" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#282626" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#fff" }}
-                  />
-                  <li
-                    className="color-item"
-                    style={{ backgroundColor: "#e2df08" }}
-                  /> */}
-                </ul>
+                </div>
               </div>
               <div className="size-filter">
                 <span>Size</span>
@@ -168,7 +177,7 @@ function ProductPage() {
                     Choose Size
                   </option>
                   {product.size.map((s) => (
-                    <option value={s} ket={s}>
+                    <option value={s} key={s}>
                       {s}
                     </option>
                   ))}
@@ -199,10 +208,14 @@ function ProductPage() {
             </div>
           </Col>
         </Row>
-        <Row className="mt-5">
+        <Row className="mt-5 review-container">
           <Col md={8}>
             <h4>Feature Reviews</h4>
-            <Reviews limit={2} id={product._id} />
+            <Reviews
+              limit={2}
+              id={product._id}
+              isReload={rating === 0 ? true : false}
+            />
             <Link to={`/reviews/${product._id}`}>
               <Button variant="dark" className="mt-3">
                 See All Reviews <i class="fa-solid fa-right-long"></i>

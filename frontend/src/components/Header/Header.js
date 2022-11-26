@@ -33,7 +33,7 @@ function Header({ user }) {
       const input = String(textSearch).replaceAll(" ", "-");
       let url;
       if (input.trim() !== "") {
-        url = `/search/product?text=${input}`;
+        url = `/search/${input}`;
         navigate("/shop", { state: { url } });
       }
       else {
@@ -97,7 +97,11 @@ function Header({ user }) {
               />
 
               <NavDropdown title={user.name} className="header-user">
-                <NavDropdown.Item>Order History</NavDropdown.Item>
+                <NavDropdown.Item>
+                  <Link to="/checkouthistory" className="no-decor">
+                    Checkout History
+                  </Link>
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
               </NavDropdown>

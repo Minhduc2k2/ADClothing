@@ -23,6 +23,8 @@ function CartPage() {
           ...data,
           quantity: element.quantity,
           sizeProduct: element.sizeProduct,
+          colorProduct: element.colorProduct,
+          indexItem: element.indexItem,
         },
       ]);
     });
@@ -31,6 +33,7 @@ function CartPage() {
   const handleDeleteProduct = (product) => {
     try {
       setProducts([]);
+      console.log(product);
       contextDispatch({ type: "CART_REMOVE_ITEM", payload: product });
       toast.success("Delete product successfully");
     } catch (err) {
@@ -56,8 +59,8 @@ function CartPage() {
           </p>
         </div>
       </div>
-      <h1>Cart</h1>
       <Row className="cart-content">
+        <h1>Cart</h1>
         <Col md={8} style={{ textAlign: cartItems.length === 0 && "center" }}>
           {cartItems.length === 0 ? (
             <img src="/assets/images/cart-empty.jpg" alt="Empty Cart" />
@@ -68,7 +71,7 @@ function CartPage() {
                   <Col md={4}>
                     <strong>Product</strong>
                   </Col>
-                  <Col md={3}>
+                  <Col md={2}>
                     <strong>Quantity</strong>
                   </Col>
                   <Col md={2}>
@@ -76,6 +79,9 @@ function CartPage() {
                   </Col>
                   <Col md={2}>
                     <strong>Size</strong>
+                  </Col>
+                  <Col md={1}>
+                    <strong>Color</strong>
                   </Col>
                   <Col md={1}>
                     <strong>Delete</strong>
@@ -98,7 +104,7 @@ function CartPage() {
                         {product.name.substring(0, 20) + "..."}
                       </Link>
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                       <span style={{ marginLeft: "28px" }}>
                         {product.quantity}
                       </span>
@@ -108,6 +114,12 @@ function CartPage() {
                       <span style={{ marginLeft: "8px" }}>
                         {product.sizeProduct}
                       </span>
+                    </Col>
+                    <Col md={1}>
+                      <button
+                        style={{ backgroundColor: product.colorProduct }}
+                        className="product-color"
+                      />
                     </Col>
                     <Col md={1}>
                       <Button
