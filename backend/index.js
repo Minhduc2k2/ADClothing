@@ -6,6 +6,7 @@ import usersRoute from "./routes/users.js";
 import productsRoute from "./routes/products.js";
 import checkoutRoute from "./routes/checkout.js";
 import categoriesRoute from "./routes/categories.js";
+import searchRoute from "./routes/search.js";
 import reviewRoute from "./routes/reviews.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
@@ -75,6 +76,7 @@ app.use("/backend/products", productsRoute);
 app.use("/backend/checkouts", checkoutRoute);
 app.use("/backend/reviews", reviewRoute);
 app.use("/backend/categories", categoriesRoute);
+app.use("/backend/search", searchRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

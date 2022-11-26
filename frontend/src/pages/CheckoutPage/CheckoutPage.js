@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Form, Col, Card, ListGroup, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -7,6 +7,8 @@ import axios from "./../../hooks/axios";
 import { default as axiosOriginal } from "axios";
 import "./CheckoutPage.css";
 import { AuthContext } from "../../context/AuthContext";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 function CheckoutPage() {
   const navigate = useNavigate();
   const { state, contextDispatch } = useContext(Store);
@@ -33,6 +35,7 @@ function CheckoutPage() {
   const [address, setAddress] = useState("");
   const [note, setNote] = useState("");
   const shippingCost = 2;
+  const info = useRef();
   const totalCost = useMemo(
     () =>
       cartItems.reduce(
@@ -95,9 +98,10 @@ function CheckoutPage() {
       fetchData();
     }
   }, [distinct]);
+
   const handleCheckout = async (paymentMethod) => {
     try {
-      await axios.post("/checkouts", {
+      const data = {
         productItems: cartItems,
         deliveryAddress: {
           fullName,
@@ -113,8 +117,9 @@ function CheckoutPage() {
         shippingCost,
         totalCost,
         paymentMethod,
-        isPaid: paymentMethod === "COD" && false,
-      });
+        isPaid: paymentMethod === "COD" ? false : true,
+      }
+      await axios.post("/checkouts", data);
 
       contextDispatch({
         type: "SAVE_DELIVERY_ADDRESS",
@@ -173,7 +178,10 @@ function CheckoutPage() {
               <Form.Label>Full Name</Form.Label>
               <Form.Control
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => {
+                  info.current = { fullName };
+                  setFullName(e.target.value)
+                }}
                 required
               />
             </Form.Group>
@@ -285,9 +293,8 @@ function CheckoutPage() {
                   <ListGroup.Item>
                     {cartItems.map((item, index) => (
                       <Row key={index}>
-                        <Col>{`${item.name} - ${
-                          item.sizeProduct
-                        } - ${item.colorProduct.toUpperCase()}`}</Col>
+                        <Col>{`${item.name} - ${item.sizeProduct
+                          } - ${item.colorProduct.toUpperCase()}`}</Col>
                         <Col>{`${item.quantity} x $${item.price}`}</Col>
                       </Row>
                     ))}
@@ -319,9 +326,37 @@ function CheckoutPage() {
                       </Button>
                     </div>
                     <div className="d-grid mt-3">
-                      <Button type="button" variant="light">
+                      {/* <Button type="button" variant="light">
                         Check out by Paypal
-                      </Button>
+                      </Button> */}
+                      <PayPalScriptProvider options={{ "client-id": "AZJXkD3NTX9_mMJ1o9JObSSM9GCYQmbY3kBXEE4-t36AC-YrNqyM_6Oy5VKrTK7Ilf-8uUaxy00z7kQb" }}>
+
+                        <PayPalButtons
+                          fundingSource="paypal"
+                          createOrder={(data, actions) => {
+                            return actions.order.create({
+                              purchase_units: [
+                                {
+                                  amount: {
+                                    value: `${totalCost}`,
+                                  }
+
+                                },
+                              ]
+                            });
+                          }}
+
+                          onApprove={async (data, actions) => {
+                            ;
+                            handleCheckout("Paypal");
+                            return actions.order.capture().then((details) => {
+
+                              const name = details.payer.name.given_name;
+                              alert(`Transaction completed by ${name}`);
+                            });
+                          }}
+                        />
+                      </PayPalScriptProvider>
                     </div>
                   </ListGroup.Item>
                 </ListGroup>

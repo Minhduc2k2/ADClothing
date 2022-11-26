@@ -1,25 +1,122 @@
-import { useRef } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
 import Products from "../../components/Products/Products";
 import "./ShopPage.css";
-
-let active = 2;
-let items = [];
-for (let number = 1; number <= 5; number++) {
-  items.push(
-    <Pagination.Item key={number} active={number === active}>
-      {number}
-    </Pagination.Item>
-  );
-}
+import axios from "../../hooks/axios.js";
+import { PaginationContext } from "../../context/PaginationContext.js"
+import Productss from "../../components/Products/Productss.js";
+import { useLocation } from "react-router-dom"
 
 function ShopPage() {
-  const url = useRef("/products/");
-  const handleChoiceFilter = async (e) => {
-    url.current = url.current + e.target.value;
-    console.log("🚀 ~ file: ShopPage.js ~ line 20 ~ handleChoiceFilter ~ url.current", url.current)
+  const location = useLocation();
+  const productData = useRef([]);
+  const idCategory = useRef("");
+  const indexPage = useRef(1);
+  const pageCount = 2;
+  const [urlProduct, setUrlProduct] = useState("/products/");
+  const [filter, setFilter] = useState("");
+  const [categories, setCategories] = useState(null);
 
+  const { products, totalPages, dispatch } = useContext(PaginationContext);
+
+
+  const handleChoiceFilter = async (e) => {
+    setFilter(e.target.value);
   }
+
+  const handleChangePage = async (e) => {
+    if (!Number(e.target.innerHTML))
+      return;
+    indexPage.current = Number(e.target.innerHTML);
+    dispatch({ type: "START", payload: { items: productData.current, currentPage: indexPage.current, pageCount: pageCount } })
+  }
+
+  const handleClickCategory = async (id) => {
+    idCategory.current = id;
+    let link = `/products/category/${id}`;
+    if (filter !== "")
+      link = `/products/category/sort/${id}/${filter}`
+    setUrlProduct(link);
+  }
+
+
+  let index = [];
+  for (let number = 1; number <= totalPages; number++) {
+    index.push(
+      <Pagination.Item key={number} active={number === indexPage.current} onClick={handleChangePage}>
+        {number}
+      </Pagination.Item>
+    );
+  }
+  useEffect(() => {
+    const getCategoryList = async () => {
+      const { data } = await axios.get("/categories");
+      setCategories(data);
+    }
+    getCategoryList();
+
+  }, [])
+
+  useEffect(() => {
+    const init = async () => {
+      indexPage.current = 1;
+      const { data } = await axios.get(urlProduct);
+      productData.current = data;
+      const result = { items: data, currentPage: indexPage.current, pageCount: pageCount }
+      dispatch({ type: "START", payload: result })
+    }
+    init();
+  }, [urlProduct])
+
+  useEffect(() => {
+    idCategory.current = "";
+    if (location.state !== null) {
+      if (filter !== "")
+        setUrlProduct(location.state.url + "/sort/" + filter);
+      else
+        setUrlProduct(location.state.url)
+    }
+    else if (location.state === null) {
+      if (filter !== "") {
+        setUrlProduct("/products/sort/" + filter);
+      }
+      else {
+        setUrlProduct("/products/");
+      }
+    }
+  }, [location])
+
+
+
+  useEffect(() => {
+    let link;
+    // TH filter bằng category
+    if (idCategory.current !== "") {
+      if (filter === "") {
+        link = "/products/category/" + idCategory.current;
+      }
+      else {
+        link = `/products/category/sort/${idCategory.current}/${filter}`
+      }
+      setUrlProduct(link);
+      return;
+    }
+    // TH dùng thanh tìm kiếm có chữ != null
+    if (location.state !== null) {
+      link = location.state.url;
+      if (filter !== null)
+        link = link + "/sort/" + filter;
+    }
+    // TH dùng thanh tìm kiếm có chữ = null
+    else if (location.state === null) {
+      link = "/products/";
+      if (filter !== "") {
+        link = link + "sort/" + filter;
+      }
+    }
+    setUrlProduct(link);
+  }, [filter])
+
   return (
     <div className="shop-container">
       <div className="shop-header">
@@ -44,7 +141,7 @@ function ShopPage() {
             <div>
               <h2>Shop</h2>
               <p>
-                Showing 1-6 of <span>17</span> results
+                Showing 1-{pageCount} of <span>{productData.current.length}</span> results
               </p>
             </div>
             <Form.Select
@@ -52,14 +149,14 @@ function ShopPage() {
               className="shop-sort"
               onChange={handleChoiceFilter}
             >
-              <option>Default Sorting</option>
-              <option value="lastest">Sort by latest</option>
+              <option value="">Default Sorting</option>
+              <option value="date/desc">Sort by latest</option>
               <option value="asc">Sort by price: low to high</option>
               <option value="desc">Sort by price: high to low</option>
             </Form.Select>
           </div>
-          <Products limit={10} url={url.current} />
-          <Pagination className="shop-pagination">{items}</Pagination>
+          <Productss products={products} />
+          <Pagination className="shop-pagination" >{index}</Pagination>
         </Col>
         <Col md={3}>
           <div className="shop-by-color">
@@ -73,13 +170,13 @@ function ShopPage() {
 
               <label class="color-container">
                 Red
-                <input type="checkbox" />
+                <input type="radio" />
                 <span class="checkmark red"></span>
               </label>
 
               <label class="color-container">
                 Black
-                <input type="checkbox" />
+                <input type="radio" />
                 <span class="checkmark black "></span>
               </label>
 
@@ -120,9 +217,20 @@ function ShopPage() {
           <div className="shop-by-category mt-4">
             <h3>Shop by category</h3>
             <div>
-              <h6>T Shirt</h6>
-              <h6>Jacket</h6>
-              <h6>Sweater</h6>
+              {
+                categories == null ? "" :
+                  <>
+                    {categories.map((item) => {
+                      return (
+                        <h6 key={item._id} onClick={() => { handleClickCategory(item._id) }}>
+                          {item.name}
+                        </h6>
+                      )
+
+                    })}
+                  </>
+
+              }
             </div>
           </div>
           <Button variant="dark" className="mt-4">
@@ -130,7 +238,7 @@ function ShopPage() {
           </Button>
         </Col>
       </Row>
-    </div>
+    </div >
   );
 }
 
