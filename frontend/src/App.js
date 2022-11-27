@@ -21,6 +21,7 @@ import { useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "./context/AuthContext.js";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.js";
+import ForgetPassword from './pages/ForgetPassword/ForgetPassword';
 
 function App() {
   const { user, loading, error, dispatch } = useContext(AuthContext);
@@ -67,6 +68,7 @@ function App() {
         <Route path="/s" element={<Show />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/aboutus" element={<AboutUsPage />} />
+        <Route path="/forgetpassword" element={<ForgetPassword />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/reviews/:id" element={<ReviewsPage />} />
         <Route path="/cart" element={<CartPage />} />

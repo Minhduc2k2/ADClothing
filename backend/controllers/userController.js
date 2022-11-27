@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { getImg } from "../utils/saveFile.js"
 
-
+const URL_PROFILE = "http://localhost:3000/myprofile"
 // update user
 export const updateUser = async (req, res, next) => {
   try {
@@ -13,8 +13,10 @@ export const updateUser = async (req, res, next) => {
       { $set: body },
       { new: true }
     );
-    res.status(200).json(updatedUser);
+    res.redirect(URL_PROFILE)
+    //res.status(200).json(updatedUser);
   } catch (err) {
+    console.log("000000")
     next(err);
   }
 };
@@ -25,8 +27,8 @@ export const updateUserPassword = async (req, res, next) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
     const body = { ...req.body, password: hash };
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
+    const updatedUser = await User.findOneAndUpdate(
+      { email: req.params.email },
       { $set: body },
       { new: true }
     );
