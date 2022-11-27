@@ -14,11 +14,13 @@ import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import SigninPage from "./pages/SigninupPage/SigninPage";
 import SignupPage from "./pages/SigninupPage/SignupPage";
 import CheckoutHistoryPage from "./pages/CheckoutHistoryPage/CheckoutHistoryPage";
+import ProfilePage from "./pages/ProfilePage/MyProfile.js";
 import CheckoutDetailsPage from "./pages/CheckoutPage/CheckoutDetailsPage";
 import ReviewsPage from "./pages/ReviewsPage/ReviewsPage";
 import { useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "./context/AuthContext.js";
+import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.js";
 
 function App() {
   const { user, loading, error, dispatch } = useContext(AuthContext);
@@ -64,12 +66,14 @@ function App() {
         <Route path="/i" element={<Image />} />
         <Route path="/s" element={<Show />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/aboutus" element={<AboutUsPage />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/reviews/:id" element={<ReviewsPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/checkout/:id" element={<CheckoutDetailsPage />} />
         <Route path="/checkouthistory" element={<CheckoutHistoryPage />} />
+        <Route path="/myprofile" element={<ProfilePage />} />
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/signup" element={<SignupPage />} />
       </Routes>

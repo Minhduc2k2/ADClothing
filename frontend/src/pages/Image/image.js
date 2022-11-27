@@ -28,6 +28,7 @@ registerPlugin(
 );
 
 const Image = () => {
+
     const [files, setFiles] = useState([]);
     return (
         <div class="dienthoai">
