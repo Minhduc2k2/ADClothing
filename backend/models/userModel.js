@@ -26,13 +26,17 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+
     },
     phoneNumber: {
       type: String,
       //required: [true, "User must have a phone number"],
       //unique: true,
     },
-    address: String,
+    address: {
+      type: String,
+      default: "%Phường Phúc Xá%Quận Ba Đình%Thành Phố Hà Nội"
+    },
     // username: {
     //   type: String,
     //   required: true,

@@ -14,9 +14,9 @@ router.get("/:id", selectUser);
 router.get("/email/:email", selectUserByEmail);
 
 // update user
-router.put("/:id", updateUser);
+router.post("/:id", updateUser);
 
 // update user password
-router.patch("/:id", updateUserPassword);
+router.patch("/:email", updateUserPassword);
 
 export default router;

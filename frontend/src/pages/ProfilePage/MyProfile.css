@@ -1,4 +1,5 @@
 .avatar {
+    width: 100px;
     border-radius: 50%;
     display: block;
     margin-left: auto;
@@ -6,6 +7,12 @@
 }
 
 .checkout-details {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.change-container {
     display: block;
     margin-left: auto;
     margin-right: auto;

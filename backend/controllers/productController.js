@@ -145,6 +145,7 @@ export const selectAllProducts = async (req, res, next) => {
 export const createProduct = async (req, res, next) => {
   try {
     const image = req.body.img;
+    console.log("🚀 ~ file: productController.js ~ line 148 ~ createProduct ~ image", image)
     const body = { ...req.body }
     const product = new Product(body);
 

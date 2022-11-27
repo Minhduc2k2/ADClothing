@@ -49,12 +49,13 @@ const Image = () => {
                 {/* <input type="file" name="cover" class="book-cover filepond" multiple></input> */}
             {/* <input type="submit" value="Buy" />
         </form> * /} */}
-            <form form action="http://localhost:8800/backend/products" method="post" >
+            <form action="http://localhost:8800/backend/products" method="post" >
                 <input type="text" name="name" />
                 <input type="text" name="price" />
                 <input type="text" name="description" />
 
                 <FilePond
+                    className="NGUYENVANAN"
                     files={files}
                     onupdatefiles={setFiles}
                     allowMultiple={true}

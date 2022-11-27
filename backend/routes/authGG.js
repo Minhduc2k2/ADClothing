@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/userModel.js"
 import { sendEmail } from "../utils/sendEmail.js";
 import { generatePassword } from "../utils/generatePassword.js";
+import { getUrlImageObj } from "../utils/getUrlImage.js";
 const router = express.Router();
 const CLIENT_URL = "http://localhost:3000/";
 
@@ -15,9 +16,11 @@ router.get("/login/success", async (req, res) => {
         if (oldUser !== null) {
             var { password, img, ...userData } = oldUser._doc;
 
-            let imgPath = userData.coverImagePath;
-            if (img == null)
+            let imgPath;
+            if (img === null)
                 imgPath = userData.avatar;
+            else
+                imgPath = getUrlImageObj(img);
             const result = { ...userData, imgPath: imgPath }
             res.status(200).json({
                 success: true,
