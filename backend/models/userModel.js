@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
       //required: [true, "User must have a phone number"],
       //unique: true,
     },
-    address: [String],
+    address: String,
     // username: {
     //   type: String,
     //   required: true,
@@ -72,9 +72,8 @@ userSchema.virtual("coverImagePath").get(function () {
     this.img.coverImage != null &&
     this.img.coverImageType != null
   ) {
-    rs = `data:${
-      this.img.coverImageType
-    };charset=utf-8;base64,${this.img.coverImage.toString("base64")}`;
+    rs = `data:${this.img.coverImageType
+      };charset=utf-8;base64,${this.img.coverImage.toString("base64")}`;
   }
   return rs;
 });

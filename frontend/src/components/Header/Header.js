@@ -98,6 +98,12 @@ function Header({ user }) {
 
               <NavDropdown title={user.name} className="header-user">
                 <NavDropdown.Item>
+                  <Link to="/myprofile" className="no-decor">
+                    My profile
+                  </Link>
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item>
                   <Link to="/checkouthistory" className="no-decor">
                     Checkout History
                   </Link>

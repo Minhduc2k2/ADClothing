@@ -10,32 +10,42 @@ import { AuthContext } from "../../context/AuthContext";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 function CheckoutPage() {
+  const provinceCode = useRef();
+  const distinctCode = useRef();
+  const wardCode = useRef();
   const navigate = useNavigate();
   const { state, contextDispatch } = useContext(Store);
   const {
     cart: { cartItems, deliveryAddress },
   } = state;
-
   const { user } = useContext(AuthContext);
+  const getAddress = () => {
+    const arr = user.address.split("%");
+    return {
+      address: arr[0],
+      ward: arr[1],
+      distinct: arr[2],
+      province: arr[3],
+    };
+  };
+  const addressInfo = getAddress();
 
+  //initData();
   const [fullName, setFullName] = useState(user.name || "");
   const [phoneNumber, setPhoneNumber] = useState(
-    deliveryAddress.phoneNumber || ""
+    user.phoneNumber || deliveryAddress.phoneNumber || ""
   );
   const [email, setEmail] = useState(user.email || "");
-  const [provinceArray, setProvinceArray] = useState([]);
-  const [distinctArray, setDistinctArray] = useState([]);
-  const [wardArray, setWardArray] = useState([]);
-  const [province, setProvince] = useState("");
-  const [distinct, setDistinct] = useState("");
-  const [ward, setWard] = useState("");
-  const [provinceText, setProvinceText] = useState("");
-  const [distinctText, setDistinctText] = useState("");
-  const [wardText, setWardText] = useState("");
-  const [address, setAddress] = useState("");
+  const provinceArray = useRef([]);
+  const distinctArray = useRef([]);
+  const wardArray = useRef([]);
+  const [provinceText, setProvinceText] = useState();
+  const [distinctText, setDistinctText] = useState(addressInfo.distinct);
+  const [wardText, setWardText] = useState(addressInfo.ward);
+  const [address, setAddress] = useState(addressInfo.address);
   const [note, setNote] = useState("");
   const shippingCost = 2;
-  const info = useRef();
+  const [paid, setPaid] = useState(false);
   const totalCost = useMemo(
     () =>
       cartItems.reduce(
@@ -46,15 +56,44 @@ function CheckoutPage() {
     [cartItems]
   );
 
+  // chạy đầu tiên sau render
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axiosOriginal.get(
+        // chạy câu dưới nhưng không thục thi và chạy những sync khác
+        const proData = await axiosOriginal.get(
+          `https://provinces.open-api.vn/api/p/search/?q=${addressInfo.province}`
+        );
+        // sau khi thực thi tất cả các sync, sẽ thực thi câu lệnh trên, sau đó chạy và thực thi các hàm dưới
+        provinceCode.current = proData.data[0].code;
+
+        const distData = await axiosOriginal.get(
+          `https://provinces.open-api.vn/api/d/search/?q=${addressInfo.distinct}&p=${provinceCode.current}`
+        );
+        distinctCode.current = distData.data[0].code;
+
+        const wardData = await axiosOriginal.get(
+          `https://provinces.open-api.vn/api/w/search/?q=${addressInfo.ward}&d=${distinctCode.current}&p=${provinceCode.current}`
+        );
+        wardCode.current = wardData.data[0].code;
+
+        const proList = await axiosOriginal.get(
           "https://provinces.open-api.vn/api/?depth=1"
         );
-        setProvince(data[0].code);
-        setProvinceText(data[0].name);
-        setProvinceArray(data);
+        provinceArray.current = proList.data;
+
+        const distList = await axiosOriginal.get(
+          `https://provinces.open-api.vn/api/p/${provinceCode.current}/?depth=2`
+        );
+        distinctArray.current = distList.data.districts;
+
+        const wardList = await axiosOriginal.get(
+          `https://provinces.open-api.vn/api/d/${distinctCode.current}/?depth=2`
+        );
+        wardArray.current = wardList.data.wards;
+
+        // gặp setState (nhưng chưa re-render, phải đợi các await (nếu có), async r mới re-render)
+        setProvinceText(addressInfo.province);
       } catch (err) {
         console.log(err);
       }
@@ -65,39 +104,47 @@ function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // chạy câu lệnh dưới nhưng không thực thi và
         const { data } = await axiosOriginal.get(
-          `https://provinces.open-api.vn/api/p/${province}/?depth=2`
+          `https://provinces.open-api.vn/api/p/${provinceCode.current}/?depth=2`
         );
-        setDistinct(data.districts[0].code);
-        setDistinctText(data.districts[0].name);
-        setDistinctArray(data.districts);
+        distinctArray.current = data.districts;
+
+        // Nếu lần đầu truy cập thì next, không thì vào
+        if (distinctCode.current === 0) {
+          wardCode.current = 0;
+          distinctCode.current = data.districts[0].code;
+          setDistinctText(data.districts[0].name);
+        }
       } catch (err) {
         console.log(err);
       }
     };
-    if (province) {
-      fetchData();
-      setWardArray([]);
-    }
-  }, [province]);
 
+    // provinceCode.current lần đầu = undefined nên không chạy fetchData()
+    if (provinceCode.current) {
+      fetchData();
+    }
+  }, [provinceText]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await axiosOriginal.get(
-          `https://provinces.open-api.vn/api/d/${distinct}/?depth=2`
+          `https://provinces.open-api.vn/api/d/${distinctCode.current}/?depth=2`
         );
-        setWard(data.wards[0].code);
-        setWardText(data.wards[0].name);
-        setWardArray(data.wards);
+        wardArray.current = data.wards;
+        if (wardCode.current === 0) {
+          wardCode.current = data.wards[0].code;
+          setWardText(data.wards[0].name);
+        }
       } catch (err) {
         console.log(err);
       }
     };
-    if (distinct) {
+    if (distinctCode.current) {
       fetchData();
     }
-  }, [distinct]);
+  }, [distinctText]);
 
   const handleCheckout = async (paymentMethod) => {
     try {
@@ -146,7 +193,11 @@ function CheckoutPage() {
       toast.error(err.message);
     }
   };
-
+  useEffect(() => {
+    if (paid) {
+      handleCheckout("Paypal");
+    }
+  }, [paid]);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -170,7 +221,6 @@ function CheckoutPage() {
         </div>
       </div>
       <h1>Checkout</h1>
-
       <Form onSubmit={handleSubmit}>
         <Row className="checkout-container">
           <Col md={8} className="checkout-details">
@@ -180,7 +230,6 @@ function CheckoutPage() {
               <Form.Control
                 value={fullName}
                 onChange={(e) => {
-                  info.current = { fullName };
                   setFullName(e.target.value);
                 }}
                 required
@@ -206,64 +255,101 @@ function CheckoutPage() {
             <Form.Group className="mb-3" controlId="province">
               <Form.Label>Province</Form.Label>
               <Form.Select
-                value={province}
+                value={provinceCode.current}
                 onChange={(e) => {
                   const index = e.nativeEvent.target.selectedIndex;
+                  provinceCode.current = e.target.value;
+                  distinctCode.current = 0;
                   setProvinceText(e.nativeEvent.target[index].text);
-                  setProvince(e.target.value);
+                  //setProvince(e.target.value);
                 }}
                 required
               >
                 <option value="" key="default" disabled>
                   Choose one Province
                 </option>
-                {provinceArray.map((element) => (
-                  <option value={element.code} key={element.code}>
-                    {element.name}
-                  </option>
-                ))}
+                {provinceArray.current.map((element) => {
+                  if (element.code === Number(provinceCode.current)) {
+                    // provinceCode.current = element.code;
+                    return (
+                      <option value={element.code} key={element.code} selected>
+                        {element.name}
+                      </option>
+                    );
+                  } else {
+                    return (
+                      <option value={element.code} key={element.code}>
+                        {element.name}
+                      </option>
+                    );
+                  }
+                })}
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="distinct">
               <Form.Label>Distinct</Form.Label>
               <Form.Select
-                value={distinct}
+                value={distinctCode.current}
                 onChange={(e) => {
                   const index = e.nativeEvent.target.selectedIndex;
+                  distinctCode.current = e.target.value;
+                  wardCode.current = 0;
                   setDistinctText(e.nativeEvent.target[index].text);
-                  setDistinct(e.target.value);
                 }}
                 required
               >
                 <option value="" key="default" disabled>
                   Choose one Distinct
                 </option>
-                {distinctArray.map((element) => (
-                  <option value={element.code} key={element.code}>
-                    {element.name}
-                  </option>
-                ))}
+                {distinctArray.current.map((element) => {
+                  if (element.code === Number(distinctCode.current)) {
+                    //distinctCode.current = element.code;
+                    return (
+                      <option value={element.code} key={element.code} selected>
+                        {element.name}
+                      </option>
+                    );
+                  } else {
+                    return (
+                      <option value={element.code} key={element.code}>
+                        {element.name}
+                      </option>
+                    );
+                  }
+                })}
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3" controlId="ward">
               <Form.Label>Ward</Form.Label>
               <Form.Select
-                value={ward}
+                value={wardCode.current}
                 onChange={(e) => {
                   const index = e.nativeEvent.target.selectedIndex;
+                  wardCode.current = e.target.value;
                   setWardText(e.nativeEvent.target[index].text);
-                  setWard(e.target.value);
+                  // setWard(e.target.value);
                 }}
                 required
               >
                 <option value="" key="default" disabled>
                   Choose one Ward
                 </option>
-                {wardArray.map((element) => (
-                  <option value={element.code} key={element.code}>
-                    {element.name}
-                  </option>
-                ))}
+                {wardArray.current.map((element) => {
+                  if (element.name === Number(wardCode.current)) {
+                    //wardCode.current = element.code;
+                    return (
+                      <option value={element.code} key={element.code} selected>
+                        {element.name}
+                      </option>
+                    );
+                  } else {
+                    return (
+                      <option value={element.code} key={element.code}>
+                        {element.name}
+                      </option>
+                    );
+                  }
+                })}
               </Form.Select>
             </Form.Group>
 
@@ -351,8 +437,8 @@ function CheckoutPage() {
                             });
                           }}
                           onApprove={async (data, actions) => {
-                            handleCheckout("Paypal");
                             return actions.order.capture().then((details) => {
+                              setPaid(true);
                               const name = details.payer.name.given_name;
                               alert(`Transaction completed by ${name}`);
                             });
