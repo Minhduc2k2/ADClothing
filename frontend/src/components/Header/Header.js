@@ -15,6 +15,7 @@ import "./Header.css";
 import axios from "../../hooks/axios.js";
 import { useNavigate } from "react-router-dom"
 function Header({ user }) {
+  console.log("🚀 ~ file: Header.js ~ line 18 ~ Header ~ user", user)
   const navigate = useNavigate();
   const { state } = useContext(Store);
   const [textSearch, setTextSearch] = useState("");
@@ -24,6 +25,8 @@ function Header({ user }) {
   const { dispatch } = useContext(AuthContext);
 
   const logout = async () => {
+    navigate("/");
+    user = null;
     await dispatch({ type: "LOGOUT" });
     Cookies.remove("userInfo");
     window.open("http://localhost:8800/auth/logout", "_self");
@@ -93,7 +96,7 @@ function Header({ user }) {
                 src={user.imgPath}
                 alt=""
                 className="avatar"
-                referrerpolicy="no-referrer"
+                referrerPolicy="no-referrer"
               />
 
               <NavDropdown title={user.name} className="header-user">
