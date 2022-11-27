@@ -118,7 +118,7 @@ function CheckoutPage() {
         totalCost,
         paymentMethod,
         isPaid: paymentMethod === "COD" ? false : true,
-      }
+      };
       await axios.post("/checkouts", data);
 
       contextDispatch({
@@ -150,6 +150,7 @@ function CheckoutPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+
   return (
     <div className="checkout-container">
       <div className="shop-header">
@@ -180,7 +181,7 @@ function CheckoutPage() {
                 value={fullName}
                 onChange={(e) => {
                   info.current = { fullName };
-                  setFullName(e.target.value)
+                  setFullName(e.target.value);
                 }}
                 required
               />
@@ -293,8 +294,9 @@ function CheckoutPage() {
                   <ListGroup.Item>
                     {cartItems.map((item, index) => (
                       <Row key={index}>
-                        <Col>{`${item.name} - ${item.sizeProduct
-                          } - ${item.colorProduct.toUpperCase()}`}</Col>
+                        <Col>{`${item.name} - ${
+                          item.sizeProduct
+                        } - ${item.colorProduct.toUpperCase()}`}</Col>
                         <Col>{`${item.quantity} x $${item.price}`}</Col>
                       </Row>
                     ))}
@@ -329,8 +331,12 @@ function CheckoutPage() {
                       {/* <Button type="button" variant="light">
                         Check out by Paypal
                       </Button> */}
-                      <PayPalScriptProvider options={{ "client-id": "AZJXkD3NTX9_mMJ1o9JObSSM9GCYQmbY3kBXEE4-t36AC-YrNqyM_6Oy5VKrTK7Ilf-8uUaxy00z7kQb" }}>
-
+                      <PayPalScriptProvider
+                        options={{
+                          "client-id":
+                            "AZJXkD3NTX9_mMJ1o9JObSSM9GCYQmbY3kBXEE4-t36AC-YrNqyM_6Oy5VKrTK7Ilf-8uUaxy00z7kQb",
+                        }}
+                      >
                         <PayPalButtons
                           fundingSource="paypal"
                           createOrder={(data, actions) => {
@@ -339,18 +345,14 @@ function CheckoutPage() {
                                 {
                                   amount: {
                                     value: `${totalCost}`,
-                                  }
-
+                                  },
                                 },
-                              ]
+                              ],
                             });
                           }}
-
                           onApprove={async (data, actions) => {
-                            ;
                             handleCheckout("Paypal");
                             return actions.order.capture().then((details) => {
-
                               const name = details.payer.name.given_name;
                               alert(`Transaction completed by ${name}`);
                             });
