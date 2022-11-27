@@ -1,0 +1,12 @@
+.avatar {
+    border-radius: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.checkout-details {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
