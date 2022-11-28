@@ -3,47 +3,54 @@ import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
 import Products from "../../components/Products/Products";
 import "./ShopPage.css";
 import axios from "../../hooks/axios.js";
-import { PaginationContext } from "../../context/PaginationContext.js"
+import { PaginationContext } from "../../context/PaginationContext.js";
 import Productss from "../../components/Products/Productss.js";
-import { useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom";
 
 function ShopPage() {
   const location = useLocation();
   const productData = useRef([]);
   const idCategory = useRef("");
   const indexPage = useRef(1);
-  const pageCount = 2;
+  const pageCount = 6;
   const [urlProduct, setUrlProduct] = useState("/products/");
   const [filter, setFilter] = useState("");
   const [categories, setCategories] = useState(null);
 
   const { products, totalPages, dispatch } = useContext(PaginationContext);
 
-
   const handleChoiceFilter = async (e) => {
     setFilter(e.target.value);
-  }
+  };
 
   const handleChangePage = async (e) => {
-    if (!Number(e.target.innerHTML))
-      return;
+    if (!Number(e.target.innerHTML)) return;
     indexPage.current = Number(e.target.innerHTML);
-    dispatch({ type: "START", payload: { items: productData.current, currentPage: indexPage.current, pageCount: pageCount } })
-  }
+    dispatch({
+      type: "START",
+      payload: {
+        items: productData.current,
+        currentPage: indexPage.current,
+        pageCount: pageCount,
+      },
+    });
+  };
 
   const handleClickCategory = async (id) => {
     idCategory.current = id;
     let link = `/products/category/${id}`;
-    if (filter !== "")
-      link = `/products/category/sort/${id}/${filter}`
+    if (filter !== "") link = `/products/category/sort/${id}/${filter}`;
     setUrlProduct(link);
-  }
-
+  };
 
   let index = [];
   for (let number = 1; number <= totalPages; number++) {
     index.push(
-      <Pagination.Item key={number} active={number === indexPage.current} onClick={handleChangePage}>
+      <Pagination.Item
+        key={number}
+        active={number === indexPage.current}
+        onClick={handleChangePage}
+      >
         {number}
       </Pagination.Item>
     );
@@ -52,41 +59,38 @@ function ShopPage() {
     const getCategoryList = async () => {
       const { data } = await axios.get("/categories");
       setCategories(data);
-    }
+    };
     getCategoryList();
-
-  }, [])
+  }, []);
 
   useEffect(() => {
     const init = async () => {
       indexPage.current = 1;
       const { data } = await axios.get(urlProduct);
       productData.current = data;
-      const result = { items: data, currentPage: indexPage.current, pageCount: pageCount }
-      dispatch({ type: "START", payload: result })
-    }
+      const result = {
+        items: data,
+        currentPage: indexPage.current,
+        pageCount: pageCount,
+      };
+      dispatch({ type: "START", payload: result });
+    };
     init();
-  }, [urlProduct])
+  }, [urlProduct]);
 
   useEffect(() => {
     idCategory.current = "";
     if (location.state !== null) {
-      if (filter !== "")
-        setUrlProduct(location.state.url + "/sort/" + filter);
-      else
-        setUrlProduct(location.state.url)
-    }
-    else if (location.state === null) {
+      if (filter !== "") setUrlProduct(location.state.url + "/sort/" + filter);
+      else setUrlProduct(location.state.url);
+    } else if (location.state === null) {
       if (filter !== "") {
         setUrlProduct("/products/sort/" + filter);
-      }
-      else {
+      } else {
         setUrlProduct("/products/");
       }
     }
-  }, [location])
-
-
+  }, [location]);
 
   useEffect(() => {
     let link;
@@ -94,9 +98,8 @@ function ShopPage() {
     if (idCategory.current !== "") {
       if (filter === "") {
         link = "/products/category/" + idCategory.current;
-      }
-      else {
-        link = `/products/category/sort/${idCategory.current}/${filter}`
+      } else {
+        link = `/products/category/sort/${idCategory.current}/${filter}`;
       }
       setUrlProduct(link);
       return;
@@ -104,8 +107,7 @@ function ShopPage() {
     // TH dùng thanh tìm kiếm có chữ != null
     if (location.state !== null) {
       link = location.state.url;
-      if (filter !== null)
-        link = link + "/sort/" + filter;
+      if (filter !== null) link = link + "/sort/" + filter;
     }
     // TH dùng thanh tìm kiếm có chữ = null
     else if (location.state === null) {
@@ -115,7 +117,7 @@ function ShopPage() {
       }
     }
     setUrlProduct(link);
-  }, [filter])
+  }, [filter]);
 
   return (
     <div className="shop-container">
@@ -141,7 +143,8 @@ function ShopPage() {
             <div>
               <h2>Shop</h2>
               <p>
-                Showing 1-{pageCount} of <span>{productData.current.length}</span> results
+                Showing 1-{pageCount} of{" "}
+                <span>{productData.current.length}</span> results
               </p>
             </div>
             <Form.Select
@@ -156,10 +159,10 @@ function ShopPage() {
             </Form.Select>
           </div>
           <Productss products={products} />
-          <Pagination className="shop-pagination" >{index}</Pagination>
+          <Pagination className="shop-pagination">{index}</Pagination>
         </Col>
         <Col md={3}>
-          <div className="shop-by-color">
+          {/* <div className="shop-by-color">
             <h3>Shop by color</h3>
             <div>
               <label class="color-container">
@@ -213,24 +216,28 @@ function ShopPage() {
                 <span>S Small</span>
               </label>
             </div>
-          </div>
+          </div> */}
           <div className="shop-by-category mt-4">
             <h3>Shop by category</h3>
             <div>
-              {
-                categories == null ? "" :
-                  <>
-                    {categories.map((item) => {
-                      return (
-                        <h6 key={item._id} onClick={() => { handleClickCategory(item._id) }}>
-                          {item.name}
-                        </h6>
-                      )
-
-                    })}
-                  </>
-
-              }
+              {categories == null ? (
+                ""
+              ) : (
+                <>
+                  {categories.map((item) => {
+                    return (
+                      <h6
+                        key={item._id}
+                        onClick={() => {
+                          handleClickCategory(item._id);
+                        }}
+                      >
+                        {item.name}
+                      </h6>
+                    );
+                  })}
+                </>
+              )}
             </div>
           </div>
           <Button variant="dark" className="mt-4">
@@ -238,7 +245,7 @@ function ShopPage() {
           </Button>
         </Col>
       </Row>
-    </div >
+    </div>
   );
 }
 

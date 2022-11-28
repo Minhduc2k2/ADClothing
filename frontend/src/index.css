@@ -14,8 +14,9 @@ code {
 
 .no-decor {
   text-decoration: none;
-  color: #000;
+  color: inherit;
 }
+
 .no-decor:hover {
-  color: #000;
+  color: inherit;
 }

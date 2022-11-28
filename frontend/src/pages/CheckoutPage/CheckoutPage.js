@@ -147,6 +147,7 @@ function CheckoutPage() {
   }, [distinctText]);
 
   const handleCheckout = async (paymentMethod) => {
+    if (!fullName || !phoneNumber || !email || !address) return;
     try {
       const data = {
         productItems: cartItems,

@@ -1,18 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContext";
 import { Store } from "../../Store";
 import axios from "./../../hooks/axios";
 import "./CartPage.css";
 
 function CartPage() {
+  const { user } = useContext(AuthContext);
   const { state, contextDispatch } = useContext(Store);
   const {
     cart: { cartItems },
   } = state;
   const [products, setProducts] = useState([]);
 
+  const navigate = useNavigate();
   useEffect(() => {
     cartItems.forEach(async (element) => {
       const { data } = await axios.get(`/products/${element._id}`);
@@ -41,6 +44,14 @@ function CartPage() {
     }
   };
 
+  const handleProceedToCheckout = () => {
+    if (!user) {
+      navigate("/signin?redirect=/checkout");
+    } else {
+      navigate("/checkout");
+    }
+  };
+
   return (
     <div className="cart-container">
       <div className="shop-header">
@@ -59,8 +70,8 @@ function CartPage() {
           </p>
         </div>
       </div>
+      <h1 className="cart-title">Cart</h1>
       <Row className="cart-content">
-        <h1>Cart</h1>
         <Col md={8} style={{ textAlign: cartItems.length === 0 && "center" }}>
           {cartItems.length === 0 ? (
             <img src="/assets/images/cart-empty.jpg" alt="Empty Cart" />
@@ -156,11 +167,16 @@ function CartPage() {
                   </h2>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <Link to="/checkout">
-                    <Button type="button" variant="dark">
-                      Proceed to Checkout
-                    </Button>
-                  </Link>
+                  <Button
+                    type="button"
+                    variant="dark"
+                    disabled={cartItems.length === 0}
+                    onClick={handleProceedToCheckout}
+                  >
+                    {/* <Link to="/checkout" className="no-decor"> */}
+                    Proceed to Checkout
+                    {/* </Link> */}
+                  </Button>
                 </ListGroup.Item>
               </ListGroup>
             </Card.Body>

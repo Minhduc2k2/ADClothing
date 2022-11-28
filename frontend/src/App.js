@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
+import ProtectedRoute from "./components/ProtectRoute";
 import HomePage from "./pages/HomePage/HomePage";
 import ShopPage from "./pages/ShopPage/ShopPage";
 import ProductPage from "./pages/ProductPage/ProductPage";
@@ -17,11 +18,11 @@ import CheckoutHistoryPage from "./pages/CheckoutHistoryPage/CheckoutHistoryPage
 import ProfilePage from "./pages/ProfilePage/MyProfile.js";
 import CheckoutDetailsPage from "./pages/CheckoutPage/CheckoutDetailsPage";
 import ReviewsPage from "./pages/ReviewsPage/ReviewsPage";
+import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.js";
+import ForgetPassword from "./pages/ForgetPassword/ForgetPassword";
 import { useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "./context/AuthContext.js";
-import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.js";
-import ForgetPassword from './pages/ForgetPassword/ForgetPassword';
 
 function App() {
   const { user, loading, error, dispatch } = useContext(AuthContext);
@@ -72,10 +73,31 @@ function App() {
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/reviews/:id" element={<ReviewsPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/checkout/:id" element={<CheckoutDetailsPage />} />
-        <Route path="/checkouthistory" element={<CheckoutHistoryPage />} />
-        <Route path="/myprofile" element={<ProfilePage />} />
+        <Route
+          path="/checkouthistory"
+          element={
+            <ProtectedRoute>
+              <CheckoutHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/myprofile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/signup" element={<SignupPage />} />
       </Routes>

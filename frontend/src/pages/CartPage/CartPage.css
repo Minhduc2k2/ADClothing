@@ -1,7 +1,11 @@
 .cart-container {
 }
+.cart-container .cart-title {
+  padding: 20px 40px;
+}
 .cart-container .cart-content {
-  padding: 40px;
+  min-height: 750px;
+  padding: 0 40px;
 }
 .cart-container .product-img {
   width: 100px;
