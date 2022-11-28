@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
+import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Products from "../../components/Products/Products";
@@ -88,6 +89,9 @@ function ProductPage() {
   return (
     product && (
       <div className="product-container">
+        <Helmet>
+          <title>{product.name}</title>
+        </Helmet>
         <Row className="product-content">
           <Col md={5} className="product-img-container">
             <div className="product-main-img-container">

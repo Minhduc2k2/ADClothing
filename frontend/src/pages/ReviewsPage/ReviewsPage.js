@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Products from "../../components/Products/Products";
 import Reviews from "../../components/Reviews/Review";
+import { Helmet } from "react-helmet-async";
 import "./ReviewsPage.css";
 function ReviewsPage() {
   const { id } = useParams();
@@ -12,6 +13,9 @@ function ReviewsPage() {
   }, [id]);
   return (
     <div className="reviews-container">
+      <Helmet>
+        <title>Shop</title>
+      </Helmet>
       <div className="shop-header">
         <div className="image-container">
           <img

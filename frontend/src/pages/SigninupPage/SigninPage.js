@@ -15,6 +15,7 @@ import axios from "./../../hooks/axios";
 import "./SigninupPage.css";
 import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext.js";
+import { Helmet } from "react-helmet-async";
 
 // TODO: baro mat khi khong nhap gi ma van verify thanh cong
 function SigninPage() {
@@ -151,6 +152,9 @@ function SigninPage() {
   };
   return (
     <div>
+      <Helmet>
+        <title>Sign in</title>
+      </Helmet>
       <Container className="signinup-container">
         {flagForget ? (
           <Card>

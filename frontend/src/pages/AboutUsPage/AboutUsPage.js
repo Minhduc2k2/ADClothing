@@ -1,9 +1,13 @@
 import { Button } from "react-bootstrap";
+import { Helmet } from "react-helmet-async";
 import "./AboutUsPage.css";
 
 function AboutUsPage() {
   return (
     <div className="aboutus-container">
+      <Helmet>
+        <title>About Us</title>
+      </Helmet>
       <div className="aboutus-card">
         <img
           className="aboutus-dev-avatar"

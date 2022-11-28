@@ -8,6 +8,7 @@ import { default as axiosOriginal } from "axios";
 import "./CheckoutPage.css";
 import { AuthContext } from "../../context/AuthContext";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { Helmet } from "react-helmet-async";
 
 function CheckoutPage() {
   const provinceCode = useRef();
@@ -205,6 +206,9 @@ function CheckoutPage() {
 
   return (
     <div className="checkout-container">
+      <Helmet>
+        <title>Checkout</title>
+      </Helmet>
       <div className="shop-header">
         <div className="image-container">
           <img
