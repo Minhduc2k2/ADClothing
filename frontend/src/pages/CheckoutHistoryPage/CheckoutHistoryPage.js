@@ -5,6 +5,7 @@ import axios from "../../hooks/axios";
 import "./CheckoutHistoryPage.css";
 import { AuthContext } from "../../context/AuthContext";
 import formatter from "../../hooks/formatter";
+import { Helmet } from "react-helmet-async";
 function CheckoutHistoryPage() {
   const { user } = useContext(AuthContext);
   const [checkouts, setCheckouts] = useState([]);
@@ -23,6 +24,9 @@ function CheckoutHistoryPage() {
   }, [user]);
   return (
     <div className="checkouthistory-container">
+      <Helmet>
+        <title>Checkout History</title>
+      </Helmet>
       <h1>Checkout History</h1>
       <table className="table">
         <thead>

@@ -1,9 +1,18 @@
 import { Link } from "react-router-dom";
-import { Button, Card, Container, Form, Spinner, Col, Row, } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Container,
+  Form,
+  Spinner,
+  Col,
+  Row,
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
 import "./SigninupPage.css";
 import axios from "../../hooks/axios.js";
+import { Helmet } from "react-helmet-async";
 
 function SignupPage() {
   const [name, setName] = useState("");
@@ -14,12 +23,10 @@ function SignupPage() {
   const [isLoading, setLoading] = useState(false);
   const [set, setCode] = useState("");
   const code = useRef();
-  const sleep = ms => new Promise(
-    resolve => setTimeout(resolve, ms)
-  );
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const handleClick = async () => {
     if (!email) {
-      toast.warn('Please enter your email information', {
+      toast.warn("Please enter your email information", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -48,7 +55,7 @@ function SignupPage() {
   };
   const handleSignUp = async () => {
     if (!checkTextBox()) {
-      toast.warn('Please complete all information', {
+      toast.warn("Please complete all information", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -60,9 +67,10 @@ function SignupPage() {
       });
       return;
     }
-    console.log('Sign Up: ', code.current, codeVerify)
-    if (code.current !== codeVerify) { //code.current !== codeVerify
-      toast.error('Wrong verify code', {
+    console.log("Sign Up: ", code.current, codeVerify);
+    if (code.current !== codeVerify) {
+      //code.current !== codeVerify
+      toast.error("Wrong verify code", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -73,9 +81,8 @@ function SignupPage() {
         theme: "colored",
       });
       return;
-    }
-    else if (password !== passwordConfirm) {
-      toast.error('Wrong password confirm', {
+    } else if (password !== passwordConfirm) {
+      toast.error("Wrong password confirm", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -100,7 +107,7 @@ function SignupPage() {
       progress: undefined,
       theme: "colored",
     });
-  }
+  };
   useEffect(() => {
     async function sendCode() {
       if (isLoading) {
@@ -120,7 +127,7 @@ function SignupPage() {
     return false;
   }
   async function isExistedUser(email) {
-    const user = await axios.get(`/users/email/${email}`)
+    const user = await axios.get(`/users/email/${email}`);
     if (user.data === null) {
       return false;
     }
@@ -130,12 +137,13 @@ function SignupPage() {
     try {
       const result = await axios.post("/auth/register", user);
       return result;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
   return (
     <div>
+      <Helmet>
+        <title>Sign up</title>
+      </Helmet>
       <Container className="signinup-container">
         <Card>
           <Card.Body>
@@ -154,7 +162,6 @@ function SignupPage() {
               >
                 <Form.Label>Name</Form.Label>
                 <Form.Control type="text" required />
-
               </Form.Group>
               <Form.Group
                 className="mb-3"
@@ -164,27 +171,34 @@ function SignupPage() {
               >
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" required />
-
               </Form.Group>
-              <Form.Group as={Row} className="mb-3"
+              <Form.Group
+                as={Row}
+                className="mb-3"
                 controlId="codeVerify"
                 onChange={(e) => setCodeVerify(e.target.value)}
-                value={codeVerify}>
-
-                {isLoading ? (<Col><Spinner animation="border" variant="info" /></Col>) :
-                  (<Col><Button
-                    variant="primary"
-                    disabled={isLoading}
-                    onClick={!isLoading ? handleClick : null}
-                  >
-                    {isLoading ? 'Loading…' : 'Send code'}
-                  </Button></Col>)}
+                value={codeVerify}
+              >
+                {isLoading ? (
+                  <Col>
+                    <Spinner animation="border" variant="info" />
+                  </Col>
+                ) : (
+                  <Col>
+                    <Button
+                      variant="primary"
+                      disabled={isLoading}
+                      onClick={!isLoading ? handleClick : null}
+                    >
+                      {isLoading ? "Loading…" : "Send code"}
+                    </Button>
+                  </Col>
+                )}
 
                 <Col sm="9">
                   <Form.Label>Code</Form.Label>
                   <Form.Control type="text" placeholder="Code" />
                 </Col>
-
               </Form.Group>
 
               <Form.Group
@@ -205,9 +219,11 @@ function SignupPage() {
                 <Form.Label>Password Confirm</Form.Label>
                 <Form.Control type="password" required />
               </Form.Group>
-              <Button variant="dark"
+              <Button
+                variant="dark"
                 className="signinup-button"
-                onClick={handleSignUp}>
+                onClick={handleSignUp}
+              >
                 Sign Up
               </Button>
 

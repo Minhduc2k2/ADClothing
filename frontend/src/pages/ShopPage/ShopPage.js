@@ -6,6 +6,7 @@ import axios from "../../hooks/axios.js";
 import { PaginationContext } from "../../context/PaginationContext.js";
 import Productss from "../../components/Products/Productss.js";
 import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 function ShopPage() {
   const location = useLocation();
@@ -121,6 +122,9 @@ function ShopPage() {
 
   return (
     <div className="shop-container">
+      <Helmet>
+        <title>Shop</title>
+      </Helmet>
       <div className="shop-header">
         <div className="image-container">
           <img

@@ -4,10 +4,14 @@ import Slider from "../../components/Slider/Slider";
 import Categories from "../../components/Categories/Categories";
 import Products from "../../components/Products/Products";
 import "./HomePage.css";
+import { Helmet } from "react-helmet-async";
 function HomePage() {
   const url = useRef("/products/");
   return (
     <div className="home-container">
+      <Helmet>
+        <title>AD Clothing</title>
+      </Helmet>
       <Slider />
       <Categories />
 

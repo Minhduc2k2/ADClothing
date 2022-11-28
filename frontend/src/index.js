@@ -7,18 +7,21 @@ import { StoreProvider } from "./Store";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext.js";
 import { PaginationContextProvider } from "./context/PaginationContext.js";
+import { HelmetProvider } from "react-helmet-async";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   //<React.StrictMode>
   <BrowserRouter>
-    <AuthContextProvider>
-      <PaginationContextProvider>
-        <StoreProvider>
-          <App />
-        </StoreProvider>
-      </PaginationContextProvider>
-    </AuthContextProvider>
+    <HelmetProvider>
+      <AuthContextProvider>
+        <PaginationContextProvider>
+          <StoreProvider>
+            <App />
+          </StoreProvider>
+        </PaginationContextProvider>
+      </AuthContextProvider>
+    </HelmetProvider>
   </BrowserRouter>
   //</React.StrictMode>
 );

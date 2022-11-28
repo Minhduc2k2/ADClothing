@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
+import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
@@ -54,6 +55,9 @@ function CartPage() {
 
   return (
     <div className="cart-container">
+      <Helmet>
+        <title>Cart</title>
+      </Helmet>
       <div className="shop-header">
         <div className="image-container">
           <img
