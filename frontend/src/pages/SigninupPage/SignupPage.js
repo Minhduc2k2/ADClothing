@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
@@ -24,6 +24,7 @@ function SignupPage() {
   const [set, setCode] = useState("");
   const code = useRef();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const navigate = useNavigate();
   const handleClick = async () => {
     if (!email) {
       toast.warn("Please enter your email information", {
@@ -94,7 +95,12 @@ function SignupPage() {
       });
       return;
     }
-    const user = { email, password, name };
+    const user = {
+      email,
+      password,
+      name,
+      avatar: "/assets/images/default-user.png",
+    };
     const msg = registerNewUser(user);
     // TODO: format code toast and navigate to home after register new user
     toast.success(msg, {
@@ -107,6 +113,8 @@ function SignupPage() {
       progress: undefined,
       theme: "colored",
     });
+
+    navigate("/signin");
   };
   useEffect(() => {
     async function sendCode() {

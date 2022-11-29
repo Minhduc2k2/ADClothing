@@ -11,7 +11,7 @@ import reviewRoute from "./routes/reviews.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
-import authGG from "./routes/authGG.js"
+import authGG from "./routes/authGG.js";
 import setUpGG from "./passport.js";
 import passport from "passport";
 import { urlencoded, json } from "express";
@@ -61,13 +61,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
+    origin: true,
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
 );
 // ====================================================
-
 
 app.use("/auth", authGG);
 app.use("/backend/auth", authRoute);
