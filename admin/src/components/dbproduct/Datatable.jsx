@@ -5,7 +5,7 @@ import { productColumns } from "../../datatablesource";
 import axios from "./../../hooks/axios";
 import { toast } from "react-toastify";
 import "./datatable.scss";
-
+  
 const Datatable = () => {
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);

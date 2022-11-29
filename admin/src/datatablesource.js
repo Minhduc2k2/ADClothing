@@ -161,16 +161,19 @@ export const productColumns = [
     headerName: "Image",
     width: 230,
     renderCell: (params) => {
+      const imgUrl = params.row.imgPath;
       return (
         <div className="cellWithImg">
-          {[0, 1, 2].map((index) => (
-            <img
+          {imgUrl.map((item, index) => {
+
+            return (<img
               key={index}
               className="cellImg"
-              src={params.row.imgPath[index]}
+              src={item}
               alt="avatar"
             />
-          ))}
+            )
+          })}
         </div>
       );
     },
