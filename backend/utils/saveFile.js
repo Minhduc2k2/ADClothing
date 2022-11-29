@@ -39,7 +39,7 @@ export function saveMultipleFile(doc, coverEncoded) {
 }
 
 // convert from encoded image to data img
-function getDataForImage(coverEncoded) {
+export function getDataForImage(coverEncoded) {
   const cover = JSON.parse(coverEncoded);
   var data;
   if (cover != null && imageMimeTypes.includes(cover.type)) {

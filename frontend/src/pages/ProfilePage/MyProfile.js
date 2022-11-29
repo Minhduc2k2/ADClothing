@@ -35,7 +35,7 @@ registerPlugin(
   FilePondPluginImagePreview,
   FilePondPluginImageResize
 );
-function CheckoutPage() {
+function MyProfile() {
   const [files, setFiles] = useState([]);
   console.log(
     "🚀 ~ file: MyProfile.js ~ line 31 ~ CheckoutPage ~ files",
@@ -483,4 +483,4 @@ function CheckoutPage() {
   );
 }
 
-export default CheckoutPage;
+export default MyProfile;

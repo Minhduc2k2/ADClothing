@@ -149,6 +149,10 @@ function CheckoutPage() {
 
   const handleCheckout = async (paymentMethod) => {
     if (!fullName || !phoneNumber || !email || !address) return;
+    if (address.includes("%")) {
+      toast.error("Address cannot contain special characters like ~!@#$%^&* ");
+      return;
+    }
     try {
       const data = {
         productItems: cartItems,
