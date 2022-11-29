@@ -1,5 +1,14 @@
 import Checkout from "../models/checkoutModel.js";
 
+export const selectAllCheckouts = async (req, res, next) => {
+  try {
+    const checkouts = await Checkout.find({});
+    res.status(200).json(checkouts);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const selectCheckout = async (req, res, next) => {
   try {
     const checkout = await Checkout.findById(req.params.id);

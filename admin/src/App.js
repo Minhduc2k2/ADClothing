@@ -9,11 +9,19 @@ import List from "./pages/list/List";
 import "./style/dark.scss";
 
 import Edit from "./pages/new/Edit";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
+        <ToastContainer
+          position="bottom-center"
+          limit={1}
+          autoClose={2000}
+          pauseOnHover={false}
+        />
         <Header />
         <Routes>
           <Route path="/dashboard">
