@@ -50,3 +50,7 @@ export function getDataForImage(coverEncoded) {
   }
   return data;
 }
+
+export function setDataForImage() {
+
+}

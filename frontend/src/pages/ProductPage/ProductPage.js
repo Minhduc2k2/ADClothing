@@ -118,24 +118,14 @@ function ProductPage() {
               </div>
             </div>
             <div className="product-sub-container">
-              <img
-                src={product.imgPath[0]}
-                alt="product"
-                className="product-sub-img"
-                onClick={() => handleChooseImg(0)}
-              />
-              <img
-                src={product.imgPath[1]}
-                alt="product"
-                className="product-sub-img"
-                onClick={() => handleChooseImg(1)}
-              />
-              <img
-                src={product.imgPath[2]}
-                alt="product"
-                className="product-sub-img"
-                onClick={() => handleChooseImg(2)}
-              />
+              {product.imgPath.map((img, index) => {
+                return (<img
+                  src={img}
+                  alt="product"
+                  className="product-sub-img"
+                  onClick={() => handleChooseImg(index)}
+                />)
+              })}
             </div>
           </Col>
           <Col md={7} className="info-container">
@@ -157,9 +147,8 @@ function ProductPage() {
                         //{backgroundColor: {color === "blue" ? "#2196f3" : color === "red" ? "#c64747" : color === "black" ? "#282626" : color === "white" ?"#fff" : color==="yellow" ? "#e2df08" : color }
                         style={{ backgroundColor: color }}
                         onClick={() => handleChoiceColor(color)}
-                        className={`color-btn ${
-                          colorProduct === color ? "active" : null
-                        }`}
+                        className={`color-btn ${colorProduct === color ? "active" : null
+                          }`}
                         key={color}
                       >
                         {/* {color}

@@ -19,7 +19,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Col, Form, Row } from "react-bootstrap";
 import axios from "./../../hooks/axios";
 import { useParams } from "react-router-dom";
-
+import { notice } from "../../hooks/toast.js";
 // Register the plugins
 registerPlugin(
   FilePondPluginFileValidateSize,
@@ -131,18 +131,40 @@ const Edit = ({ title }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      await axios.put(`/products/${id}`, {
+      const img = getImageData(files);
+      const {data} = await axios.put(`/products/${id}`, {
         name,
         price,
         color: setColor(),
         size: setSize(),
         description,
-        img: files,
+        img: img,
       });
+      console.log("🚀 ~ file: Edit.jsx ~ line 143 ~ handleSubmit ~ rs", data)
+      if(data._id)
+      {
+        notice("success", "Update successful", 2000);
+      }
+      else
+      {
+        notice("error", "Update failed", 2000);
+      }
+      
     } catch (error) {
+      notice("error", "Wrong something", 2000);
       console.log(error);
     }
   };
+  const getImageData = (files) => {
+    let rs = [];
+    files.forEach((item) => {
+     
+        var imgData = `{"type":"${item.fileType.split(";")[0]}","data":"${item.getFileEncodeBase64String()}"}`
+
+        rs.push(imgData);
+    })
+    return rs
+}
   return (
     <div className="new">
       <Sidebar />

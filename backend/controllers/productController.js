@@ -71,26 +71,7 @@ export const selectAllProductsAndSort = async (req, res, next) => {
   }
 };
 
-// update product by id
-export const updateProduct = async (req, res, next) => {
-  try {
-    const image = req.body.img.slice(0, req.body.img.length);
-    let img = [];
-    for (var i = 0; i < image.length; i++) {
-      var data = getDataForImage(image[i]);
-      img.push(data);
-    }
-    const body = { ...req.body, img: img };
-    const update = await Product.findOneAndUpdate(
-      { _id: req.params.id },
-      { $set: body },
-      { new: true }
-    );
-    res.status(200).json(update);
-  } catch (error) {
-    next(error);
-  }
-};
+
 // delete product by id
 export const deleteProduct = async (req, res, next) => {
   try {
@@ -143,10 +124,7 @@ export const createProduct = async (req, res, next) => {
   try {
     // const image = req.body.img;
     const image = req.body.img.slice(0, req.body.img.length);
-    console.log(
-      "🚀 ~ file: productController.js ~ line 148 ~ createProduct ~ image",
-      image
-    );
+    console.log("🚀 ~ CREATE REQ ~ image", image)
     const body = { ...req.body };
     const product = new Product(body);
 
@@ -158,5 +136,25 @@ export const createProduct = async (req, res, next) => {
     res.status(200).send(result);
   } catch (err) {
     next(err);
+  }
+};
+// update product by id
+export const updateProduct = async (req, res, next) => {
+  try {
+    const image = req.body.img.slice(0, req.body.img.length);
+    let img = [];
+    for (var i = 0; i < image.length; i++) {
+      var data = getDataForImage(image[i]);
+      img.push(data);
+    }
+    const body = { ...req.body, img: img };
+    const update = await Product.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: body },
+      { new: true }
+    );
+    res.status(200).json(update);
+  } catch (error) {
+    next(error);
   }
 };
