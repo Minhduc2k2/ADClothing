@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { productColumns } from "../../datatablesource";
 import axios from "./../../hooks/axios";
+import { toast } from "react-toastify";
 import "./datatable.scss";
 
 const Datatable = () => {
   const [data, setData] = useState([]);
-
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     try {
       const fetchData = async () => {
@@ -29,12 +30,13 @@ const Datatable = () => {
     } catch (err) {
       console.log(err.message);
     }
-  });
+  }, [refresh]);
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`/products/${id}`);
-      alert("Delete product successfully");
+      toast.success("Delete product successfully");
+      setRefresh(!refresh);
     } catch (err) {
       console.log(err);
     }

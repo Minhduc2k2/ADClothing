@@ -2,10 +2,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { userColumns } from "../../datatablesource";
 import axios from "./../../hooks/axios";
+import { toast } from "react-toastify";
 import "./datatable.scss";
 const Datatable = () => {
   const [data, setData] = useState([]);
-
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     try {
       const fetchData = async () => {
@@ -25,12 +26,13 @@ const Datatable = () => {
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [refresh]);
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`/users/${id}`);
-      alert("Delete user successfully");
+      toast.success("Delete user successfully");
+      setRefresh(!refresh);
     } catch (err) {
       console.log(err);
     }
