@@ -272,8 +272,8 @@ function SigninPage() {
                   Don’t have an account?{" "}
                   <Link to="/signup"> Create a free account</Link>
                   <p>or</p>
-                  <Button variant="light">
-                    <a onClick={handleForgetPwd}>Forget password</a>
+                  <Button variant="light" onClick={handleForgetPwd}>
+                    <p>Forget password</p>
                   </Button>
                 </p>
               </div>

@@ -29,7 +29,8 @@ function CheckoutPage() {
       province: arr[3],
     };
   };
-  const addressInfo = getAddress();
+  const addressInfo = useRef();
+  addressInfo.current = getAddress();
 
   //initData();
   const [fullName, setFullName] = useState(user.name || "");
@@ -41,9 +42,11 @@ function CheckoutPage() {
   const distinctArray = useRef([]);
   const wardArray = useRef([]);
   const [provinceText, setProvinceText] = useState();
-  const [distinctText, setDistinctText] = useState(addressInfo.distinct);
-  const [wardText, setWardText] = useState(addressInfo.ward);
-  const [address, setAddress] = useState(addressInfo.address);
+  const [distinctText, setDistinctText] = useState(
+    addressInfo.current.distinct
+  );
+  const [wardText, setWardText] = useState(addressInfo.current.ward);
+  const [address, setAddress] = useState(addressInfo.current.address);
   const [note, setNote] = useState("");
   const shippingCost = 2;
   const [paid, setPaid] = useState(false);
@@ -63,18 +66,18 @@ function CheckoutPage() {
       try {
         // chạy câu dưới nhưng không thục thi và chạy những sync khác
         const proData = await axiosOriginal.get(
-          `https://provinces.open-api.vn/api/p/search/?q=${addressInfo.province}`
+          `https://provinces.open-api.vn/api/p/search/?q=${addressInfo.current.province}`
         );
         // sau khi thực thi tất cả các sync, sẽ thực thi câu lệnh trên, sau đó chạy và thực thi các hàm dưới
         provinceCode.current = proData.data[0].code;
 
         const distData = await axiosOriginal.get(
-          `https://provinces.open-api.vn/api/d/search/?q=${addressInfo.distinct}&p=${provinceCode.current}`
+          `https://provinces.open-api.vn/api/d/search/?q=${addressInfo.current.distinct}&p=${provinceCode.current}`
         );
         distinctCode.current = distData.data[0].code;
 
         const wardData = await axiosOriginal.get(
-          `https://provinces.open-api.vn/api/w/search/?q=${addressInfo.ward}&d=${distinctCode.current}&p=${provinceCode.current}`
+          `https://provinces.open-api.vn/api/w/search/?q=${addressInfo.current.ward}&d=${distinctCode.current}&p=${provinceCode.current}`
         );
         wardCode.current = wardData.data[0].code;
 
@@ -94,7 +97,7 @@ function CheckoutPage() {
         wardArray.current = wardList.data.wards;
 
         // gặp setState (nhưng chưa re-render, phải đợi các await (nếu có), async r mới re-render)
-        setProvinceText(addressInfo.province);
+        setProvinceText(addressInfo.current.province);
       } catch (err) {
         console.log(err);
       }
@@ -149,7 +152,17 @@ function CheckoutPage() {
 
   const handleCheckout = async (paymentMethod) => {
     if (!fullName || !phoneNumber || !email || !address) return;
-    if (address.includes("%")) {
+    if (
+      address.includes("~") ||
+      address.includes("!") ||
+      address.includes("@") ||
+      address.includes("#") ||
+      address.includes("$") ||
+      address.includes("%") ||
+      address.includes("^") ||
+      address.includes("&") ||
+      address.includes("*")
+    ) {
       toast.error("Address cannot contain special characters like ~!@#$%^&* ");
       return;
     }
