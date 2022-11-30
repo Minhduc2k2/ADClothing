@@ -222,6 +222,21 @@ function MyProfile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!fullName || !phoneNumber || !email || !address) return;
+    if (
+      address.includes("~") ||
+      address.includes("!") ||
+      address.includes("@") ||
+      address.includes("#") ||
+      address.includes("$") ||
+      address.includes("%") ||
+      address.includes("^") ||
+      address.includes("&") ||
+      address.includes("*")
+    ) {
+      toast.error("Address cannot contain special characters like ~!@#$%^&* ");
+      return;
+    }
     const userInfo = {
       ...user,
       name: fullName,

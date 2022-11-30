@@ -11,6 +11,7 @@ import "./style/dark.scss";
 import Edit from "./pages/new/Edit";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Signin from "./pages/signin/signin";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               <Route path="edit/:id" element={<Edit title="Edit Product" />} />
             </Route>
           </Route>
+          <Route path="/signin" element={<Signin />} />
         </Routes>
         <Footer />
       </div>

@@ -19,18 +19,17 @@ function Footer() {
         </div>
       </div>
       <div className={"center"}>
-        <h3 className={"title"}>Useful Links</h3>
+        <h3 className={"title"}>Opening Hours</h3>
         <ul className={"link-list"}>
-          <li className={"link-item"}>Home</li>
-          <li className={"link-item"}>Man Fashion</li>
-          <li className={"link-item"}>Accessories</li>
-          <li className={"link-item"}>Order Tracking</li>
-          <li className={"link-item"}>Wishlist</li>
-          <li className={"link-item"}>Cart</li>
-          <li className={"link-item"}>Woman Fashion</li>
-          <li className={"link-item"}>My Account</li>
-          <li className={"link-item"}>Wishlist</li>
-          <li className={"link-item"}>Terms</li>
+          <li className={"link-item"}>
+            Monday-Friday: <span>8.00h-20.00h</span>
+          </li>
+          <li className={"link-item"}>
+            Saturday: <span>10.00h-20.00h</span>
+          </li>
+          <li className={"link-item"}>
+            Sunday: <span>12.00h-20.00h</span>
+          </li>
         </ul>
       </div>
       <div className={"right"}>
@@ -38,11 +37,14 @@ function Footer() {
         <ul className={"contact-list"}>
           <li className={"contact-item"}>
             <i class="fa-solid fa-location-dot"></i>
-            <span>622 Dixie Path , South Tobinchester 98336</span>
+            <span>
+              Số 1 Đ. Võ Văn Ngân, Linh Chiểu, Thành Phố Thủ Đức, Thành phố Hồ
+              Chí Minh
+            </span>
           </li>
           <li className={"contact-item"}>
             <i class="fa-solid fa-phone"></i>
-            <span>+1 234 56 78</span>
+            <span>0339930201 || 0334901237</span>
           </li>
           <li className={"contact-item"}>
             <i class="fa-solid fa-envelope"></i>
