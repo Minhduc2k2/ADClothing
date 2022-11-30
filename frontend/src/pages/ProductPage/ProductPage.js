@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -43,7 +43,7 @@ function ProductPage() {
 
   const handleAddReview = async () => {
     try {
-      await axios.post("/reviews", {
+      const { data } = await axios.post("/reviews", {
         user: user._id,
         product: product._id,
         review,
@@ -51,9 +51,13 @@ function ProductPage() {
       });
       setReview("");
       setRating(0);
-      toast.success("Review added successfully");
+      if (data.message) toast.error(data.message);
+      else {
+        toast.success("Review has been created");
+      }
     } catch (err) {
-      toast.error("Review added failed");
+      console.log(err);
+      toast.error(err.message);
     }
   };
   const handleAddtoCart = async () => {
@@ -86,6 +90,11 @@ function ProductPage() {
     setColorProduct(color);
     setIndexImg(indexImg);
   };
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      {!user && "You must Sign in to add review"}
+    </Tooltip>
+  );
   return (
     product && (
       <div className="product-container">
@@ -119,12 +128,15 @@ function ProductPage() {
             </div>
             <div className="product-sub-container">
               {product.imgPath.map((img, index) => {
-                return (<img
-                  src={img}
-                  alt="product"
-                  className="product-sub-img"
-                  onClick={() => handleChooseImg(index)}
-                />)
+                return (
+                  <img
+                    key={index}
+                    src={img}
+                    alt="product"
+                    className="product-sub-img"
+                    onClick={() => handleChooseImg(index)}
+                  />
+                );
               })}
             </div>
           </Col>
@@ -147,8 +159,9 @@ function ProductPage() {
                         //{backgroundColor: {color === "blue" ? "#2196f3" : color === "red" ? "#c64747" : color === "black" ? "#282626" : color === "white" ?"#fff" : color==="yellow" ? "#e2df08" : color }
                         style={{ backgroundColor: color }}
                         onClick={() => handleChoiceColor(color)}
-                        className={`color-btn ${colorProduct === color ? "active" : null
-                          }`}
+                        className={`color-btn ${
+                          colorProduct === color ? "active" : null
+                        }`}
                         key={color}
                       >
                         {/* {color}
@@ -225,9 +238,21 @@ function ProductPage() {
               required
               onChange={(e) => setReview(e.target.value)}
             />
-            <Button variant="dark" onClick={handleAddReview}>
-              Add
-            </Button>
+            <OverlayTrigger
+              placement="right"
+              delay={{ show: 250, hide: 400 }}
+              overlay={renderTooltip}
+            >
+              <span>
+                <Button
+                  variant="dark"
+                  onClick={handleAddReview}
+                  disabled={user ? false : true}
+                >
+                  Add
+                </Button>
+              </span>
+            </OverlayTrigger>
           </Col>
         </Row>
         <div className="new-arr">

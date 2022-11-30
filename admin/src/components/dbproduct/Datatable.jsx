@@ -113,7 +113,7 @@ const Datatable = () => {
         </Link>
       </div>
       <div class="input-group mb-3">
-          <input 
+          <input
             type="text" 
             class="form-control" 
             placeholder="Find something..." 

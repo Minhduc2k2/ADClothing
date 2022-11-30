@@ -21,7 +21,6 @@ const DateRangePickerComp = ({ getDateRange }) => {
   useEffect(() => {
     getDateRange(range);
   }, [range])
-  console.log("🚀 ~ start[0]", range[0].startDate.getDate(), range[0].startDate.getMonth(), range[0].startDate.getFullYear());
 
   // open close
   const [open, setOpen] = useState(false)
