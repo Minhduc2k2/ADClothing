@@ -21,7 +21,8 @@ router.get("/:id", selectUser);
 router.get("/email/:email", selectUserByEmail);
 
 // update user
-router.post("/:id", updateUser);
+router.put("/:id", updateUser);
+
 
 // update user password
 router.patch("/:email", updateUserPassword);

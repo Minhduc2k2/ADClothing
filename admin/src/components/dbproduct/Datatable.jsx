@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import "./datatable.scss";
   
 const Datatable = () => {
+  const [textSearch, setTextSearch] = useState("");
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   useEffect(() => {
@@ -67,6 +68,42 @@ const Datatable = () => {
       },
     },
   ];
+  const handleSearch = async (e) => {
+    try {
+      const input = String(textSearch).replaceAll(" ", "-");
+      if(textSearch.trim() === "") {
+        const res = await axios.get("/products");
+        const myArr = res.data.map((item) => {
+          return {
+            id: item._id,
+            name: item.name,
+            color: item.color,
+            size: item.size.join(", "),
+            price: item.price,
+            description: item.description,
+            imgPath: item.imgPath,
+          };
+        });
+        setData(myArr);
+        return;
+      }
+      const res = await axios.get(`/search/${input}`);
+      const myArr = res.data.map((item) => {
+        return {
+          id: item._id,
+          name: item.name,
+          color: item.color,
+          size: item.size.join(", "),
+          price: item.price,
+          description: item.description,
+          imgPath: item.imgPath,
+        };
+      });
+      setData(myArr);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="datatable">
       <div className="datatableTitle">
@@ -75,6 +112,28 @@ const Datatable = () => {
           Add New
         </Link>
       </div>
+      <div class="input-group mb-3">
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Find something..." 
+            aria-label="Find something..." 
+            aria-describedby="button-addon2" 
+            onChange={(e) => setTextSearch(e.target.value)}
+            onKeyDown={(event) => {
+              if (event.which === 13) {
+                handleSearch(event);
+              }
+            }}/>
+          <button 
+            class="btn btn-outline-primary" 
+            type="button" 
+            id="button-addon2"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+        </div>
       {data && (
         <DataGrid
           className="datagrid"
