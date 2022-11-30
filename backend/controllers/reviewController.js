@@ -55,9 +55,20 @@ export const updateReview = async (req, res, next) => {
 // create a new review
 export const createReview = async (req, res, next) => {
   try {
+    const existReview = await Review.findOne({
+      product: req.body.product,
+      user: req.body.user,
+    });
+    if (existReview) {
+      res
+        .status(200)
+        .json({ message: "You has already add review in this product." });
+      return;
+    }
     const review = new Review(req.body);
     await review.save();
     const rating = Number(req.body.rating);
+
     const product = await Product.findOne({ _id: req.body.product });
 
     const ratingQuantity = product.ratingQuantity + 1;

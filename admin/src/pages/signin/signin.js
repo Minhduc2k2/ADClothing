@@ -1,12 +1,51 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Card, Container, Form } from "react-bootstrap";
 import "./SigninupPage.css";
+import { toast } from "react-toastify";
+import axios from "./../../hooks/axios";
+import Cookies from "js-cookie";
+import { AuthContext } from "../../context/AuthContext";
+import { useEffect } from "react";
 
-const submithandler = () => {};
-const handleForgetPwd = () => {};
 function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user, loading, error, dispatch } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
+
+  const submithandler = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post("/auth/login", {
+        email: email,
+        password: password,
+      });
+      if (data.success === false) {
+        toast.error("Wrong email or password");
+        return;
+      }
+      if (data.isAdmin === false) {
+        toast.error("You are not admin");
+        return;
+      }
+      toast.success("Success Sign in");
+      Cookies.set("userInfo", JSON.stringify(data));
+      dispatch({ type: "LOGIN_SUCCESS", payload: data });
+
+      navigate("/dashboard", { state: { user: data } });
+    } catch (err) {
+      console.log(err.message);
+      toast.error("Invalid username or password");
+    }
+  };
+  const handleForgetPwd = () => {};
   return (
     <Container className="signinup-container">
       <Card>

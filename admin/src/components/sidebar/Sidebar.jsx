@@ -1,20 +1,22 @@
-import "./sidebar.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import StoreIcon from "@mui/icons-material/Store";
-import InsertChartIcon from "@mui/icons-material/InsertChart";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
-import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import StoreIcon from "@mui/icons-material/Store";
 import { Link } from "react-router-dom";
+import "./sidebar.scss";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-
+import { AuthContext } from "../../context/AuthContext";
 const Sidebar = () => {
+  const { dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const logout = async () => {
+    navigate("/signin");
+    await dispatch({ type: "LOGOUT" });
+    Cookies.remove("userInfo");
+    window.open("http://localhost:8800/auth/logout", "_self");
+  };
   return (
     <div className="sidebar">
       {/* <div className="top">
@@ -46,11 +48,11 @@ const Sidebar = () => {
             </li>
           </Link>
           <p className="title">USER</p>
-          <li>
+          {/* <li>
             <AccountCircleOutlinedIcon className="icon" />
             <span>Profile</span>
-          </li>
-          <li>
+          </li> */}
+          <li onClick={logout}>
             <ExitToAppIcon className="icon" />
             <span>Logout</span>
           </li>
