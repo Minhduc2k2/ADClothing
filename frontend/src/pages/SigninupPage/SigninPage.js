@@ -61,10 +61,6 @@ function SigninPage() {
         email: email,
         password: password,
       });
-      // contextDispatch({
-      //   type: "USER_SIGNIN",
-      //   payload: data,
-      // });
 
       notice("success", "Success Sign in", 1500);
       Cookies.set("userInfo", JSON.stringify(data));
