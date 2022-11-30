@@ -62,3 +62,48 @@ export const createCheckout = async (req, res, next) => {
     next(error);
   }
 };
+
+// group by date, sum monney
+
+export const revenue = async (req, res, next) => {
+  try {
+    const now = new Date();
+    const start = new Date()
+    let startDate = new Date(req.params.startDate);
+    let endDate = new Date(req.params.endDate);
+    const checkout = await Checkout.aggregate([
+      {
+        $match:
+        {
+          $and: [
+            { createdAt: { $gt: startDate } },
+            { createdAt: { $lt: endDate } }
+          ]
+
+        }
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+
+          total: {
+            $sum: "$totalCost"
+          }
+        }
+      },
+      { $sort: { _id: 1 } }
+
+    ]);
+    res.status(200).json(checkout);
+  } catch (error) {
+    next(error);
+  }
+}
+
+const getDateObject = (date) => {
+  return {
+    day: date.split('-'),
+    month: date.split('-'),
+    year: date.split('-')
+  }
+}

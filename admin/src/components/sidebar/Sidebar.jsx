@@ -15,7 +15,7 @@ const Sidebar = () => {
     navigate("/signin");
     await dispatch({ type: "LOGOUT" });
     Cookies.remove("userInfo");
-    window.open("http://localhost:8800/auth/logout", "_self");
+    window.open("http://localhost:8800/auth/logoutAdmin", "_self");
   };
   return (
     <div className="sidebar">

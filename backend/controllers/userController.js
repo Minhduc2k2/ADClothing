@@ -1,22 +1,34 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { getImg } from "../utils/saveFile.js"
+import { getUrlImageObj } from "../utils/getUrlImage.js";
 
-const URL_PROFILE = "http://localhost:3000/myprofile"
 // update user
 export const updateUser = async (req, res, next) => {
   try {
-    const image = getImg(req.body.img);
-    const body = { ...req.body, img: image };
+    let image = null
+    let body;
+    // nếu có ảnh
+    if (req.body.img !== null) {
+      image = getImg(req.body.img);
+      body = { ...req.body, img: image };
+    }
+    else {
+      body = { ...req.body }
+    }
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       { $set: body },
       { new: true }
     );
-    res.redirect(URL_PROFILE)
-    //res.status(200).json(updatedUser);
+    const { password, img, ...otherDetails } = updatedUser._doc;
+    let imgPath;
+    if (img === null)
+      imgPath = otherDetails.avatar;
+    else
+      imgPath = getUrlImageObj(img);
+    res.status(200).json({ ...otherDetails, imgPath: imgPath });
   } catch (err) {
-    console.log("000000")
     next(err);
   }
 };

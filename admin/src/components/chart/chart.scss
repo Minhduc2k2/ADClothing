@@ -12,18 +12,25 @@
   .chartGrid {
     stroke: rgb(228, 225, 225);
   }
-  .featured{
-    .bottom{
-      .ratio-month{
-        .amount{
+
+  .featured {
+    .bottom {
+      .ratio-month {
+        .amount {
           margin: 30px 0;
         }
       }
     }
   }
-  
+
 }
 
-p{
+p {
   margin: 30px 0;
+}
+
+.headerSearchItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }

@@ -7,6 +7,7 @@ import { generatePassword } from "../utils/generatePassword.js";
 import { getUrlImageObj } from "../utils/getUrlImage.js";
 const router = express.Router();
 const CLIENT_URL = "http://localhost:3000/";
+const CLIENT_URL_ADMIN = "http://localhost:3001/";
 
 
 router.get("/login/success", async (req, res) => {
@@ -69,8 +70,14 @@ router.get("/logout", (req, res) => {
     res.redirect(CLIENT_URL);
 });
 
+router.get("/logoutAdmin", (req, res) => {
+    req.logout();
+    res.redirect(CLIENT_URL_ADMIN);
+});
+
 // scope: get infor fields of user
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
 
 router.get(
     "/google/callback",
@@ -79,6 +86,8 @@ router.get(
         failureRedirect: "/login/failed",
     })
 );
+
+
 
 
 export default router

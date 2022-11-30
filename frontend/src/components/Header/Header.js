@@ -15,7 +15,6 @@ import "./Header.css";
 import axios from "../../hooks/axios.js";
 import { useNavigate } from "react-router-dom"
 function Header({ user }) {
-  console.log("🚀 ~ file: Header.js ~ line 18 ~ Header ~ user", user)
   const navigate = useNavigate();
   const { state } = useContext(Store);
   const [textSearch, setTextSearch] = useState("");

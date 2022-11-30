@@ -131,6 +131,7 @@ const Edit = ({ title }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      console.log("🚀 ~ file: Edit.jsx:135 ~ handleSubmit ~ files", files)
       const img = getImageData(files);
       const {data} = await axios.put(`/products/${id}`, {
         name,
@@ -140,7 +141,6 @@ const Edit = ({ title }) => {
         description,
         img: img,
       });
-      console.log("🚀 ~ file: Edit.jsx ~ line 143 ~ handleSubmit ~ rs", data)
       if(data._id)
       {
         notice("success", "Update successful", 2000);
@@ -338,7 +338,6 @@ const Edit = ({ title }) => {
               </Col>
               <Col md={6}>
                 <FilePond
-                  className="NGUYENVANAN"
                   files={files}
                   onupdatefiles={setFiles}
                   allowMultiple={true}

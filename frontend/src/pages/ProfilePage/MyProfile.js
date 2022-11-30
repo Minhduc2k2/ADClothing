@@ -36,11 +36,6 @@ registerPlugin(
   FilePondPluginImageResize
 );
 function MyProfile() {
-  const [files, setFiles] = useState([]);
-  console.log(
-    "🚀 ~ file: MyProfile.js ~ line 31 ~ CheckoutPage ~ files",
-    files
-  );
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -58,9 +53,10 @@ function MyProfile() {
   const distinctCode = useRef();
   const wardCode = useRef();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
-  console.log("🚀 ~ file: MyProfile.js ~ line 49 ~ CheckoutPage ~ user", user);
-  const urlUpdateAvt = `http://localhost:8800/backend/users/${user._id}`;
+  const { user, dispatch } = useContext(AuthContext);
+  const [files, setFiles] = useState([user.imgPath]);
+
+
   const getAddress = () => {
     const arr = user.address.split("%");
     return {
@@ -85,11 +81,7 @@ function MyProfile() {
   const [address, setAddress] = useState(addressInfo.address);
   // FIXME: lỗi khi chưa có address, cả bên checkout
 
-  const save = async (e) => {
-    e.preventDefault();
-    console.log("SAV", e.target[5].innerHTML.name);
-  };
-  const handleChangeAvt = async () => {};
+
   const handleChangePassword = async () => {
     if (newPassword !== rePassword) {
       notice("warn", "Re-password incorrect", 2000);
@@ -245,10 +237,42 @@ function MyProfile() {
       address:
         address + "%" + wardText + "%" + distinctText + "%" + provinceText,
     };
-    const result = await axios.put(`/users/${user._id}`, userInfo);
-    if (result.data !== null) notice("success", "Edit success", 2000);
-    else notice("error", "Edit error", 2000);
+
+    const { data } = await axios.put(`/users/${user._id}`, userInfo);
+    const { password, isAdmin, ...others } = data;
+    if (data.success === false)
+      notice("error", "Edit error", 2000);
+    else {
+      notice("success", "Edit success", 2000);
+      dispatch({ type: "LOGIN_SUCCESS", payload: others });
+    }
   };
+  const handleChangeAvt = async () => {
+    let img;
+    if (files[0] === undefined) {
+      notice("warn", "You haven't added a photo yet", 2000);
+      return;
+    }
+    else {
+      img = getImageData(files[0]);
+    }
+    const userInfo = {
+      img: img,
+    };
+    const { data } = await axios.put(`/users/${user._id}`, userInfo);
+    const { password, isAdmin, ...others } = data;
+    if (data.success === false)
+      notice("error", "Edit error", 2000);
+    else {
+      notice("success", "Edit success", 2000);
+      dispatch({ type: "LOGIN_SUCCESS", payload: others });
+      handleCloseAvt();
+    }
+  }
+  const getImageData = (item) => {
+    return `{"type":"${item.fileType.split(";")[0]}","data":"${item.getFileEncodeBase64String()}"}`
+
+  }
   return (
     <div className="checkout-container">
       <Helmet>
@@ -305,7 +329,7 @@ function MyProfile() {
                   if (element.code === Number(provinceCode.current)) {
                     // provinceCode.current = element.code;
                     return (
-                      <option value={element.code} key={element.code} selected>
+                      <option value={element.code} key={element.code} defaultValue>
                         {element.name}
                       </option>
                     );
@@ -338,7 +362,7 @@ function MyProfile() {
                   if (element.code === Number(distinctCode.current)) {
                     //distinctCode.current = element.code;
                     return (
-                      <option value={element.code} key={element.code} selected>
+                      <option value={element.code} key={element.code} defaultValue>
                         {element.name}
                       </option>
                     );
@@ -371,7 +395,7 @@ function MyProfile() {
                   if (element.name === Number(wardCode.current)) {
                     //wardCode.current = element.code;
                     return (
-                      <option value={element.code} key={element.code} selected>
+                      <option value={element.code} key={element.code} defaultValue>
                         {element.name}
                       </option>
                     );
@@ -467,12 +491,14 @@ function MyProfile() {
                   <Modal.Title>Choose Image</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <form action={urlUpdateAvt} method="post">
+                  <form >
                     <FilePond
                       files={files}
-                      onUpdateFiles={setFiles}
+                      onupdatefiles={setFiles}
+                      allowMultiple={false}
                       maxFiles={3}
                       maxFileSize="3MB"
+
                       //server="/api"
                       name="img"
                       labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
@@ -481,11 +507,17 @@ function MyProfile() {
                       <button
                         onClick={handleCloseAvt}
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn btn-danger"
                       >
                         Close
                       </button>
-                      <input type="submit" class="btn btn-primary" />
+                      <button
+                        onClick={handleChangeAvt}
+                        type="button"
+                        class="btn btn-primary"
+                      >
+                        Save
+                      </button>
                     </div>
                   </form>
                 </Modal.Body>

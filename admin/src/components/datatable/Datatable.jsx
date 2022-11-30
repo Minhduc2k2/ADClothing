@@ -18,6 +18,7 @@ const Datatable = () => {
             address: item.address.replaceAll("%", ", "),
             avatar: item.avatar,
             email: item.email,
+            role: item.isAdmin === true ? "Admin" : ""
           };
         });
         setData(myArr);

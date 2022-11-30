@@ -7,12 +7,15 @@ import {
   updateCheckout,
   deleteCheckout,
   selectCheckout,
-  selectAllCheckouts,
+  selectAllCheckouts, revenue
 } from "../controllers/checkoutController.js";
 const router = express.Router();
 
 // select all checkout
 router.get("/", selectAllCheckouts);
+
+// select all checkout
+router.get("/revenue/:startDate/:endDate", revenue);
 
 // create a new checkout
 router.post("/", createCheckout);

@@ -23,6 +23,11 @@ export const userColumns = [
     headerName: "Address",
     width: 530,
   },
+  {
+    field: "role",
+    headerName: "Role",
+    width: 530,
+  },
 ];
 
 // export const userColumns = [

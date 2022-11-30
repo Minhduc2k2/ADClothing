@@ -61,7 +61,15 @@ function SigninPage() {
         email: email,
         password: password,
       });
+      // contextDispatch({
+      //   type: "USER_SIGNIN",
+      //   payload: data,
+      // });
+      if (data.success === false) {
 
+        notice("error", "Wrong email or password", 1500);
+        return;
+      }
       notice("success", "Success Sign in", 1500);
       Cookies.set("userInfo", JSON.stringify(data));
       dispatch({ type: "LOGIN_SUCCESS", payload: data });

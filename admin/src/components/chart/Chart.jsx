@@ -10,7 +10,12 @@ import {
 import { useEffect, useState } from "react";
 import axios from "./../../hooks/axios";
 import formatter from "./../../hooks/formatter";
-
+import {faCalendarDays} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { format } from "date-fns";
+import { DateRange } from "react-date-range";
+import DateRangePickerComp from "../calendar/DateRangePickerComp.jsx";
+import { addDays } from 'date-fns';
 // const data = [
 //   { name: "January", Total: 1200 },
 //   { name: "February", Total: 2100 },
@@ -21,26 +26,32 @@ import formatter from "./../../hooks/formatter";
 // ];
 
 const Chart = ({ aspect, title }) => {
+  const [dates, setDates] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: "selection",
+    },
+  ]);
+  const startDate = `${dates[0].startDate.getFullYear()}-${dates[0].startDate.getMonth() + 1}-${dates[0].startDate.getDate()}`;
+
+  const endDate = `${dates[0].endDate.getFullYear()}-${dates[0].endDate.getMonth() + 1}-${dates[0].endDate.getDate() + 1}`;
+  
   const [checkouts, setCheckouts] = useState([]);
+  const handleDateRange = (input) => {
+    setDates(input);
+  }
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get("/checkouts");
-      let myArr = data.map((item) => {
-        return {
-          name: formatter.format(new Date(item.createdAt.substring(0, 10))),
-          Total: item.totalCost,
-        };
-      });
-      console.log(myArr);
-
-      setCheckouts(myArr);
+      const { data } = await axios.get(`/checkouts/revenue/${startDate}/${endDate}`);
+      setCheckouts(data);
     };
     fetchData();
-  }, []);
+  }, [dates]);
   return (
     <div className="chart">
-      <div className="title">{title}</div>
-
+      <DateRangePickerComp getDateRange={handleDateRange} />
+      
       {checkouts && (
         <ResponsiveContainer width="100%" aspect={aspect}>
           <AreaChart
@@ -51,17 +62,17 @@ const Chart = ({ aspect, title }) => {
           >
             <defs>
               <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#747171" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#747171" stopOpacity={0} />
+                <stop offset="5%" stopColor="#014088" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#1C97CB" stopOpacity={0.2} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="name" stroke="gray" />
+            <XAxis dataKey="_id" stroke="#081118" />
             <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
             <Tooltip />
             <Area
               type="monotone"
-              dataKey="Total"
-              stroke="#000000"
+              dataKey="total"
+              stroke="#4EBBB9"
               fillOpacity={1}
               fill="url(#total)"
             />
