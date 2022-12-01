@@ -14,7 +14,6 @@ const Datatable = () => {
     try {
       const fetchData = async () => {
         const res = await axios.get("/products");
-        console.log(res.data);
         const myArr = res.data.map((item) => {
           return {
             id: item._id,
