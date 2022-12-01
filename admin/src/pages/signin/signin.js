@@ -240,15 +240,18 @@ function Signin() {
             )}
           </Card.Body>
         </Card>
-      ) :
-        (<Card>
+      ) : (
+        <Card>
           <Card.Body>
             <div className="signinup-header">
               <h1>Sign In</h1>
             </div>
             <Form onSubmit={submithandler}>
               <div className="input-group mb-3">
-                <span className="input-group-text" id="inputGroup-sizing-default">
+                <span
+                  className="input-group-text"
+                  id="inputGroup-sizing-default"
+                >
                   Email
                 </span>
                 <input
@@ -261,7 +264,10 @@ function Signin() {
                 />
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text" id="inputGroup-sizing-default">
+                <span
+                  className="input-group-text"
+                  id="inputGroup-sizing-default"
+                >
                   Password
                 </span>
                 <input
@@ -280,15 +286,16 @@ function Signin() {
               >
                 Sign In
               </Button>
-              <p className="signinup-forget">
+              <div className="signinup-forget">
                 <div>or</div>
                 <Button variant="light" onClick={handleForgetPwd}>
                   Forget password
                 </Button>
-              </p>
+              </div>
             </Form>
           </Card.Body>
-        </Card>)}
+        </Card>
+      )}
     </Container>
   );
 }

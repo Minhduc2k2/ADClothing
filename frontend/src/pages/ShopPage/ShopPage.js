@@ -1,12 +1,11 @@
-import { useState, useContext, useEffect, useRef } from "react";
-import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
-import Products from "../../components/Products/Products";
-import "./ShopPage.css";
-import axios from "../../hooks/axios.js";
-import { PaginationContext } from "../../context/PaginationContext.js";
-import Productss from "../../components/Products/Productss.js";
-import { useLocation } from "react-router-dom";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Button, Col, Form, ListGroup, Pagination, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
+import { useLocation } from "react-router-dom";
+import Productss from "../../components/Products/Productss.js";
+import { PaginationContext } from "../../context/PaginationContext.js";
+import axios from "../../hooks/axios.js";
+import "./ShopPage.css";
 
 function ShopPage() {
   const location = useLocation();
@@ -166,87 +165,31 @@ function ShopPage() {
           <Pagination className="shop-pagination">{index}</Pagination>
         </Col>
         <Col md={3}>
-          {/* <div className="shop-by-color">
-            <h3>Shop by color</h3>
-            <div>
-              <label class="color-container">
-                Blue
-                <input type="checkbox" />
-                <span class="checkmark blue"></span>
-              </label>
-
-              <label class="color-container">
-                Red
-                <input type="radio" />
-                <span class="checkmark red"></span>
-              </label>
-
-              <label class="color-container">
-                Black
-                <input type="radio" />
-                <span class="checkmark black "></span>
-              </label>
-
-              <label class="color-container">
-                White
-                <input type="checkbox" />
-                <span class="checkmark white "></span>
-              </label>
-
-              <label class="color-container">
-                Yellow
-                <input type="checkbox" />
-                <span class="checkmark yellow"></span>
-              </label>
-            </div>
-          </div>
-          <div className="shop-by-size mt-4">
-            <h3>Shop by size</h3>
-            <div>
-              <label class="size-container">
-                <input type="checkbox" />
-                <span>XL Extra Large</span>
-              </label>
-              <label class="size-container">
-                <input type="checkbox" />
-                <span>L Large</span>
-              </label>
-              <label class="size-container">
-                <input type="checkbox" />
-                <span>M Medium</span>
-              </label>
-              <label class="size-container">
-                <input type="checkbox" />
-                <span>S Small</span>
-              </label>
-            </div>
-          </div> */}
           <div className="shop-by-category mt-4">
             <h3>Shop by category</h3>
             <div>
               {categories == null ? (
                 ""
               ) : (
-                <>
+                <ListGroup>
                   {categories.map((item) => {
                     return (
-                      <h6
+                      <ListGroup.Item
+                        action
+                        variant="light"
                         key={item._id}
                         onClick={() => {
                           handleClickCategory(item._id);
                         }}
                       >
                         {item.name}
-                      </h6>
+                      </ListGroup.Item>
                     );
                   })}
-                </>
+                </ListGroup>
               )}
             </div>
           </div>
-          <Button variant="dark" className="mt-4">
-            Filter <i class="fa-solid fa-filter"></i>
-          </Button>
         </Col>
       </Row>
     </div>

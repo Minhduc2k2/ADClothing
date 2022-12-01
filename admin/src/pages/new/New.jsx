@@ -30,10 +30,10 @@ registerPlugin(
 
 const New = ({ title }) => {
   const [files, setFiles] = useState([]);
-  console.log("🚀 ~ file: New.jsx:32 ~ New ~ files", files)
-
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [category, setCategory] = useState();
+  const [categories, setCategories] = useState([]);
   const [colorRed, setColorRed] = useState(false);
   const [colorBlue, setColorBlue] = useState(false);
   const [colorBlack, setColorBlack] = useState(false);
@@ -65,6 +65,17 @@ const New = ({ title }) => {
     }
     checkBoxLimit();
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get("/categories");
+        setCategories(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   const setColor = () => {
     var color = [];
     if (colorRed) {
@@ -104,28 +115,31 @@ const New = ({ title }) => {
     return size;
   };
   const checkFrom = () => {
-    if(files.length === 0) {
+    if (files.length === 0) {
       notice("warn", "You must add a photo for the product", 2000);
       return false;
-    }
-    else if(name.trim() === "" || description.trim() === "" || price !== "number")
-    {
+    } else if (
+      name.trim() === "" ||
+      description.trim() === "" ||
+      !Number.parseInt(price)
+    ) {
       notice("warn", "Name, price and description cannot be left blank", 2000);
       return false;
-    }
-    else if(setSize().length === 0    )
-    {
+    } else if (setSize().length === 0) {
       notice("warn", "You must choose the size for the product", 2000);
       return false;
     }
     return true;
-  }
-  const checkProductName = async (name) => { 
+  };
+  const checkProductName = async (name) => {
     try {
-      const {data} = await axios.get(`/products/check/${name}`);
-      if(data.length > 0)
-      {
-        notice("warn",  `"${name}" already exists, please choose another name`, 2000);
+      const { data } = await axios.get(`/products/check/${name}`);
+      if (data.length > 0) {
+        notice(
+          "warn",
+          `"${name}" already exists, please choose another name`,
+          2000
+        );
         return false;
       }
       return true;
@@ -133,36 +147,34 @@ const New = ({ title }) => {
       notice("error", "Wrong something", 2000);
       console.log(error);
     }
-  }
+  };
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      if(checkFrom() === false)
-      {
+      if (checkFrom() === false) {
         return;
-      }
-      else if(await checkProductName(name.trim()) === false)
-      {
+      } else if ((await checkProductName(name.trim())) === false) {
         return;
       }
       const img = getImageData(files);
-      const {data} = await axios.post(`/products`, {
+      console.log(name);
+      console.log(price);
+      console.log(category);
+      console.log(description);
+      const { data } = await axios.post(`/products`, {
         name: name.trim(),
         price,
+        category,
         color: setColor(),
         size: setSize(),
         description,
         img: img,
       });
-      if(data._id)
-      {
+      if (data._id) {
         notice("success", "Create successful", 2000);
-      }
-      else
-      {
+      } else {
         notice("error", "Create failed", 2000);
       }
-      
     } catch (error) {
       notice("error", "Wrong something 11", 2000);
       console.log(error);
@@ -171,13 +183,14 @@ const New = ({ title }) => {
   const getImageData = (files) => {
     let rs = [];
     files.forEach((item) => {
-     
-        var imgData = `{"type":"${item.fileType.split(";")[0]}","data":"${item.getFileEncodeBase64String()}"}`
+      var imgData = `{"type":"${
+        item.fileType.split(";")[0]
+      }","data":"${item.getFileEncodeBase64String()}"}`;
 
-        rs.push(imgData);
-    })
-    return rs
-  }
+      rs.push(imgData);
+    });
+    return rs;
+  };
   return (
     <div className="new">
       <Sidebar />
@@ -196,7 +209,6 @@ const New = ({ title }) => {
             /> */}
           <Form
             onSubmit={handleSubmit}
-            
             method="post"
             name="form_name"
             id="form_name"
@@ -213,9 +225,8 @@ const New = ({ title }) => {
                   style={{ minWidth: "500px" }}
                   value={name}
                   onChange={async (e) => {
-                    setName(e.target.value)
-                    await checkProductName(name.trim());
-                    ;
+                    checkProductName(e.target.value.trim());
+                    setName(e.target.value);
                   }}
                 />
                 <br />
@@ -223,36 +234,75 @@ const New = ({ title }) => {
                   Price
                 </label>
                 <br />
-                <input type="number" name="price" style={{ minWidth: "500px" }} 
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}/>
+                <input
+                  type="number"
+                  name="price"
+                  min={0}
+                  style={{ minWidth: "500px" }}
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+                <br />
+                <label>Category</label>
+                <br />
+                <select
+                  id="category"
+                  name="category"
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  {categories?.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
                 <br />
                 <label>Color (Choose base on order of img) </label>
                 <br />
-                <input type="checkbox" id="red" name="color" value="red" 
-                checked={colorRed}
-                onChange={(e) => setColorRed(e.target.checked)}/>
+                <input
+                  type="checkbox"
+                  id="red"
+                  name="color"
+                  value="red"
+                  checked={colorRed}
+                  onChange={(e) => setColorRed(e.target.checked)}
+                />
                 <label htmlFor="red" style={{ color: "red" }}>
                   Red
                 </label>
                 <br />
-                <input type="checkbox" id="blue" name="color" value="blue" 
-                checked={colorBlue}
-                onChange={(e) => setColorBlue(e.target.checked)}/>
+                <input
+                  type="checkbox"
+                  id="blue"
+                  name="color"
+                  value="blue"
+                  checked={colorBlue}
+                  onChange={(e) => setColorBlue(e.target.checked)}
+                />
                 <label htmlFor="blue" style={{ color: "blue" }}>
                   Blue
                 </label>
                 <br />
-                <input type="checkbox" id="black" name="color" value="black" 
-                checked={colorBlack}
-                onChange={(e) => setColorBlack(e.target.checked)}/>
+                <input
+                  type="checkbox"
+                  id="black"
+                  name="color"
+                  value="black"
+                  checked={colorBlack}
+                  onChange={(e) => setColorBlack(e.target.checked)}
+                />
                 <label htmlFor="black" style={{ color: "black" }}>
                   Black
                 </label>
                 <br />
-                <input type="checkbox" id="white" name="color" value="white" 
-                checked={colorWhite}
-                onChange={(e) => setColorWhite(e.target.checked)}/>
+                <input
+                  type="checkbox"
+                  id="white"
+                  name="color"
+                  value="white"
+                  checked={colorWhite}
+                  onChange={(e) => setColorWhite(e.target.checked)}
+                />
                 <label
                   htmlFor="white"
                   style={{ color: "white", textShadow: "1px 1px #000" }}

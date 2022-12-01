@@ -12,7 +12,10 @@ const productSchema = new mongoose.Schema(
         40,
         "A product name must have less or equal than 40 characters",
       ],
-      minLength: [5, "A product name must have more or equal than 5 characters"],
+      minLength: [
+        5,
+        "A product name must have more or equal than 5 characters",
+      ],
     },
     slug: String,
     color: {
@@ -51,7 +54,7 @@ const productSchema = new mongoose.Schema(
           type: String,
           //required: true
         },
-      }
+      },
     ],
     ratingAverage: {
       type: Number,
@@ -64,46 +67,15 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.ObjectId,
       ref: "Category",
-    }
+    },
   },
   {
     timestamps: true,
   }
-
-  // classify: {
-  //   standard: {
-  //     type: String,
-  //     required: true
-  //   },
-  //   desc: [{
-  //     value: {
-  //       type: String,
-  //       required: true
-  //     },
-  //     price: {
-  //       type: Number,
-  //       required: true
-  //     }
-  //   }],
-  // },
-  // quantity: {
-  //   type: Number,
-  //   required: [true, "User product have quantity"],
-  //   default: 1
-  // },
-
-  // price: { type: Number, required: [true, "A product must have a price"] },
-
-  // imageCover: {
-  //   type: String,
-  //   //required: [true, "A product must have a cover image"],
-  // },
-  // images: [String],
-
 );
 
 // FIXME: xem lai co nen search theo description ?
-productSchema.index({ name: 'text', description: 'text' });
+productSchema.index({ name: "text", description: "text" });
 productSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true, trim: true });
   next();

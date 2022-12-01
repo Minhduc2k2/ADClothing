@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-
     },
     phoneNumber: {
       type: String,
@@ -35,14 +34,8 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      default: "%Phường Phúc Xá%Quận Ba Đình%Thành Phố Hà Nội"
+      default: "%Phường Phúc Xá%Quận Ba Đình%Thành Phố Hà Nội",
     },
-    // username: {
-    //   type: String,
-    //   required: true,
-    //   minLength: [6, "A user name must have more or equal than 6 characters"],
-    //   unique: true,
-    // },
     email: {
       type: String,
       //required: [true, "User must have a email"],
@@ -60,11 +53,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    active: {
-      type: Boolean,
-      default: true,
-      select: false,
-    },
   },
   { timestamps: true }
 );
@@ -76,8 +64,9 @@ userSchema.virtual("coverImagePath").get(function () {
     this.img.coverImage != null &&
     this.img.coverImageType != null
   ) {
-    rs = `data:${this.img.coverImageType
-      };charset=utf-8;base64,${this.img.coverImage.toString("base64")}`;
+    rs = `data:${
+      this.img.coverImageType
+    };charset=utf-8;base64,${this.img.coverImage.toString("base64")}`;
   }
   return rs;
 });

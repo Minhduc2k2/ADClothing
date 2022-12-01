@@ -17,6 +17,8 @@ import { AuthContext } from "./context/AuthContext";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import ProtectedRoute from "./components/ProtectRoute";
+import NewCategory from "./pages/new/NewCategory";
+import EditCategory from "./pages/new/EditCategory";
 function App() {
   const { user, loading, error, dispatch } = useContext(AuthContext);
   useEffect(() => {
@@ -99,6 +101,32 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Edit title="Edit Product" />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="categories">
+              <Route
+                index
+                element={
+                  <ProtectedRoute>
+                    <List type={3} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="new"
+                element={
+                  <ProtectedRoute>
+                    <NewCategory title="Add New Category" />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="edit/:id"
+                element={
+                  <ProtectedRoute>
+                    <EditCategory title="Edit Category" />
                   </ProtectedRoute>
                 }
               />

@@ -226,3 +226,10 @@
 .product-container .color-btn.active {
   opacity: 1;
 }
+
+.product-container .product-category {
+  margin-top: 20px;
+  color: gray;
+  font-size: 16px;
+  font-weight: 500;
+}

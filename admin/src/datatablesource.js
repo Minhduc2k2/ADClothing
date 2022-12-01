@@ -26,7 +26,7 @@ export const userColumns = [
   {
     field: "role",
     headerName: "Role",
-    width: 530,
+    width: 100,
   },
 ];
 
@@ -154,6 +154,14 @@ export const userRows = [
   },
 ];
 
+export const categoryColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  {
+    field: "name",
+    headerName: "Name",
+    width: 230,
+  },
+];
 export const productColumns = [
   { field: "id", headerName: "ID", width: 70 },
   {
@@ -170,14 +178,9 @@ export const productColumns = [
       return (
         <div className="cellWithImg">
           {imgUrl.map((item, index) => {
-
-            return (<img
-              key={index}
-              className="cellImg"
-              src={item}
-              alt="avatar"
-            />
-            )
+            return (
+              <img key={index} className="cellImg" src={item} alt="avatar" />
+            );
           })}
         </div>
       );
@@ -187,7 +190,7 @@ export const productColumns = [
   {
     field: "size",
     headerName: "Size",
-    width: 160,
+    width: 140,
   },
   {
     field: "color",
@@ -205,12 +208,18 @@ export const productColumns = [
                 borderRadius: "50%",
                 margin: "0 4px",
                 backgroundColor: item,
+                border: item === "white" && "1px solid #ccc",
               }}
             />
           ))}
         </div>
       );
     },
+  },
+  {
+    field: "category",
+    headerName: "Category",
+    width: 140,
   },
   {
     field: "description",
