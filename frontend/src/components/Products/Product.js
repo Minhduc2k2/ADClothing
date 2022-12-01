@@ -8,12 +8,8 @@ function Product({ product }) {
         <div className="circle" />
         <img className="img" src={product.imgPath[0]} alt="product" />
         <div className="info">
-          {/* <div className="icon">
-            <i class="fa-solid fa-cart-shopping"></i>
-          </div> */}
           <div className="icon">
             <Link to={`/product/${product._id}`} className="no-decor">
-              {/* <i class="fa-solid fa-magnifying-glass"></i> */}
               <i class="fa-solid fa-bag-shopping"></i>
             </Link>
           </div>

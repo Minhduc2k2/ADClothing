@@ -78,12 +78,11 @@ const Edit = ({ title }) => {
     const fetchData = async () => {
       const { data: cat } = await axios.get("/categories");
       setCategories(cat);
-
       const { data } = await axios.get(`/products/${id}`);
       nameOrigin.current = data.name;
       setName(data.name);
       setPrice(data.price);
-      setCategory(data.category);
+      setCategory(data.category._id);
       setColorRed(data.color.includes("red"));
       setColorBlue(data.color.includes("blue"));
       setColorBlack(data.color.includes("black"));
