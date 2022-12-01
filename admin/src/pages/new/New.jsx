@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useEffect, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
-
+import { useNavigate } from "react-router-dom";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
@@ -45,6 +45,8 @@ const New = ({ title }) => {
   const [sizeXL, setSizeXL] = useState(false);
   const [sizeXXL, setSizeXXL] = useState(false);
   const [description, setDescription] = useState("");
+
+  const navigate = useNavigate();
   useEffect(() => {
     function checkBoxLimit() {
       var checkBoxGroup = document.forms["form_name"]["color"];
@@ -175,6 +177,7 @@ const New = ({ title }) => {
       } else {
         notice("error", "Create failed", 2000);
       }
+      navigate("/dashboard/products");
     } catch (error) {
       notice("error", "Wrong something 11", 2000);
       console.log(error);
