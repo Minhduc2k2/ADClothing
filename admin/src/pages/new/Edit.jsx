@@ -1,7 +1,7 @@
 import "./new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 
 import "filepond/dist/filepond.min.css";
@@ -32,7 +32,8 @@ registerPlugin(
 const Edit = ({ title }) => {
   // const [files, setFiles] = useState([]);
   const [files, setFiles] = useState([]);
-
+  const flagChangeFile = useRef(false);
+  const nameOrigin = useRef();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [colorRed, setColorRed] = useState(false);
@@ -49,6 +50,7 @@ const Edit = ({ title }) => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
     function checkBoxLimit() {
       var checkBoxGroup = document.forms["form_name"]["color"];
@@ -73,6 +75,7 @@ const Edit = ({ title }) => {
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`/products/${id}`);
+      nameOrigin.current = data.name;
       setName(data.name);
       setPrice(data.price);
       setColorRed(data.color.includes("red"));
@@ -129,13 +132,55 @@ const Edit = ({ title }) => {
     }
     return size;
   };
+  const checkFrom = () => {
+    if (files.length === 0) {
+      notice("warn", "You must add a photo for the product", 2000);
+      return false;
+    } else if (
+      name.trim() === "" ||
+      description.trim() === "" ||
+      typeof price !== "number"
+    ) {
+      notice("warn", "Name, price and description cannot be left blank", 2000);
+      return false;
+    } else if (setSize().length === 0) {
+      notice("warn", "You must choose the size for the product", 2000);
+      return false;
+    }
+    return true;
+  };
+  const checkProductName = async (name) => {
+    try {
+      const { data } = await axios.get(`/products/check/${name}`);
+      if (
+        data.length === 0 ||
+        (data.length === 1 && data[0].name.trim() === nameOrigin.current.trim())
+      ) {
+        return true;
+      } else {
+        notice(
+          "warn",
+          `"${name}" already exists, please choose another name`,
+          2000
+        );
+        return false;
+      }
+    } catch (error) {
+      notice("error", "Wrong something", 2000);
+      console.log(error);
+    }
+  };
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log("🚀 ~ file: Edit.jsx:135 ~ handleSubmit ~ files", files);
+      if (checkFrom() === false) {
+        return;
+      } else if ((await checkProductName(name.trim())) === false) {
+        return;
+      }
       const img = getImageData(files);
       const { data } = await axios.put(`/products/${id}`, {
-        name,
+        name: name.trim(),
         price,
         color: setColor(),
         size: setSize(),
@@ -188,7 +233,10 @@ const Edit = ({ title }) => {
                   id="name"
                   style={{ minWidth: "500px" }}
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={async (e) => {
+                    setName(e.target.value);
+                    await checkProductName(name.trim());
+                  }}
                 />
                 <br />
                 <label htmlFor="price" id="price">
@@ -196,7 +244,7 @@ const Edit = ({ title }) => {
                 </label>
                 <br />
                 <input
-                  type="text"
+                  type="number"
                   name="price"
                   style={{ minWidth: "500px" }}
                   value={price}

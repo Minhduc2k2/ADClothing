@@ -118,13 +118,24 @@ export const selectAllProducts = async (req, res, next) => {
     next(err);
   }
 };
-
+export const isExistedName = async (req, res, next) => {
+  try {
+    const rs = await Product.find({ name: req.params.name });
+    if (rs) {
+      res.status(200).json(rs);
+    }
+    else
+      res.status(200).json(rs);
+  } catch (error) {
+    next(error);
+  }
+}
 // create a new product
 export const createProduct = async (req, res, next) => {
   try {
     // const image = req.body.img;
     const image = req.body.img.slice(0, req.body.img.length);
-    console.log("🚀 ~ CREATE REQ ~ image", image)
+    //console.log("🚀 ~ CREATE REQ ~ image", image)
     const body = { ...req.body };
     const product = new Product(body);
 

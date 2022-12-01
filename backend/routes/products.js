@@ -1,5 +1,5 @@
 import express from "express";
-import { updateProduct, deleteProduct, selectProductsByCategory, selectAllProducts, createProduct, selectProduct, selectAllProductsAndSort, selectProductsByCategoryAndSort, selectAllProductsAndSortDate, selectProductsByCategoryAndSortDate } from "../controllers/productController.js";
+import { updateProduct, deleteProduct, selectProductsByCategory, selectAllProducts, createProduct, selectProduct, selectAllProductsAndSort, selectProductsByCategoryAndSort, selectAllProductsAndSortDate, selectProductsByCategoryAndSortDate, isExistedName } from "../controllers/productController.js";
 import { verifyBuyer, verifyUser, verifyAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
@@ -7,8 +7,11 @@ const router = express.Router();
 // select all products
 router.get("/", selectAllProducts);
 
-// select all products
+// select product by id
 router.get("/:id", selectProduct);
+
+// select product by name
+router.get("/check/:name", isExistedName);
 
 router.get("/sort/date/:code", selectAllProductsAndSortDate);
 
