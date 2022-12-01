@@ -14,10 +14,12 @@ const Datatable = () => {
     try {
       const fetchData = async () => {
         const res = await axios.get("/products");
+        console.log(res.data);
         const myArr = res.data.map((item) => {
           return {
             id: item._id,
             name: item.name,
+            category: item.category?.name,
             color: item.color,
             size: item.size.join(", "),
             price: item.price,
@@ -78,6 +80,7 @@ const Datatable = () => {
             id: item._id,
             name: item.name,
             color: item.color,
+            category: item.category,
             size: item.size.join(", "),
             price: item.price,
             description: item.description,
@@ -92,6 +95,7 @@ const Datatable = () => {
         return {
           id: item._id,
           name: item.name,
+          category: item.category,
           color: item.color,
           size: item.size.join(", "),
           price: item.price,

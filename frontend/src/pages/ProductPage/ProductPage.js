@@ -212,6 +212,11 @@ function ProductPage() {
                 ADD TO CART
               </button>
             </div>
+            <div>
+              <p className="product-category">
+                Category: <strong>{product.category?.name}</strong>
+              </p>
+            </div>
           </Col>
         </Row>
         <Row className="mt-5 review-container">

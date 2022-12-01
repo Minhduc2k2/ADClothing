@@ -2,6 +2,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import StoreIcon from "@mui/icons-material/Store";
+import CategoryIcon from "@mui/icons-material/Category";
 import { Link } from "react-router-dom";
 import "./sidebar.scss";
 import Cookies from "js-cookie";
@@ -35,6 +36,12 @@ const Sidebar = () => {
             </li>
           </Link>
           <p className="title">LISTS</p>
+          <Link to="/dashboard/categories" style={{ textDecoration: "none" }}>
+            <li>
+              <CategoryIcon className="icon" />
+              <span>Categories</span>
+            </li>
+          </Link>
           <Link to="/dashboard/users" style={{ textDecoration: "none" }}>
             <li>
               <PersonOutlineIcon className="icon" />

@@ -36,6 +36,8 @@ const Edit = ({ title }) => {
   const nameOrigin = useRef();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [category, setCategory] = useState();
+  const [categories, setCategories] = useState([]);
   const [colorRed, setColorRed] = useState(false);
   const [colorBlue, setColorBlue] = useState(false);
   const [colorBlack, setColorBlack] = useState(false);
@@ -74,10 +76,14 @@ const Edit = ({ title }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const { data: cat } = await axios.get("/categories");
+      setCategories(cat);
+
       const { data } = await axios.get(`/products/${id}`);
       nameOrigin.current = data.name;
       setName(data.name);
       setPrice(data.price);
+      setCategory(data.category);
       setColorRed(data.color.includes("red"));
       setColorBlue(data.color.includes("blue"));
       setColorBlack(data.color.includes("black"));
@@ -182,6 +188,7 @@ const Edit = ({ title }) => {
       const { data } = await axios.put(`/products/${id}`, {
         name: name.trim(),
         price,
+        category,
         color: setColor(),
         size: setSize(),
         description,
@@ -234,8 +241,8 @@ const Edit = ({ title }) => {
                   style={{ minWidth: "500px" }}
                   value={name}
                   onChange={async (e) => {
+                    checkProductName(e.target.value.trim());
                     setName(e.target.value);
-                    await checkProductName(name.trim());
                   }}
                 />
                 <br />
@@ -250,6 +257,25 @@ const Edit = ({ title }) => {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                 />
+                <br />
+                <label>Category</label>
+                <br />
+                <select
+                  id="category"
+                  name="category"
+                  onChange={(e) => setCategory(e.target.value)}
+                  style={{ width: "100%" }}
+                >
+                  {categories?.map((c) => (
+                    <option
+                      key={c._id}
+                      value={c._id}
+                      selected={c._id === category}
+                    >
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
                 <br />
                 <label>Color (Choose base on order of img) </label>
                 <br />

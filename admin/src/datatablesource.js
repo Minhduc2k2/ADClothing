@@ -154,6 +154,14 @@ export const userRows = [
   },
 ];
 
+export const categoryColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  {
+    field: "name",
+    headerName: "Name",
+    width: 230,
+  },
+];
 export const productColumns = [
   { field: "id", headerName: "ID", width: 70 },
   {
@@ -207,6 +215,11 @@ export const productColumns = [
         </div>
       );
     },
+  },
+  {
+    field: "category",
+    headerName: "Category",
+    width: 140,
   },
   {
     field: "description",
