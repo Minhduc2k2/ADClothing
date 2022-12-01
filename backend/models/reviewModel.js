@@ -6,7 +6,6 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
       required: [true, "Review must be post by a user"],
-      unique: true,
     },
     product: {
       type: mongoose.Schema.ObjectId,
@@ -22,7 +21,6 @@ const reviewSchema = new mongoose.Schema(
       default: 1,
       max: [5, "Rating must be equal or below 5"],
       min: [1, "Rating must be equal or greater than 1"],
-      set: (value) => Math.round(value * 10) / 10,
     },
   },
   {

@@ -18,7 +18,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Col, Form, Row } from "react-bootstrap";
 import axios from "./../../hooks/axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { notice } from "../../hooks/toast.js";
 // Register the plugins
 registerPlugin(
@@ -48,6 +48,7 @@ const Edit = ({ title }) => {
   const [description, setDescription] = useState("");
 
   const { id } = useParams();
+  const navigate = useNavigate();
   useEffect(() => {
     function checkBoxLimit() {
       var checkBoxGroup = document.forms["form_name"]["color"];
@@ -131,9 +132,9 @@ const Edit = ({ title }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log("🚀 ~ file: Edit.jsx:135 ~ handleSubmit ~ files", files)
+      console.log("🚀 ~ file: Edit.jsx:135 ~ handleSubmit ~ files", files);
       const img = getImageData(files);
-      const {data} = await axios.put(`/products/${id}`, {
+      const { data } = await axios.put(`/products/${id}`, {
         name,
         price,
         color: setColor(),
@@ -141,15 +142,12 @@ const Edit = ({ title }) => {
         description,
         img: img,
       });
-      if(data._id)
-      {
+      if (data._id) {
         notice("success", "Update successful", 2000);
-      }
-      else
-      {
+      } else {
         notice("error", "Update failed", 2000);
       }
-      
+      navigate("/dashboard/products");
     } catch (error) {
       notice("error", "Wrong something", 2000);
       console.log(error);
@@ -158,13 +156,14 @@ const Edit = ({ title }) => {
   const getImageData = (files) => {
     let rs = [];
     files.forEach((item) => {
-     
-        var imgData = `{"type":"${item.fileType.split(";")[0]}","data":"${item.getFileEncodeBase64String()}"}`
+      var imgData = `{"type":"${
+        item.fileType.split(";")[0]
+      }","data":"${item.getFileEncodeBase64String()}"}`;
 
-        rs.push(imgData);
-    })
-    return rs
-}
+      rs.push(imgData);
+    });
+    return rs;
+  };
   return (
     <div className="new">
       <Sidebar />

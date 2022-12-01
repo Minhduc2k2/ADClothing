@@ -18,7 +18,7 @@ const Datatable = () => {
             address: item.address.replaceAll("%", ", "),
             avatar: item.avatar,
             email: item.email,
-            role: item.isAdmin === true ? "Admin" : ""
+            role: item.isAdmin === true ? "Admin" : "User",
           };
         });
         setData(myArr);
@@ -43,7 +43,7 @@ const Datatable = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 140,
       renderCell: (params) => {
         return (
           <div className="cellAction">

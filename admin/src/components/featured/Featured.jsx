@@ -32,6 +32,8 @@ const Featured = () => {
     };
     fetchData();
   }, []);
+  console.log("Yesterday: " + yesterRevenue);
+  console.log("Today: " + todayRevenue);
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("/checkouts");
