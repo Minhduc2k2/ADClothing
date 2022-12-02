@@ -65,7 +65,7 @@ const Datatable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Products
+        Categories
         <Link to="/dashboard/categories/new" className="link">
           Add New
         </Link>
