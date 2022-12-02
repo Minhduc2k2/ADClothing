@@ -66,7 +66,6 @@ function SigninPage() {
       //   payload: data,
       // });
       if (data.success === false) {
-
         notice("error", "Wrong email or password", 1500);
         return;
       }
@@ -164,7 +163,7 @@ function SigninPage() {
           <Card>
             <Card.Body>
               <div className="signinup-header">
-                <h1>Forget Password</h1>
+                <h1>Forgot Password</h1>
               </div>
 
               {!isVerify ? (
@@ -277,7 +276,7 @@ function SigninPage() {
                   <Link to="/signup"> Create a free account</Link>
                   <p>or</p>
                   <Button variant="light" onClick={handleForgetPwd}>
-                    <p>Forget password</p>
+                    <p>Forgot password</p>
                   </Button>
                 </p>
               </div>

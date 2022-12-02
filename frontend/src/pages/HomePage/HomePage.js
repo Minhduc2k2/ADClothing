@@ -25,8 +25,8 @@ function HomePage() {
         <Col md={3} className="d-flex justify-content-center col-info">
           <i class="fa-solid fa-truck-fast"></i>
           <div>
-            <h3>Free Shipping</h3>
-            <p>On all order over $39.00</p>
+            <h3>Express Shipping</h3>
+            <p>Delivery within 24 hours</p>
           </div>
         </Col>
         <Col md={3} className="d-flex justify-content-center col-info">
