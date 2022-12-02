@@ -9,8 +9,8 @@ import "./table.scss";
 
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import axios from "./../../hooks/axios";
-import formatter from "./../../hooks/formatter";
+import axios from "../../hooks/axios";
+import formatter from "../../hooks/formatter";
 import { toast } from "react-toastify";
 const List = () => {
   const [checkouts, setCheckouts] = useState([]);

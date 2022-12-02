@@ -1,21 +1,16 @@
-import "./chart.scss";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { addDays } from "date-fns";
 import { useEffect, useState } from "react";
-import axios from "./../../hooks/axios";
-import formatter from "./../../hooks/formatter";
-import {faCalendarDays} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { format } from "date-fns";
-import { DateRange } from "react-date-range";
-import DateRangePickerComp from "../calendar/DateRangePickerComp.jsx";
-import { addDays } from 'date-fns';
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+} from "recharts";
+import axios from "../../hooks/axios";
+import DateRangePickerComp from "../calendar/DateRangePickerComp.js";
+import "./chart.scss";
 // const data = [
 //   { name: "January", Total: 1200 },
 //   { name: "February", Total: 2100 },
@@ -33,17 +28,23 @@ const Chart = ({ aspect, title }) => {
       key: "selection",
     },
   ]);
-  const startDate = `${dates[0].startDate.getFullYear()}-${dates[0].startDate.getMonth() + 1}-${dates[0].startDate.getDate()}`;
+  const startDate = `${dates[0].startDate.getFullYear()}-${
+    dates[0].startDate.getMonth() + 1
+  }-${dates[0].startDate.getDate()}`;
 
-  const endDate = `${dates[0].endDate.getFullYear()}-${dates[0].endDate.getMonth() + 1}-${dates[0].endDate.getDate() + 1}`;
-  
+  const endDate = `${dates[0].endDate.getFullYear()}-${
+    dates[0].endDate.getMonth() + 1
+  }-${dates[0].endDate.getDate() + 1}`;
+
   const [checkouts, setCheckouts] = useState([]);
   const handleDateRange = (input) => {
     setDates(input);
-  }
+  };
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(`/checkouts/revenue/${startDate}/${endDate}`);
+      const { data } = await axios.get(
+        `/checkouts/revenue/${startDate}/${endDate}`
+      );
       setCheckouts(data);
     };
     fetchData();
@@ -51,7 +52,7 @@ const Chart = ({ aspect, title }) => {
   return (
     <div className="chart">
       <DateRangePickerComp getDateRange={handleDateRange} />
-      
+
       {checkouts && (
         <ResponsiveContainer width="100%" aspect={aspect}>
           <AreaChart

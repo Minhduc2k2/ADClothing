@@ -2,11 +2,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { productColumns } from "../../datatablesource";
-import axios from "./../../hooks/axios";
+import axios from "../../hooks/axios";
 import { toast } from "react-toastify";
 import "./datatable.scss";
 
-const Datatable = () => {
+const DBproduct = () => {
   const [textSearch, setTextSearch] = useState("");
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -152,4 +152,4 @@ const Datatable = () => {
   );
 };
 
-export default Datatable;
+export default DBproduct;

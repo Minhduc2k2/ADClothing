@@ -1,9 +1,9 @@
-import "./new.scss";
+import "./custom.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
-import { useNavigate } from "react-router-dom";
+
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
@@ -17,7 +17,8 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Col, Form, Row } from "react-bootstrap";
-import axios from "./../../hooks/axios";
+import axios from "../../hooks/axios";
+import { useNavigate, useParams } from "react-router-dom";
 import { notice } from "../../hooks/toast.js";
 // Register the plugins
 registerPlugin(
@@ -28,8 +29,11 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-const New = ({ title }) => {
+const EditProduct = ({ title }) => {
+  // const [files, setFiles] = useState([]);
   const [files, setFiles] = useState([]);
+  const flagChangeFile = useRef(false);
+  const nameOrigin = useRef();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState();
@@ -46,7 +50,9 @@ const New = ({ title }) => {
   const [sizeXXL, setSizeXXL] = useState(false);
   const [description, setDescription] = useState("");
 
+  const { id } = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
     function checkBoxLimit() {
       var checkBoxGroup = document.forms["form_name"]["color"];
@@ -66,18 +72,33 @@ const New = ({ title }) => {
       }
     }
     checkBoxLimit();
-  });
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const { data } = await axios.get("/categories");
-        setCategories(data);
-      } catch (error) {
-        console.log(error);
-      }
+      const { data: cat } = await axios.get("/categories");
+      setCategories(cat);
+      const { data } = await axios.get(`/products/${id}`);
+      nameOrigin.current = data.name;
+      setName(data.name);
+      setPrice(data.price);
+      setCategory(data.category._id);
+      setColorRed(data.color.includes("red"));
+      setColorBlue(data.color.includes("blue"));
+      setColorBlack(data.color.includes("black"));
+      setColorWhite(data.color.includes("white"));
+      setColorYellow(data.color.includes("yellow"));
+      setSizeS(data.size.includes("S"));
+      setSizeM(data.size.includes("M"));
+      setSizeL(data.size.includes("L"));
+      setSizeXL(data.size.includes("XL"));
+      setSizeXXL(data.size.includes("XXL"));
+      setDescription(data.description);
+      setFiles(data.imgPath);
     };
     fetchData();
-  }, []);
+  }, [id]);
+
   const setColor = () => {
     var color = [];
     if (colorRed) {
@@ -123,7 +144,7 @@ const New = ({ title }) => {
     } else if (
       name.trim() === "" ||
       description.trim() === "" ||
-      !Number.parseInt(price)
+      typeof price !== "number"
     ) {
       notice("warn", "Name, price and description cannot be left blank", 2000);
       return false;
@@ -136,7 +157,12 @@ const New = ({ title }) => {
   const checkProductName = async (name) => {
     try {
       const { data } = await axios.get(`/products/check/${name}`);
-      if (data.length > 0) {
+      if (
+        data.length === 0 ||
+        (data.length === 1 && data[0].name.trim() === nameOrigin.current.trim())
+      ) {
+        return true;
+      } else {
         notice(
           "warn",
           `"${name}" already exists, please choose another name`,
@@ -144,7 +170,6 @@ const New = ({ title }) => {
         );
         return false;
       }
-      return true;
     } catch (error) {
       notice("error", "Wrong something", 2000);
       console.log(error);
@@ -159,11 +184,7 @@ const New = ({ title }) => {
         return;
       }
       const img = getImageData(files);
-      console.log(name);
-      console.log(price);
-      console.log(category);
-      console.log(description);
-      const { data } = await axios.post(`/products`, {
+      const { data } = await axios.put(`/products/${id}`, {
         name: name.trim(),
         price,
         category,
@@ -173,13 +194,13 @@ const New = ({ title }) => {
         img: img,
       });
       if (data._id) {
-        notice("success", "Create successful", 2000);
+        notice("success", "Update successful", 2000);
       } else {
-        notice("error", "Create failed", 2000);
+        notice("error", "Update failed", 2000);
       }
       navigate("/dashboard/products");
     } catch (error) {
-      notice("error", "Wrong something 11", 2000);
+      notice("error", "Wrong something", 2000);
       console.log(error);
     }
   };
@@ -202,17 +223,8 @@ const New = ({ title }) => {
           <h1>{title}</h1>
         </div>
         <div className="bottom">
-          {/* <img
-              src={
-                file
-                  ? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-            /> */}
           <Form
             onSubmit={handleSubmit}
-            method="post"
             name="form_name"
             id="form_name"
             style={{ width: "100%" }}
@@ -240,7 +252,6 @@ const New = ({ title }) => {
                 <input
                   type="number"
                   name="price"
-                  min={0}
                   style={{ minWidth: "500px" }}
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
@@ -252,10 +263,15 @@ const New = ({ title }) => {
                   id="category"
                   name="category"
                   onChange={(e) => setCategory(e.target.value)}
+                  style={{ width: "100%" }}
                 >
-                  {categories?.map((category) => (
-                    <option key={category._id} value={category._id}>
-                      {category.name}
+                  {categories?.map((c) => (
+                    <option
+                      key={c._id}
+                      value={c._id}
+                      selected={c._id === category}
+                    >
+                      {c.name}
                     </option>
                   ))}
                 </select>
@@ -394,7 +410,6 @@ const New = ({ title }) => {
               </Col>
               <Col md={6}>
                 <FilePond
-                  className="NGUYENVANAN"
                   files={files}
                   onupdatefiles={setFiles}
                   allowMultiple={true}
@@ -404,36 +419,14 @@ const New = ({ title }) => {
                   name="img"
                   labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
                 />
-                <input type="submit" value="Add Product" />
+                <input type="submit" value="Edit Product" />
               </Col>
             </Row>
           </Form>
-          {/* 
-            <form>
-              <div className="formInput">
-                <label htmlFor="file">
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                  type="file"
-                  id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-              </div>
-
-              {inputs.map((input) => (
-                <div className="formInput" key={input.id}>
-                  <label>{input.label}</label>
-                  <input type={input.type} placeholder={input.placeholder} />
-                </div>
-              ))}
-              <button>Send</button>
-            </form> */}
         </div>
       </div>
     </div>
   );
 };
 
-export default New;
+export default EditProduct;
