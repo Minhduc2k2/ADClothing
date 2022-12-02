@@ -5,8 +5,8 @@ import "react-circular-progressbar/dist/styles.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import { useEffect, useState } from "react";
-import axios from "./../../hooks/axios";
-import formatter from "./../../hooks/formatter";
+import axios from "../../hooks/axios";
+import formatter from "../../hooks/formatter";
 
 const Featured = () => {
   const [yesterRevenue, setYesTerRevenue] = useState(0);

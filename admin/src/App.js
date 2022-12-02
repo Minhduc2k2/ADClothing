@@ -2,13 +2,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
-import New from "./pages/new/New";
 
 import Home from "./pages/home/Home";
 import List from "./pages/list/List";
 import "./style/dark.scss";
 
-import Edit from "./pages/new/Edit";
+import NewProduct from "./pages/custom/Newproduct";
+import EditProduct from "./pages/custom/Editproduct";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Signin from "./pages/signin/signin";
@@ -17,8 +17,8 @@ import { AuthContext } from "./context/AuthContext";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import ProtectedRoute from "./components/ProtectRoute";
-import NewCategory from "./pages/new/NewCategory";
-import EditCategory from "./pages/new/EditCategory";
+import NewCategory from "./pages/custom/Newcategory";
+import EditCategory from "./pages/custom/Editcategory";
 function App() {
   const { user, loading, error, dispatch } = useContext(AuthContext);
   useEffect(() => {
@@ -92,7 +92,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute>
-                    <New title="Add New Product" />
+                    <NewProduct title="Add New Product" />
                   </ProtectedRoute>
                 }
               />
@@ -100,7 +100,7 @@ function App() {
                 path="edit/:id"
                 element={
                   <ProtectedRoute>
-                    <Edit title="Edit Product" />
+                    <EditProduct title="Edit Product" />
                   </ProtectedRoute>
                 }
               />

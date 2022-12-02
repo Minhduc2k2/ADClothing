@@ -1,38 +1,36 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { userColumns } from "../../datatablesource";
-import axios from "./../../hooks/axios";
+import { Link } from "react-router-dom";
+import { categoryColumns } from "../../datatablesource";
+import axios from "../../hooks/axios";
 import { toast } from "react-toastify";
 import "./datatable.scss";
-const Datatable = () => {
+
+const DBCategory = () => {
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     try {
       const fetchData = async () => {
-        const res = await axios.get("/users");
+        const res = await axios.get("/categories");
         const myArr = res.data.map((item) => {
           return {
             id: item._id,
             name: item.name,
-            address: item.address.replaceAll("%", ", "),
-            avatar: item.avatar,
-            email: item.email,
-            role: item.isAdmin === true ? "Admin" : "User",
           };
         });
         setData(myArr);
       };
       fetchData();
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   }, [refresh]);
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/users/${id}`);
-      toast.success("Delete user successfully");
+      await axios.delete(`/categories/${id}`);
+      toast.success("Delete product successfully");
       setRefresh(!refresh);
     } catch (err) {
       console.log(err);
@@ -47,9 +45,12 @@ const Datatable = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            {/* <Link to="/users/test" style={{ textDecoration: "none" }}>
-              <div className="viewButton">View</div>
-            </Link> */}
+            <Link
+              to={`/dashboard/categories/edit/${params.row.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="viewButton">Edit</div>
+            </Link>
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}
@@ -63,19 +64,23 @@ const Datatable = () => {
   ];
   return (
     <div className="datatable">
-      <div className="datatableTitle">User</div>
+      <div className="datatableTitle">
+        Categories
+        <Link to="/dashboard/categories/new" className="link">
+          Add New
+        </Link>
+      </div>
       {data && (
         <DataGrid
           className="datagrid"
           rows={data}
-          columns={userColumns.concat(actionColumn)}
+          columns={categoryColumns.concat(actionColumn)}
           pageSize={9}
           rowsPerPageOptions={[9]}
-          // checkboxSelection
         />
       )}
     </div>
   );
 };
 
-export default Datatable;
+export default DBCategory;

@@ -1,19 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
-import "./new.scss";
+import "./custom.scss";
 
 import "filepond/dist/filepond.min.css";
 // Register the plugin
 
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "./../../hooks/axios";
+import axios from "../../hooks/axios";
 
-const NewCategory = ({ title }) => {
+const EditCategory = ({ title }) => {
   const [name, setName] = useState("");
+  const { id } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(`/categories/${id}`);
+        setName(data.name);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [id]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,10 +35,10 @@ const NewCategory = ({ title }) => {
         toast.error("This category is exist");
         return;
       }
-      await axios.post("/categories", {
+      await axios.patch(`/categories/${id}`, {
         name,
       });
-      toast.success("Category created");
+      toast.success("Category Edited");
       navigate("/dashboard/categories");
     } catch (error) {
       toast.error(error.message);
@@ -70,4 +83,4 @@ const NewCategory = ({ title }) => {
   );
 };
 
-export default NewCategory;
+export default EditCategory;
