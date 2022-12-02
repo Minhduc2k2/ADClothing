@@ -2,7 +2,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import "./home.scss";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
-import Table from "../../components/table/Table";
+import DbCheckout from "../../components/table/Dbcheckout";
 
 const Home = () => {
   return (
@@ -17,7 +17,7 @@ const Home = () => {
         </div>
         <div className="listContainer">
           <div className="listTitle">Latest Transactions</div>
-          <Table />
+          <DbCheckout />
         </div>
       </div>
     </div>

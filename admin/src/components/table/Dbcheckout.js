@@ -12,7 +12,7 @@ import { Button, Modal } from "react-bootstrap";
 import axios from "../../hooks/axios";
 import formatter from "../../hooks/formatter";
 import { toast } from "react-toastify";
-const List = () => {
+const DbCheckout = () => {
   const [checkouts, setCheckouts] = useState([]);
   const [refresh, setRefresh] = useState(true);
   const [show, setShow] = useState(false);
@@ -120,4 +120,4 @@ const List = () => {
   );
 };
 
-export default List;
+export default DbCheckout;
