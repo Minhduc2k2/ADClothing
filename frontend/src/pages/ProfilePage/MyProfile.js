@@ -36,7 +36,6 @@ registerPlugin(
   FilePondPluginImageResize
 );
 function MyProfile() {
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -55,7 +54,6 @@ function MyProfile() {
   const navigate = useNavigate();
   const { user, dispatch } = useContext(AuthContext);
   const [files, setFiles] = useState([user.imgPath]);
-
 
   const getAddress = () => {
     const arr = user.address.split("%");
@@ -80,7 +78,6 @@ function MyProfile() {
   const [wardText, setWardText] = useState(addressInfo.ward);
   const [address, setAddress] = useState(addressInfo.address);
   // FIXME: lỗi khi chưa có address, cả bên checkout
-
 
   const handleChangePassword = async () => {
     if (newPassword !== rePassword) {
@@ -240,8 +237,7 @@ function MyProfile() {
 
     const { data } = await axios.put(`/users/${user._id}`, userInfo);
     const { password, isAdmin, ...others } = data;
-    if (data.success === false)
-      notice("error", "Edit error", 2000);
+    if (data.success === false) notice("error", "Edit error", 2000);
     else {
       notice("success", "Edit success", 2000);
       dispatch({ type: "LOGIN_SUCCESS", payload: others });
@@ -252,8 +248,7 @@ function MyProfile() {
     if (files[0] === undefined) {
       notice("warn", "You haven't added a photo yet", 2000);
       return;
-    }
-    else {
+    } else {
       img = getImageData(files[0]);
     }
     const userInfo = {
@@ -261,18 +256,18 @@ function MyProfile() {
     };
     const { data } = await axios.put(`/users/${user._id}`, userInfo);
     const { password, isAdmin, ...others } = data;
-    if (data.success === false)
-      notice("error", "Edit error", 2000);
+    if (data.success === false) notice("error", "Edit error", 2000);
     else {
       notice("success", "Edit success", 2000);
       dispatch({ type: "LOGIN_SUCCESS", payload: others });
       handleCloseAvt();
     }
-  }
+  };
   const getImageData = (item) => {
-    return `{"type":"${item.fileType.split(";")[0]}","data":"${item.getFileEncodeBase64String()}"}`
-
-  }
+    return `{"type":"${
+      item.fileType.split(";")[0]
+    }","data":"${item.getFileEncodeBase64String()}"}`;
+  };
   return (
     <div className="checkout-container">
       <Helmet>
@@ -329,7 +324,11 @@ function MyProfile() {
                   if (element.code === Number(provinceCode.current)) {
                     // provinceCode.current = element.code;
                     return (
-                      <option value={element.code} key={element.code} defaultValue>
+                      <option
+                        value={element.code}
+                        key={element.code}
+                        defaultValue
+                      >
                         {element.name}
                       </option>
                     );
@@ -362,7 +361,11 @@ function MyProfile() {
                   if (element.code === Number(distinctCode.current)) {
                     //distinctCode.current = element.code;
                     return (
-                      <option value={element.code} key={element.code} defaultValue>
+                      <option
+                        value={element.code}
+                        key={element.code}
+                        defaultValue
+                      >
                         {element.name}
                       </option>
                     );
@@ -395,7 +398,11 @@ function MyProfile() {
                   if (element.name === Number(wardCode.current)) {
                     //wardCode.current = element.code;
                     return (
-                      <option value={element.code} key={element.code} defaultValue>
+                      <option
+                        value={element.code}
+                        key={element.code}
+                        defaultValue
+                      >
                         {element.name}
                       </option>
                     );
@@ -444,10 +451,10 @@ function MyProfile() {
                 <Modal.Body>
                   <Form>
                     <Form.Group className="mb-3" controlId="old-password">
-                      <Form.Label>Old password</Form.Label>
+                      <Form.Label>Current password</Form.Label>
                       <Form.Control
                         type="password"
-                        placeholder="Old password"
+                        placeholder="Current password"
                         autoFocus
                         onChange={(e) => setOldPassword(e.target.value)}
                       />
@@ -491,14 +498,13 @@ function MyProfile() {
                   <Modal.Title>Choose Image</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <form >
+                  <form>
                     <FilePond
                       files={files}
                       onupdatefiles={setFiles}
                       allowMultiple={false}
                       maxFiles={3}
                       maxFileSize="3MB"
-
                       //server="/api"
                       name="img"
                       labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'

@@ -237,8 +237,10 @@ function CheckoutPage() {
         <div className="info-container">
           <h1 className="title">Checkout</h1>
           <p className="desc">
-            Hath after appear tree great fruitful green dominion moveth sixth
-            abundantly image that midst of god day multiply you’ll which
+            ADClothing is clothing designed to make everyone's life better. It
+            is simple, high-quality, everyday clothing with a practical sense of
+            beauty-ingenious in detail, thought through with life's needs in
+            mind, and always evolving.
           </p>
         </div>
       </div>
