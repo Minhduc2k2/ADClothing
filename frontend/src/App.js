@@ -19,7 +19,6 @@ import ProfilePage from "./pages/ProfilePage/MyProfile.js";
 import CheckoutDetailsPage from "./pages/CheckoutPage/CheckoutDetailsPage";
 import ReviewsPage from "./pages/ReviewsPage/ReviewsPage";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.js";
-import ForgetPassword from "./pages/ForgetPassword/ForgetPassword";
 import { useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import { AuthContext } from "./context/AuthContext.js";
@@ -69,7 +68,6 @@ function App() {
         <Route path="/s" element={<Show />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/aboutus" element={<AboutUsPage />} />
-        <Route path="/forgetpassword" element={<ForgetPassword />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/reviews/:id" element={<ReviewsPage />} />
         <Route path="/cart" element={<CartPage />} />
