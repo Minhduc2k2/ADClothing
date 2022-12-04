@@ -1,7 +1,7 @@
 import "./list.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Dbuser from "../../components/DBuser/DBuser";
-import Dbproduct from "../../components/DBproduct/DBproduct";
+import Dbproduct from "../../components/dbproduct/DBproduct";
 import Dbcategory from "../../components/DBcategory/DBcategory";
 
 const List = ({ type }) => {
